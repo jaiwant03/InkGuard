@@ -1,37 +1,38 @@
-import React, { useState } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
-import Sidebar from '../components/Sidebar';
-import Navbar from '../components/Navbar';
+import React, { useState, useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
+import TopNavigation from '../components/TopNavigation';
+import GlobalSearchModal from '../components/GlobalSearchModal';
 
 export default function AppLayout() {
-  const [collapsed, setCollapsed] = useState(false);
-  const location = useLocation();
+  const [searchOpen, setSearchOpen] = useState(false);
 
-  const getPageTitle = (pathname) => {
-    if (pathname === '/' || pathname === '/dashboard') return 'Dashboard';
-    if (pathname.startsWith('/guidelines')) return 'Brand Guidelines & Identity';
-    if (pathname.startsWith('/facts')) return 'Approved Facts & Sources';
-    if (pathname.startsWith('/assets')) return 'Brand Asset Library';
-    if (pathname.startsWith('/review')) return 'Content Review Studio';
-    if (pathname.startsWith('/approvals')) return 'Human Approval Queue';
-    if (pathname.startsWith('/history')) return 'Review History & Audit Trail';
-    if (pathname.startsWith('/insights')) return 'Governance Insights & Analytics';
-    if (pathname.startsWith('/settings')) return 'Workspace Settings & Team';
-    return 'Brand Governance';
-  };
+  useEffect(() => {
+    const handleOpenSearch = () => setSearchOpen(true);
+    window.addEventListener('inkguard-open-search', handleOpenSearch);
+    return () => window.removeEventListener('inkguard-open-search', handleOpenSearch);
+  }, []);
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-app)' }}>
-      <Sidebar
-        collapsed={collapsed}
-        onToggleCollapse={() => setCollapsed(!collapsed)}
-      />
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflowX: 'hidden' }}>
-        <Navbar pageTitle={getPageTitle(location.pathname)} />
-        <main style={{ flex: 1, padding: 'var(--space-8)', maxWidth: '1440px', width: '100%', margin: '0 auto' }}>
-          <Outlet />
-        </main>
-      </div>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-app)' }}>
+      {/* Full-width horizontal top navigation */}
+      <TopNavigation onOpenSearch={() => setSearchOpen(true)} />
+
+      {/* Global Search Modal triggered via shortcut or top bar */}
+      <GlobalSearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+
+      {/* Main Page Canvas Container */}
+      <main
+        style={{
+          flex: 1,
+          width: '100%',
+          maxWidth: '1440px',
+          margin: '0 auto',
+          padding: '24px 32px 48px 32px',
+        }}
+        className="app-main-content"
+      >
+        <Outlet />
+      </main>
     </div>
   );
 }

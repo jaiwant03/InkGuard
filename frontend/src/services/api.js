@@ -60,6 +60,17 @@ async function request(endpoint, options = {}) {
   return data;
 }
 
+function toQueryString(params = {}) {
+  const clean = {};
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && value !== null && value !== '' && value !== 'undefined') {
+      clean[key] = value;
+    }
+  }
+  const str = new URLSearchParams(clean).toString();
+  return str ? `?${str}` : '';
+}
+
 export const api = {
   // Auth
   auth: {
@@ -91,10 +102,7 @@ export const api = {
 
   // Brand Rules
   brandRules: {
-    list: (params = {}) => {
-      const query = new URLSearchParams(params).toString();
-      return request(`/brand-rules${query ? `?${query}` : ''}`);
-    },
+    list: (params = {}) => request(`/brand-rules${toQueryString(params)}`),
     get: (id) => request(`/brand-rules/${id}`),
     create: (rule) => request('/brand-rules', { method: 'POST', body: JSON.stringify(rule) }),
     update: (id, rule) => request(`/brand-rules/${id}`, { method: 'PUT', body: JSON.stringify(rule) }),
@@ -104,10 +112,7 @@ export const api = {
 
   // Approved Facts
   approvedFacts: {
-    list: (params = {}) => {
-      const query = new URLSearchParams(params).toString();
-      return request(`/approved-facts${query ? `?${query}` : ''}`);
-    },
+    list: (params = {}) => request(`/approved-facts${toQueryString(params)}`),
     get: (id) => request(`/approved-facts/${id}`),
     create: (fact) => request('/approved-facts', { method: 'POST', body: JSON.stringify(fact) }),
     update: (id, fact) => request(`/approved-facts/${id}`, { method: 'PUT', body: JSON.stringify(fact) }),
@@ -116,10 +121,7 @@ export const api = {
 
   // Brand Assets
   brandAssets: {
-    list: (params = {}) => {
-      const query = new URLSearchParams(params).toString();
-      return request(`/brand-assets${query ? `?${query}` : ''}`);
-    },
+    list: (params = {}) => request(`/brand-assets${toQueryString(params)}`),
     upload: (formData) => request('/brand-assets', { method: 'POST', body: formData }),
     updateStatus: (id, approvalStatus) => request(`/brand-assets/${id}/status`, { method: 'PATCH', body: JSON.stringify({ approvalStatus }) }),
     delete: (id) => request(`/brand-assets/${id}`, { method: 'DELETE' }),
@@ -127,10 +129,7 @@ export const api = {
 
   // Drafts & Reviews
   drafts: {
-    list: (params = {}) => {
-      const query = new URLSearchParams(params).toString();
-      return request(`/drafts${query ? `?${query}` : ''}`);
-    },
+    list: (params = {}) => request(`/drafts${toQueryString(params)}`),
     create: (draft) => request('/drafts', { method: 'POST', body: JSON.stringify(draft) }),
     get: (id) => request(`/drafts/${id}`),
     update: (id, draft) => request(`/drafts/${id}`, { method: 'PUT', body: JSON.stringify(draft) }),
@@ -158,9 +157,6 @@ export const api = {
 
   // Audit Logs
   audit: {
-    list: (params = {}) => {
-      const query = new URLSearchParams(params).toString();
-      return request(`/audit${query ? `?${query}` : ''}`);
-    },
+    list: (params = {}) => request(`/audit${toQueryString(params)}`),
   },
 };

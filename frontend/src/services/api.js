@@ -148,6 +148,8 @@ export const api = {
   // Dashboard
   dashboard: {
     metrics: () => request('/dashboard/metrics'),
+    findings: (params = {}) => request(`/dashboard/findings${toQueryString(params)}`),
+    search: (q = '') => request(`/dashboard/search?q=${encodeURIComponent(q)}`),
   },
 
   // Governance Insights

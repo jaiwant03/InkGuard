@@ -17,6 +17,7 @@ import {
   ExternalLink,
   Edit3,
   History,
+  FileText,
 } from 'lucide-react';
 import ComplianceScoreRing from '../components/ComplianceScoreRing';
 import { SeverityBadge, ClaimStatusBadge, WorkflowStatusBadge } from '../components/Badges';

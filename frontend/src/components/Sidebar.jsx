@@ -19,6 +19,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { useToast } from '../context/ToastContext';
+import { ASSET_IMAGES } from '../assets/images';
 
 export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onCloseMobile }) {
   const { workspace, role, user, switchWorkspace } = useAuth();
@@ -336,6 +337,50 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
             })}
           </div>
         </nav>
+
+        {/* 3D Mascot AI Governance Widget */}
+        {!collapsed && (
+          <div style={{ padding: '0 var(--space-4) var(--space-3) var(--space-4)' }}>
+            <div
+              style={{
+                background: 'linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%)',
+                borderRadius: 'var(--radius-xl)',
+                padding: '10px 12px',
+                border: '1px solid #BFDBFE',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+              }}
+            >
+              <div
+                className="motion-mascot"
+                style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '50%',
+                  overflow: 'hidden',
+                  flexShrink: 0,
+                  boxShadow: '0 4px 10px rgba(37, 99, 235, 0.3)',
+                  border: '1.5px solid #93C5FD',
+                }}
+              >
+                <img
+                  src={ASSET_IMAGES.governanceShield}
+                  alt="InkGuard Mascot"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                />
+              </div>
+              <div style={{ minWidth: 0 }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#1E40AF', display: 'block', lineHeight: 1.2 }}>
+                  InkGuard AI
+                </span>
+                <span style={{ fontSize: '0.6875rem', color: '#2563EB', fontWeight: 600 }}>
+                  Deterministic Engine
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* User Mini Profile Footer */}
         <div

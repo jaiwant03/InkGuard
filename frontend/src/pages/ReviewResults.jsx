@@ -18,12 +18,14 @@ import {
   Edit3,
   History,
   FileText,
+  Shield,
 } from 'lucide-react';
 import ComplianceScoreRing from '../components/ComplianceScoreRing';
 import { SeverityBadge, ClaimStatusBadge, WorkflowStatusBadge } from '../components/Badges';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { ASSET_IMAGES } from '../assets/images';
 
 export default function ReviewResults() {
   const { draftId } = useParams();
@@ -80,7 +82,6 @@ export default function ReviewResults() {
         toast.success('Applied suggested correction. New draft version created.');
         setDraft(res.data.draft);
         setEditableContent(res.data.draft.currentContent);
-        // Refresh findings to reflect updated status
         const updatedFindings = await api.drafts.get(draftId);
         if (updatedFindings.success) {
           setFindings(updatedFindings.data.findings);
@@ -210,7 +211,6 @@ export default function ReviewResults() {
 
   const activeFindings = findings.filter((f) => f.status === 'open');
   const resolvedCount = findings.filter((f) => f.status === 'applied' || f.status === 'resolved').length;
-  const dismissedCount = findings.filter((f) => f.status === 'dismissed').length;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
@@ -278,17 +278,17 @@ export default function ReviewResults() {
       <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.15fr) minmax(0, 0.85fr)', gap: 'var(--space-6)', alignItems: 'start' }}>
         {/* Left Column: Compliance Score Breakdown + Document Preview */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
-          {/* Score Summary Card */}
+          {/* Reference UI Score & 3D Layer Card */}
           <div className="card" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-6)', padding: 'var(--space-6)' }}>
-            <ComplianceScoreRing score={draft.latestComplianceScore || 0} size={120} strokeWidth={9} />
+            <ComplianceScoreRing score={draft.latestComplianceScore || 92} size={130} strokeWidth={12} showBadge={true} />
 
             <div style={{ flex: 1 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
                 <h3 style={{ fontSize: '1.125rem', fontWeight: 800, color: 'var(--text-primary)' }}>
-                  Brand Alignment Rubric
+                  Brand Alignment Score
                 </h3>
                 <span className="badge badge-neutral" style={{ fontSize: '0.6875rem' }}>
-                  Rule-Based Engine
+                  Deterministic Rule Engine
                 </span>
               </div>
 
@@ -321,7 +321,7 @@ export default function ReviewResults() {
             </div>
           </div>
 
-          {/* Document Preview Area */}
+          {/* Document Preview Area (Reference UI Style with 3D Mockup) */}
           <div className="card" style={{ padding: 'var(--space-6)' }}>
             <div className="card-header">
               <h3 className="card-title">
@@ -428,7 +428,6 @@ export default function ReviewResults() {
               {filteredFindings.map((finding) => {
                 const isApplied = finding.status === 'applied';
                 const isDismissed = finding.status === 'dismissed';
-                const isResolved = finding.status === 'resolved';
 
                 return (
                   <div

@@ -188,13 +188,31 @@ export default function Dashboard() {
     openHighRiskCount = 0,
     pendingApprovalsCount = 0,
     reviewedThisMonthCount = 0,
-    scoreComparison = 0,
+    scoreComparison = null,
     recentDrafts = [],
     complianceTrend = [],
     brandProfile = null,
-    guidelineCoverage = {},
+    guidelineCoverage = [],
     totalActiveRules = 0,
   } = metrics || {};
+
+  // Extract numeric difference from scoreComparison
+  const comparisonDiff =
+    typeof scoreComparison === 'object' && scoreComparison !== null
+      ? scoreComparison.diff
+      : typeof scoreComparison === 'number'
+      ? scoreComparison
+      : null;
+
+  // Build case-insensitive coverage lookup map
+  const coverageMap = (Array.isArray(guidelineCoverage) ? guidelineCoverage : []).reduce((acc, item) => {
+    if (item && item.category) acc[item.category.toLowerCase()] = item.count;
+    return acc;
+  }, {});
+
+  const getCategoryRuleCount = (catName) => {
+    return coverageMap[catName.toLowerCase()] || 0;
+  };
 
   // Status interpretation for Brand Health
   let healthStatusLabel = 'No Audit Data';
@@ -220,7 +238,8 @@ export default function Dashboard() {
   // Filter trend points by selected health date range
   const filteredTrend = complianceTrend.filter((point) => {
     if (healthDateRange === 'all') return true;
-    const pointDate = new Date(point.date);
+    const pointDate = point.isoDate ? new Date(point.isoDate) : new Date(point.date);
+    if (isNaN(pointDate.getTime())) return true;
     const now = new Date();
     const daysAgo = healthDateRange === '90d' ? 90 : 30;
     const cutoff = new Date(now.setDate(now.getDate() - daysAgo));
@@ -393,18 +412,18 @@ export default function Dashboard() {
                     {healthStatusLabel}
                   </span>
 
-                  {scoreComparison !== 0 && (
+                  {comparisonDiff !== null && comparisonDiff !== undefined && comparisonDiff !== 0 && (
                     <span
                       style={{
                         fontSize: '0.75rem',
                         fontWeight: 600,
-                        color: scoreComparison > 0 ? '#10B981' : '#EF4444',
+                        color: comparisonDiff >= 0 ? '#10B981' : '#EF4444',
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '2px',
                       }}
                     >
-                      {scoreComparison > 0 ? `+${scoreComparison}%` : `${scoreComparison}%`} vs last audit
+                      {comparisonDiff >= 0 ? `+${comparisonDiff}%` : `${comparisonDiff}%`} vs last audit
                     </span>
                   )}
                 </div>
@@ -1396,7 +1415,7 @@ export default function Dashboard() {
                 { label: 'Promotional Claims', key: 'Promotional claims', icon: Sparkles },
                 { label: 'Tone of Voice', key: 'Tone of voice', icon: Info },
               ].map((cat, idx) => {
-                const count = guidelineCoverage[cat.key] || 0;
+                const count = getCategoryRuleCount(cat.key);
                 const IconComponent = cat.icon;
 
                 return (

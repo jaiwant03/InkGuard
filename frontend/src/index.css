@@ -533,6 +533,60 @@ html, body {
   font-weight: 600;
 }
 
+.top-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.top-nav-btn {
+  background: #FFFFFF;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.top-nav-btn:hover {
+  background: var(--bg-surface-secondary);
+  border-color: var(--border-medium);
+}
+
+.top-nav-btn-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+}
+
+.top-nav-btn-icon:hover {
+  color: var(--text-primary);
+}
+
+.mobile-menu-toggle {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .top-nav-links {
+    display: none;
+  }
+  .mobile-menu-toggle {
+    display: flex;
+  }
+  .search-btn-label {
+    display: none;
+  }
+}
+
 /* Dashboard Layout Grids */
 .dashboard-grid-top {
   display: grid;

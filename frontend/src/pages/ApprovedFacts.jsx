@@ -15,6 +15,8 @@ import {
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { ASSET_IMAGES } from '../assets/images';
+import { Check, Sparkles } from 'lucide-react';
 
 export default function ApprovedFacts() {
   const [facts, setFacts] = useState([]);

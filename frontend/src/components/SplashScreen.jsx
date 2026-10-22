@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ShieldCheck, ArrowRight } from 'lucide-react';
+import { ASSET_IMAGES } from '../assets/images';
 
 export default function SplashScreen({ onComplete }) {
   const [progress, setProgress] = useState(0);

@@ -24,7 +24,7 @@ const auditEventSchema = new mongoose.Schema(
     },
     entityType: {
       type: String,
-      enum: ['Draft', 'ReviewRun', 'Finding', 'BrandRule', 'ApprovedFact', 'BrandAsset', 'Workspace', 'Member', 'Approval'],
+      enum: ['User', 'Draft', 'ReviewRun', 'Finding', 'BrandRule', 'ApprovedFact', 'BrandAsset', 'Workspace', 'Member', 'Approval'],
       required: true,
       index: true,
     },

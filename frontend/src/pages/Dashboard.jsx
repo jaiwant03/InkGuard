@@ -1246,8 +1246,8 @@ export default function Dashboard() {
                     Approved Colour Palette
                   </span>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: '8px' }}>
-                    {brandProfile.colors && brandProfile.colors.length > 0 ? (
-                      brandProfile.colors.map((c, i) => (
+                    {(brandProfile.brandColors || brandProfile.colors || []).length > 0 ? (
+                      (brandProfile.brandColors || brandProfile.colors).map((c, i) => (
                         <div
                           key={i}
                           onClick={() => handleCopyHex(c.hex)}
@@ -1325,13 +1325,17 @@ export default function Dashboard() {
                     <div>
                       <div style={{ fontSize: '0.6875rem', color: '#64748B' }}>Primary Body Font</div>
                       <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#0F172A' }}>
-                        {brandProfile.typography?.primaryFont || 'Inter, -apple-system'}
+                        {Array.isArray(brandProfile.typography)
+                          ? brandProfile.typography.find((t) => t.role === 'Body')?.family || 'Inter'
+                          : brandProfile.typography?.primaryFont || 'Inter, -apple-system'}
                       </div>
                     </div>
                     <div>
                       <div style={{ fontSize: '0.6875rem', color: '#64748B' }}>Heading Display Font</div>
                       <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#0F172A' }}>
-                        {brandProfile.typography?.headingFont || 'Plus Jakarta Sans'}
+                        {Array.isArray(brandProfile.typography)
+                          ? brandProfile.typography.find((t) => t.role === 'Heading')?.family || 'Inter'
+                          : brandProfile.typography?.headingFont || 'Plus Jakarta Sans'}
                       </div>
                     </div>
                   </div>

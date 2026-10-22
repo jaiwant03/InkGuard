@@ -71,39 +71,24 @@ export default function SplashScreen({ onComplete }) {
         }}
       >
         <div
+          className="motion-mascot"
           style={{
             position: 'relative',
-            width: '100px',
-            height: '100px',
+            width: '110px',
+            height: '110px',
             marginBottom: 'var(--space-6)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            borderRadius: '50%',
+            overflow: 'hidden',
+            boxShadow: '0 0 40px rgba(37, 99, 235, 0.6), 0 16px 32px rgba(0, 0, 0, 0.4)',
+            border: '3px solid rgba(147, 197, 253, 0.6)',
+            background: 'radial-gradient(circle, #2563EB 0%, #1E1B4B 100%)',
           }}
         >
-          {/* Animated SVG Shield Emblem */}
-          <svg viewBox="0 0 100 100" width="100" height="100" style={{ filter: 'drop-shadow(0 0 24px rgba(37, 99, 235, 0.6))' }}>
-            <defs>
-              <linearGradient id="splashGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#3B82F6" />
-                <stop offset="50%" stopColor="#4F46E5" />
-                <stop offset="100%" stopColor="#6366F1" />
-              </linearGradient>
-            </defs>
-            <path
-              d="M 50,8 L 88,24 C 88,68 66,88 50,96 C 34,88 12,68 12,24 Z"
-              fill="url(#splashGrad)"
-            />
-            {/* Inner checkmark */}
-            <path
-              d="M 32,48 L 45,62 L 70,34"
-              fill="none"
-              stroke="#FFFFFF"
-              strokeWidth="7"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <img
+            src={ASSET_IMAGES.governanceShield}
+            alt="InkGuard Mascot 3D"
+            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+          />
         </div>
 
         <h1

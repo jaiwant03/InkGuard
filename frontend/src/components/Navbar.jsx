@@ -95,14 +95,24 @@ export default function Navbar({ pageTitle = 'Dashboard' }) {
 
         {/* Right: Actions, Notifications, User Profile */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
-          {/* Quick Start Review CTA */}
+          {/* Reference UI Action Button matching Screenshot */}
           <button
             onClick={() => navigate('/review')}
             className="btn btn-primary btn-sm"
-            style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              background: '#2563EB',
+              borderRadius: 'var(--radius-md)',
+              boxShadow: '0 4px 14px rgba(37, 99, 235, 0.35)',
+              fontWeight: 700,
+              padding: '6px 14px',
+            }}
+            title="Instant Brand Compliance Engine"
           >
-            <Plus size={15} />
-            <span>New Content Review</span>
+            <Sparkles size={14} />
+            <span>Dolorow</span>
           </button>
 
           {/* Notifications Dropdown */}

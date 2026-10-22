@@ -18,7 +18,9 @@ router.get('/metrics', async (req, res, next) => {
     const workspaceId = req.workspace._id;
 
     // 1. Total content reviews & average compliance score
-    const reviewRuns = await ReviewRun.find({ workspace: workspaceId }).sort({ createdAt: -1 });
+    const reviewRuns = await ReviewRun.find({ workspace: workspaceId })
+      .populate('draft', 'title contentType')
+      .sort({ createdAt: -1 });
     const totalReviews = reviewRuns.length;
 
     let averageScore = 0;
@@ -102,9 +104,11 @@ router.get('/metrics', async (req, res, next) => {
       .reverse()
       .map((r, idx) => ({
         index: idx + 1,
-        date: new Date(r.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+        date: new Date(r.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+        isoDate: r.createdAt.toISOString(),
         score: r.complianceScore,
         engine: r.engineType,
+        draftTitle: r.draft?.title || 'Brand Review',
       }));
 
     // Calculate period comparison if at least 2 reviews exist

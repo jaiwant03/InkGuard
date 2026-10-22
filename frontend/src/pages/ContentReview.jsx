@@ -10,12 +10,13 @@ import {
   Clock,
   CheckCircle2,
   AlertTriangle,
-  Lightbulb,
+  Shield,
+  Check,
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import { WorkflowStatusBadge } from '../components/Badges';
+import { ASSET_IMAGES } from '../assets/images';
 
 const CONTENT_TYPES = [
   'General marketing text',
@@ -26,7 +27,6 @@ const CONTENT_TYPES = [
   'Product description',
 ];
 
-// Sample test content for fast evaluation
 const VIOLATION_SAMPLE = `Introducing the new ACE platform for high-scale enterprise workloads!
 
 Our cloud architecture is 100% guaranteed to be hack-proof, with zero-risk migration for any legacy cluster. If your engineers experience any difficulties, they can simply contact our helpdesk.
@@ -45,7 +45,6 @@ export default function ContentReview() {
   const [content, setContent] = useState('');
   const [savingDraft, setSavingDraft] = useState(false);
   const [auditing, setAuditing] = useState(false);
-  const [recentDrafts, setRecentDrafts] = useState([]);
   const [activeRules, setActiveRules] = useState([]);
 
   const { workspace } = useAuth();
@@ -53,22 +52,17 @@ export default function ContentReview() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    async function loadContext() {
+    async function loadRules() {
       try {
-        const [draftsRes, rulesRes] = await Promise.all([
-          api.drafts.list({ limit: 5 }),
-          api.brandRules.list({ isActive: true }),
-        ]);
-        if (draftsRes.success) setRecentDrafts(draftsRes.data);
+        const rulesRes = await api.brandRules.list({ isActive: true });
         if (rulesRes.success) setActiveRules(rulesRes.data);
       } catch (err) {
         // silent load
       }
     }
-    loadContext();
+    loadRules();
   }, [workspace]);
 
-  // Handle TXT or MD file import
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -125,7 +119,6 @@ export default function ContentReview() {
 
     try {
       setAuditing(true);
-      // 1. Create draft record
       const draftRes = await api.drafts.create({
         title: title.trim(),
         contentType,
@@ -135,7 +128,6 @@ export default function ContentReview() {
       if (!draftRes.success) throw new Error(draftRes.message);
       const draftId = draftRes.data._id;
 
-      // 2. Trigger Brand Audit Engine
       const auditRes = await api.drafts.review(draftId);
       if (auditRes.success) {
         toast.success(`Audit Complete! Compliance Score: ${auditRes.data.scoreResult.score}%`);
@@ -152,7 +144,7 @@ export default function ContentReview() {
   const charCount = content.length;
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 340px', gap: 'var(--space-6)', alignItems: 'start' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 360px', gap: 'var(--space-6)', alignItems: 'start' }}>
       {/* Left Main Pane: Editor */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
         <div className="card">
@@ -298,73 +290,94 @@ export default function ContentReview() {
         </div>
       </div>
 
-      {/* Right Side Pane: Guidelines Snapshot & Recent Drafts */}
+      {/* Right Side Pane: 3D Animation Motion Card & Guidelines */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
-        {/* Active Rules Snapshot */}
-        <div className="card">
-          <div className="card-header">
-            <h3 className="card-title" style={{ fontSize: '0.9375rem' }}>
-              <BookOpen size={16} /> Active Brand Rules ({activeRules.length})
-            </h3>
+        {/* 3D Motion Reference Card */}
+        <div className="card" style={{ padding: 'var(--space-4)', overflow: 'hidden' }}>
+          <div style={{ fontSize: '0.875rem', fontWeight: 800, color: '#0F172A', marginBottom: '8px' }}>
+            Brand Document Mockup
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '260px', overflowY: 'auto' }}>
-            {activeRules.slice(0, 6).map((rule) => (
+          <div
+            className="doc-mockup-frame"
+            style={{
+              minHeight: '160px',
+              padding: '10px',
+              background: '#FFFFFF',
+              border: '1px solid #E2E8F0',
+              borderRadius: 'var(--radius-lg)',
+            }}
+          >
+            <img
+              src={ASSET_IMAGES.brochureMockup}
+              alt="3D Brochure presentation"
+              className="motion-float"
+              style={{ width: '100%', maxHeight: '150px', objectFit: 'contain' }}
+            />
+          </div>
+
+          <div style={{ marginTop: '12px' }}>
+            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#0F172A', marginBottom: '6px' }}>
+              Typography Standard
+            </div>
+            <div className="typography-checker-card">
+              <div>
+                <div style={{ fontSize: '0.8125rem', fontWeight: 700 }}>Inter / Lato Bold</div>
+                <div style={{ fontSize: '0.6875rem', color: '#64748B' }}>Primary Heading Hierarchy</div>
+              </div>
               <div
-                key={rule._id}
                 style={{
-                  padding: '8px',
-                  borderRadius: 'var(--radius-sm)',
-                  background: 'var(--bg-surface-secondary)',
-                  fontSize: '0.75rem',
+                  width: '18px',
+                  height: '18px',
+                  borderRadius: '50%',
+                  background: '#10B981',
+                  color: '#FFFFFF',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
-                <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{rule.title}</div>
-                <div style={{ color: 'var(--text-tertiary)', marginTop: '2px' }}>
-                  {rule.preferredWording ? `Use: "${rule.preferredWording}"` : rule.category}
-                </div>
+                <Check size={11} strokeWidth={3.5} />
               </div>
-            ))}
+            </div>
+
+            <div className="typography-checker-card" style={{ marginBottom: 0 }}>
+              <div>
+                <div style={{ fontSize: '0.8125rem', fontWeight: 700 }}>Open Sans Regular</div>
+                <div style={{ fontSize: '0.6875rem', color: '#64748B' }}>Body Standard</div>
+              </div>
+              <div
+                style={{
+                  width: '18px',
+                  height: '18px',
+                  borderRadius: '50%',
+                  background: '#10B981',
+                  color: '#FFFFFF',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Check size={11} strokeWidth={3.5} />
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Recent Workspace Drafts */}
-        <div className="card">
-          <div className="card-header">
-            <h3 className="card-title" style={{ fontSize: '0.9375rem' }}>
-              <Clock size={16} /> Recent Drafts
-            </h3>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {recentDrafts.length === 0 ? (
-              <span style={{ fontSize: '0.8125rem', color: 'var(--text-tertiary)' }}>No previous drafts.</span>
-            ) : (
-              recentDrafts.map((d) => (
-                <div
-                  key={d._id}
-                  onClick={() => navigate(`/review/${d._id}`)}
-                  style={{
-                    padding: '8px 10px',
-                    borderRadius: 'var(--radius-sm)',
-                    border: '1px solid var(--border-light)',
-                    cursor: 'pointer',
-                    fontSize: '0.8125rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  <div style={{ minWidth: 0, paddingRight: '6px' }}>
-                    <div style={{ fontWeight: 600, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {d.title}
-                    </div>
-                    <div style={{ fontSize: '0.6875rem', color: 'var(--text-tertiary)' }}>
-                      {d.contentType} • Score: {d.latestComplianceScore !== null ? `${d.latestComplianceScore}%` : 'Not audited'}
-                    </div>
-                  </div>
-                  <WorkflowStatusBadge status={d.status} />
-                </div>
-              ))
-            )}
+        {/* Mascot Info Card */}
+        <div className="card" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', padding: 'var(--space-4)' }}>
+          <img
+            src={ASSET_IMAGES.governanceShield}
+            alt="Mascot shield"
+            className="motion-mascot"
+            style={{ width: '48px', height: '48px', objectFit: 'contain' }}
+          />
+          <div>
+            <div style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+              Deterministic Rule Engine
+            </div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+              {activeRules.length} rules loaded for immediate verification.
+            </div>
           </div>
         </div>
       </div>

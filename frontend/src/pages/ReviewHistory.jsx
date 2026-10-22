@@ -14,6 +14,8 @@ import {
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { ASSET_IMAGES } from '../assets/images';
+import { Check } from 'lucide-react';
 
 export default function ReviewHistory() {
   const [activeTab, setActiveTab] = useState('audit'); // 'audit' | 'versions'
@@ -68,11 +70,113 @@ export default function ReviewHistory() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
+      {/* Reference UI Hero Showcase Card with 3D Motion */}
+      <div
+        style={{
+          background: '#FFFFFF',
+          borderRadius: 'var(--radius-2xl)',
+          padding: 'var(--space-6)',
+          border: '1px solid #E2E8F0',
+          boxShadow: '0 20px 50px -10px rgba(15, 23, 42, 0.08)',
+          display: 'grid',
+          gridTemplateColumns: '280px minmax(0, 1fr) 280px',
+          gap: 'var(--space-6)',
+          alignItems: 'center',
+        }}
+      >
+        {/* Left: 3D Brand Document Preview with Moving Motion Effect */}
+        <div style={{ textAlign: 'center' }}>
+          <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '8px' }}>
+            Revision Ledger
+          </span>
+          <div
+            className="motion-float"
+            style={{
+              borderRadius: 'var(--radius-xl)',
+              overflow: 'hidden',
+              boxShadow: '0 16px 36px -8px rgba(37, 99, 235, 0.28)',
+              border: '1px solid #E2E8F0',
+              background: '#FFFFFF',
+              maxHeight: '190px',
+            }}
+          >
+            <img
+              src={ASSET_IMAGES.brandDocPreview}
+              alt="Version Audit Ledger"
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+            />
+          </div>
+          <div style={{ marginTop: '8px', display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', color: '#10B981', fontWeight: 600, background: '#ECFDF5', padding: '3px 10px', borderRadius: '999px' }}>
+            <span className="motion-pulse-check" style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#10B981', display: 'inline-block' }} />
+            Immutable Audit Trail
+          </div>
+        </div>
+
+        {/* Center: History Overview & Metrics */}
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+            <span className="badge" style={{ background: '#EFF6FF', color: '#2563EB', border: '1px solid #BFDBFE' }}>
+              Governance Ledger
+            </span>
+            <span style={{ fontSize: '0.8125rem', color: '#64748B' }}>
+              {auditLogs.length} Logged Audit Events
+            </span>
+          </div>
+          <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0F172A', letterSpacing: '-0.02em', marginBottom: '6px' }}>
+            Review History & Audit Trail
+          </h1>
+          <p style={{ fontSize: '0.875rem', color: '#475569', lineHeight: 1.5, marginBottom: 'var(--space-4)' }}>
+            Immutable corporate governance log, revision comparisons, and approval timelines ensuring complete compliance accountability.
+          </p>
+
+          {/* Quick Metrics Bar */}
+          <div style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
+            <div style={{ background: '#F8FAFC', padding: '8px 14px', borderRadius: 'var(--radius-lg)', border: '1px solid #E2E8F0' }}>
+              <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block' }}>Total Audit Entries</span>
+              <span style={{ fontSize: '1.125rem', fontWeight: 800, color: '#2563EB' }}>{auditLogs.length}</span>
+            </div>
+            <div style={{ background: '#F8FAFC', padding: '8px 14px', borderRadius: 'var(--radius-lg)', border: '1px solid #E2E8F0' }}>
+              <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block' }}>Drafts Tracked</span>
+              <span style={{ fontSize: '1.125rem', fontWeight: 800, color: '#10B981' }}>{drafts.length}</span>
+            </div>
+            <div style={{ background: '#F8FAFC', padding: '8px 14px', borderRadius: 'var(--radius-lg)', border: '1px solid #E2E8F0' }}>
+              <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block' }}>Data Integrity</span>
+              <span style={{ fontSize: '1.125rem', fontWeight: 800, color: '#10B981' }}>100% Verified</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Right: Extracted Guidelines & Compliance Badges */}
+        <div style={{ background: '#F8FAFC', padding: 'var(--space-4)', borderRadius: 'var(--radius-xl)', border: '1px solid #E2E8F0' }}>
+          <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', marginBottom: '8px' }}>
+            Extracted Guidelines
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#FFFFFF', padding: '6px 10px', borderRadius: 'var(--radius-md)', marginBottom: '8px', border: '1px solid #E2E8F0' }}>
+            <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#0F172A' }}>Logo Usage</span>
+            <span style={{ fontSize: '0.75rem', color: '#2563EB', fontWeight: 700 }}>Dolorow</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#FFFFFF', padding: '6px 10px', borderRadius: 'var(--radius-md)', marginBottom: '8px', border: '1px solid #E2E8F0' }}>
+            <span style={{ fontSize: '0.8125rem', color: '#475569' }}>Messaging Tone</span>
+            <span style={{ fontSize: '0.6875rem', background: '#EFF6FF', color: '#2563EB', padding: '2px 8px', borderRadius: '999px', fontWeight: 600 }}>Setew</span>
+          </div>
+
+          <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', margin: '10px 0 6px 0' }}>
+            Typography Checker
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#FFFFFF', padding: '6px 10px', borderRadius: 'var(--radius-md)', border: '1px solid #E2E8F0' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#0F172A' }}>Lato Bold</span>
+            <div className="motion-pulse-check" style={{ width: '18px', height: '18px', borderRadius: '50%', background: '#10B981', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Check size={11} strokeWidth={3} />
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
         <div>
           <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)' }}>
-            Review History & Audit Trail
+            Governance Timeline & Revision Trees
           </h2>
           <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
             Immutable corporate governance log, revision comparisons, and approval timelines.

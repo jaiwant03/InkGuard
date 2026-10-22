@@ -575,12 +575,51 @@ export default function BrandGuidelines() {
             </div>
           </div>
 
-          {/* Brand Colors Palette */}
+          {/* Brand Colors Palette with Reference 2x5 Color Dot Matrix */}
           <div className="card">
-            <h3 className="card-title" style={{ marginBottom: 'var(--space-2)' }}>Brand Color Palette</h3>
-            <p className="card-subtitle" style={{ marginBottom: 'var(--space-4)' }}>
-              Official brand colors verified for primary, secondary, and neutral components.
-            </p>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-2)' }}>
+              <div>
+                <h3 className="card-title">Brand Color Palette</h3>
+                <p className="card-subtitle">
+                  Official brand colors verified for primary, secondary, and neutral components.
+                </p>
+              </div>
+              {/* Reference 2x5 Dot Matrix Indicator */}
+              <div style={{ background: '#F8FAFC', padding: '8px 12px', borderRadius: 'var(--radius-lg)', border: '1px solid #E2E8F0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569' }}>Quick Dot Matrix:</span>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '6px' }}>
+                  {[
+                    { hex: '#0E7490', checked: false },
+                    { hex: '#2563EB', checked: true },
+                    { hex: '#7C3AED', checked: false },
+                    { hex: '#DC2626', checked: false },
+                    { hex: '#D97706', checked: false },
+                    { hex: '#06B6D4', checked: false },
+                    { hex: '#6366F1', checked: true },
+                    { hex: '#9333EA', checked: false },
+                    { hex: '#F43F5E', checked: false },
+                    { hex: '#EAB308', checked: false },
+                  ].map((dot, dIdx) => (
+                    <div
+                      key={dIdx}
+                      style={{
+                        width: '18px',
+                        height: '18px',
+                        borderRadius: '50%',
+                        backgroundColor: dot.hex,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                      }}
+                      title={dot.hex}
+                    >
+                      {dot.checked && <Check size={11} color="#FFFFFF" strokeWidth={3} />}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--space-4)' }}>
               {(profileForm.brandColors || []).map((color, idx) => (

@@ -91,25 +91,31 @@ export default function Login() {
           zIndex: 1,
         }}
       >
-        {/* Brand Header */}
+        {/* Brand Header with 3D Motion Mascot */}
         <div style={{ textAlign: 'center', marginBottom: 'var(--space-6)' }}>
           <div
+            className="motion-mascot"
             style={{
-              width: '52px',
-              height: '52px',
-              borderRadius: 'var(--radius-xl)',
-              background: 'var(--gradient-primary)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto var(--space-4) auto',
-              boxShadow: '0 6px 16px rgba(37, 99, 235, 0.35)',
+              width: '84px',
+              height: '84px',
+              margin: '0 auto var(--space-3) auto',
+              borderRadius: '50%',
+              overflow: 'hidden',
+              boxShadow: '0 12px 28px -4px rgba(37, 99, 235, 0.4)',
+              border: '2px solid #DBEAFE',
+              background: 'radial-gradient(circle, #EFF6FF 0%, #DBEAFE 100%)',
             }}
           >
-            <svg viewBox="0 0 100 100" width="30" height="30">
-              <path d="M 50,10 L 85,25 C 85,65 65,85 50,96 C 35,85 15,65 15,25 Z" fill="none" stroke="#FFFFFF" strokeWidth="10" />
-              <path d="M 35,50 L 46,62 L 68,36" fill="none" stroke="#FFFFFF" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            <img
+              src={ASSET_IMAGES.governanceShield}
+              alt="Governance Mascot 3D"
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+            />
+          </div>
+
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', color: '#10B981', fontWeight: 600, background: '#ECFDF5', padding: '3px 10px', borderRadius: '999px', marginBottom: '8px' }}>
+            <span className="motion-pulse-check" style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#10B981', display: 'inline-block' }} />
+            Brand Governance Engine
           </div>
 
           <h1 style={{ fontSize: '1.625rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
@@ -118,6 +124,18 @@ export default function Login() {
           <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
             Create with confidence. Publish with consistency.
           </p>
+
+          {/* Reference Palette Dot Matrix */}
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', marginTop: '10px' }}>
+            {['#2563EB', '#4F46E5', '#0284C7', '#10B981', '#F59E0B'].map((hex, idx) => (
+              <span
+                key={idx}
+                className="color-dot"
+                style={{ width: '14px', height: '14px', backgroundColor: hex }}
+                title={hex}
+              />
+            ))}
+          </div>
         </div>
 
         {/* Demo Fast Login Buttons */}

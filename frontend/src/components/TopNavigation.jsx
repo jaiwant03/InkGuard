@@ -168,64 +168,111 @@ export default function TopNavigation({ onOpenSearch, onToggleMobileSidebar, isS
     <>
       <header className="top-nav">
         <div className="top-nav-inner">
-          {/* LEFT: Shield Emblem Logo & Brand Title */}
-          <div className="top-nav-brand">
-            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
-              <div
-                style={{
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '10px',
-                  background: 'linear-gradient(135deg, #1E40AF, #2563EB)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 4px 12px rgba(37, 99, 235, 0.25)',
-                  flexShrink: 0,
-                }}
+          {/* LEFT: Mobile toggle & Brand / Breadcrumb */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            {isSidebarLayout && (
+              <button
+                type="button"
+                onClick={onToggleMobileSidebar}
+                className="top-nav-btn top-nav-btn-icon mobile-menu-toggle"
+                style={{ display: 'none' }}
+                aria-label="Toggle Sidebar Navigation"
               >
-                <Shield size={20} color="#FFFFFF" strokeWidth={2.2} />
+                <Menu size={20} />
+              </button>
+            )}
+
+            {!isSidebarLayout ? (
+              <div className="top-nav-brand">
+                <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
+                  <div
+                    style={{
+                      width: '36px',
+                      height: '36px',
+                      borderRadius: '10px',
+                      background: 'linear-gradient(135deg, #2563EB, #7C3AED)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxShadow: '0 4px 12px rgba(37, 99, 235, 0.25)',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <Shield size={20} color="#FFFFFF" strokeWidth={2.2} />
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <span
+                      style={{
+                        fontSize: '1.125rem',
+                        fontWeight: 800,
+                        letterSpacing: '-0.02em',
+                        color: '#0F172A',
+                        lineHeight: 1.15,
+                      }}
+                    >
+                      INKGUARD
+                    </span>
+                    <span
+                      style={{
+                        fontSize: '0.625rem',
+                        fontWeight: 600,
+                        letterSpacing: '0.04em',
+                        color: '#64748B',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      Brand Governance Platform
+                    </span>
+                  </div>
+                </Link>
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span
                   style={{
-                    fontSize: '1.125rem',
-                    fontWeight: 800,
-                    letterSpacing: '-0.02em',
-                    color: '#0F172A',
-                    lineHeight: 1.15,
-                  }}
-                >
-                  INKGUARD
-                </span>
-                <span
-                  style={{
-                    fontSize: '0.625rem',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '4px 10px',
+                    borderRadius: '999px',
+                    background: '#ECFDF5',
+                    color: '#059669',
+                    fontSize: '0.75rem',
                     fontWeight: 600,
-                    letterSpacing: '0.04em',
-                    color: '#64748B',
-                    textTransform: 'uppercase',
+                    border: '1px solid #A7F3D0',
                   }}
                 >
-                  Brand Governance Platform
+                  <span
+                    className="motion-pulse-check"
+                    style={{
+                      width: '6px',
+                      height: '6px',
+                      borderRadius: '50%',
+                      background: '#10B981',
+                      display: 'inline-block',
+                    }}
+                  />
+                  AI Governance Active
                 </span>
               </div>
-            </Link>
+            )}
           </div>
 
-          {/* CENTER: Main Horizontal Navigation Links */}
-          <nav className="top-nav-links" aria-label="Main Navigation">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                end={item.end}
-                className={({ isActive }) => `top-nav-link ${isActive ? 'active' : ''}`}
-              >
-                {item.label}
-              </NavLink>
-            ))}
-          </nav>
+          {/* CENTER: Main Horizontal Navigation Links (Only shown when not in sidebar layout) */}
+          {!isSidebarLayout && (
+            <nav className="top-nav-links" aria-label="Main Navigation">
+              {navItems.map((item) => (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  end={item.end}
+                  className={({ isActive }) => `top-nav-link ${isActive ? 'active' : ''}`}
+                >
+                  {item.label}
+                </NavLink>
+              ))}
+            </nav>
+          )}
 
           {/* RIGHT: Actions, Search, Notifications, Avatar */}
           <div className="top-nav-actions">

@@ -249,6 +249,7 @@ html, body {
   background: conic-gradient(from 180deg, transparent 0%, rgba(37, 99, 235, 0.4) 50%, transparent 100%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
   pointer-events: none;
   animation: splashOrbitCounterClockwise 5.5s linear infinite;

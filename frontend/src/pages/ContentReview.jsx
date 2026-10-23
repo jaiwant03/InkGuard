@@ -298,20 +298,17 @@ export default function ContentReview() {
             Brand Document Mockup
           </div>
           <div
-            className="doc-mockup-frame"
+            className="ui-seamless-mockup-frame"
             style={{
-              minHeight: '160px',
-              padding: '10px',
-              background: '#FFFFFF',
-              border: '1px solid #E2E8F0',
-              borderRadius: 'var(--radius-lg)',
+              minHeight: '150px',
+              padding: '12px',
             }}
           >
             <img
               src={ASSET_IMAGES.brochureMockup}
               alt="3D Brochure presentation"
               className="motion-float"
-              style={{ width: '100%', maxHeight: '150px', objectFit: 'contain' }}
+              style={{ width: '100%', maxHeight: '140px', objectFit: 'contain' }}
             />
           </div>
 
@@ -365,12 +362,14 @@ export default function ContentReview() {
 
         {/* Mascot Info Card */}
         <div className="card" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', padding: 'var(--space-4)' }}>
-          <img
-            src={ASSET_IMAGES.governanceShield}
-            alt="Mascot shield"
-            className="motion-mascot"
-            style={{ width: '48px', height: '48px', objectFit: 'contain' }}
-          />
+          <div className="ui-integrated-graphic" style={{ width: '46px', height: '46px' }}>
+            <img
+              src={ASSET_IMAGES.governanceShield}
+              alt="Mascot shield"
+              className="ui-seamless-image motion-mascot"
+              style={{ width: '100%', height: '100%' }}
+            />
+          </div>
           <div>
             <div style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-primary)' }}>
               Deterministic Rule Engine

@@ -86,22 +86,18 @@ export default function GovernanceInsights() {
             Intelligence Oracle
           </span>
           <div
-            className="motion-mascot"
+            className="ui-integrated-graphic motion-mascot"
             style={{
-              width: '140px',
-              height: '140px',
+              width: '120px',
+              height: '120px',
               margin: '0 auto',
-              borderRadius: '50%',
-              overflow: 'hidden',
-              boxShadow: '0 16px 36px -6px rgba(37, 99, 235, 0.3)',
-              border: '2px solid #DBEAFE',
-              background: 'radial-gradient(circle, #EFF6FF 0%, #DBEAFE 100%)',
             }}
           >
             <img
               src={ASSET_IMAGES.governanceShield}
               alt="Governance Mascot 3D"
-              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+              className="ui-seamless-image"
+              style={{ width: '100%', height: '100%' }}
             />
           </div>
           <div style={{ marginTop: '8px', display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', color: '#10B981', fontWeight: 600, background: '#ECFDF5', padding: '3px 10px', borderRadius: '999px' }}>

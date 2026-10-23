@@ -14,7 +14,12 @@ import {
   Plus,
   ChevronLeft,
   ChevronRight,
-  ShieldAlert,
+  Shield,
+  LogOut,
+  X,
+  Check,
+  Building,
+  Sparkles,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
@@ -22,7 +27,7 @@ import { useToast } from '../context/ToastContext';
 import { ASSET_IMAGES } from '../assets/images';
 
 export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onCloseMobile }) {
-  const { workspace, role, user, switchWorkspace } = useAuth();
+  const { workspace, role, user, switchWorkspace, logout } = useAuth();
   const [workspaces, setWorkspaces] = useState([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -36,11 +41,11 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
     async function loadWorkspaces() {
       try {
         const res = await api.workspaces.list();
-        if (res.success) {
+        if (res.success && res.data) {
           setWorkspaces(res.data);
         }
       } catch (err) {
-        // silent load
+        // silent
       }
     }
     loadWorkspaces();
@@ -81,72 +86,104 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+      toast.info('Signed out.');
+      navigate('/login');
+    } catch (err) {
+      toast.error('Logout error: ' + err.message);
+    }
+  };
+
   const navItems = [
-    { name: 'Dashboard', path: '/', icon: LayoutDashboard },
-    { name: 'Brand Guidelines', path: '/guidelines', icon: BookOpen },
-    { name: 'Approved Facts', path: '/facts', icon: CheckCircle2 },
-    { name: 'Brand Assets', path: '/assets', icon: ImageIcon },
-    { name: 'Content Review', path: '/review', icon: FileCheck2 },
-    { name: 'Approval Queue', path: '/approvals', icon: ClipboardList },
-    { name: 'Review History', path: '/history', icon: History },
-    { name: 'Governance Insights', path: '/insights', icon: BarChart3 },
-    { name: 'Workspace Settings', path: '/settings', icon: Settings },
+    { name: 'Dashboard', path: '/', icon: LayoutDashboard, color: '#2563EB', lightBg: '#EFF6FF', end: true },
+    { name: 'Brand Guidelines', path: '/guidelines', icon: BookOpen, color: '#7C3AED', lightBg: '#F5F3FF' },
+    { name: 'Approved Facts', path: '/facts', icon: CheckCircle2, color: '#10B981', lightBg: '#ECFDF5' },
+    { name: 'Brand Assets', path: '/assets', icon: ImageIcon, color: '#06B6D4', lightBg: '#ECFEFF' },
+    { name: 'Content Review', path: '/review', icon: FileCheck2, color: '#F43F5E', lightBg: '#FFF1F2' },
+    { name: 'Approval Queue', path: '/approvals', icon: ClipboardList, color: '#F59E0B', lightBg: '#FFFBEB' },
+    { name: 'Review History', path: '/history', icon: History, color: '#3B82F6', lightBg: '#EFF6FF' },
+    { name: 'Governance Insights', path: '/insights', icon: BarChart3, color: '#8B5CF6', lightBg: '#F5F3FF' },
+    { name: 'Workspace Settings', path: '/settings', icon: Settings, color: '#64748B', lightBg: '#F1F5F9' },
   ];
 
-  const sidebarWidth = collapsed ? 'var(--sidebar-collapsed-width)' : 'var(--sidebar-width)';
+  const sidebarWidth = collapsed ? '74px' : '260px';
 
   return (
     <>
+      {/* Mobile Backdrop Overlay */}
+      {mobileOpen && (
+        <div
+          onClick={onCloseMobile}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(15, 23, 42, 0.45)',
+            backdropFilter: 'blur(4px)',
+            zIndex: 998,
+          }}
+        />
+      )}
+
       <aside
         style={{
           width: sidebarWidth,
-          background: 'var(--bg-surface)',
-          borderRight: '1px solid var(--border-light)',
+          background: '#FFFFFF',
+          borderRight: '1px solid #E2E8F0',
           display: 'flex',
           flexDirection: 'column',
-          transition: 'width var(--transition-normal)',
+          transition: 'width 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
           height: '100vh',
           position: 'sticky',
           top: 0,
-          zIndex: 100,
+          zIndex: 999,
           userSelect: 'none',
+          boxShadow: '1px 0 10px rgba(15, 23, 42, 0.03)',
         }}
+        className={mobileOpen ? 'sidebar-mobile-open' : ''}
       >
         {/* Brand Header */}
         <div
           style={{
-            height: 'var(--topbar-height)',
+            height: '68px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: collapsed ? 'center' : 'space-between',
-            padding: collapsed ? '0' : '0 var(--space-5)',
-            borderBottom: '1px solid var(--border-subtle)',
+            padding: collapsed ? '0' : '0 18px',
+            borderBottom: '1px solid #F1F5F9',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0 }}>
             {/* Logo Shield */}
             <div
               style={{
                 width: '36px',
                 height: '36px',
-                borderRadius: 'var(--radius-md)',
-                background: 'var(--gradient-primary)',
+                borderRadius: '11px',
+                background: 'linear-gradient(135deg, #2563EB 0%, #7C3AED 100%)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 4px 12px rgba(37, 99, 235, 0.3)',
+                boxShadow: '0 4px 14px rgba(37, 99, 235, 0.32)',
                 flexShrink: 0,
               }}
             >
-              <svg viewBox="0 0 100 100" width="22" height="22">
-                <path d="M 50,10 L 85,25 C 85,65 65,85 50,95 C 35,85 15,65 15,25 Z" fill="none" stroke="#FFFFFF" strokeWidth="10" />
-                <path d="M 35,50 L 46,62 L 68,36" fill="none" stroke="#FFFFFF" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+              <Shield size={20} color="#FFFFFF" strokeWidth={2.3} />
             </div>
 
             {!collapsed && (
-              <div>
-                <span style={{ fontSize: '1.1875rem', fontWeight: 800, letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>
+              <div style={{ minWidth: 0 }}>
+                <span
+                  style={{
+                    fontSize: '1.1875rem',
+                    fontWeight: 850,
+                    letterSpacing: '-0.025em',
+                    color: '#0F172A',
+                    display: 'block',
+                    lineHeight: 1.15,
+                  }}
+                >
                   INKGUARD
                 </span>
                 <span
@@ -154,28 +191,32 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
                     display: 'block',
                     fontSize: '0.625rem',
                     fontWeight: 700,
-                    letterSpacing: '0.08em',
-                    color: 'var(--color-primary)',
+                    letterSpacing: '0.06em',
+                    color: '#2563EB',
                     textTransform: 'uppercase',
-                    marginTop: '-2px',
                   }}
                 >
-                  Governance Platform
+                  Governance Engine
                 </span>
               </div>
             )}
           </div>
 
-          {!collapsed && (
+          {!collapsed && onToggleCollapse && (
             <button
               onClick={onToggleCollapse}
               style={{
                 padding: '6px',
-                borderRadius: 'var(--radius-sm)',
-                color: 'var(--text-tertiary)',
+                borderRadius: '8px',
+                color: '#64748B',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
+                transition: 'all 0.15s ease',
               }}
+              title="Collapse Sidebar"
               aria-label="Collapse sidebar"
             >
               <ChevronLeft size={18} />
@@ -185,82 +226,111 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
 
         {/* Workspace Switcher Selector */}
         {!collapsed && (
-          <div style={{ padding: 'var(--space-4) var(--space-5)', position: 'relative' }}>
+          <div style={{ padding: '14px 16px 8px 16px', position: 'relative' }}>
             <div
               onClick={() => setDropdownOpen(!dropdownOpen)}
               style={{
-                padding: '10px 12px',
-                borderRadius: 'var(--radius-lg)',
-                background: 'var(--bg-surface-secondary)',
-                border: '1px solid var(--border-light)',
+                padding: '8px 12px',
+                borderRadius: '12px',
+                background: '#F8FAFC',
+                border: '1px solid #E2E8F0',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
+                transition: 'all 0.15s ease',
               }}
+              title="Switch Workspace"
             >
-              <div style={{ minWidth: 0 }}>
-                <span style={{ display: 'block', fontSize: '0.6875rem', color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase' }}>
-                  Workspace
-                </span>
-                <span
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+                <div
                   style={{
-                    display: 'block',
-                    fontSize: '0.875rem',
-                    fontWeight: 700,
-                    color: 'var(--text-primary)',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
+                    width: '26px',
+                    height: '26px',
+                    borderRadius: '7px',
+                    background: '#EFF6FF',
+                    color: '#2563EB',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
                   }}
                 >
-                  {workspace?.name || 'Default Workspace'}
-                </span>
+                  <Building size={14} />
+                </div>
+                <div style={{ minWidth: 0 }}>
+                  <span
+                    style={{
+                      display: 'block',
+                      fontSize: '0.8125rem',
+                      fontWeight: 700,
+                      color: '#0F172A',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {workspace?.name || 'Default Workspace'}
+                  </span>
+                </div>
               </div>
-              <ChevronDown size={16} color="var(--text-tertiary)" style={{ transform: dropdownOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+              <ChevronDown
+                size={14}
+                color="#64748B"
+                style={{
+                  transform: dropdownOpen ? 'rotate(180deg)' : 'none',
+                  transition: 'transform 0.2s',
+                  flexShrink: 0,
+                }}
+              />
             </div>
 
-            {/* Dropdown menu */}
+            {/* Dropdown Menu */}
             {dropdownOpen && (
               <div
                 style={{
                   position: 'absolute',
-                  top: 'calc(100% - 8px)',
-                  left: 'var(--space-5)',
-                  right: 'var(--space-5)',
-                  background: 'var(--bg-surface)',
-                  borderRadius: 'var(--radius-lg)',
-                  border: '1px solid var(--border-light)',
-                  boxShadow: 'var(--shadow-dropdown)',
+                  top: 'calc(100% - 2px)',
+                  left: '16px',
+                  right: '16px',
+                  background: '#FFFFFF',
+                  borderRadius: '14px',
+                  border: '1px solid #E2E8F0',
+                  boxShadow: '0 12px 32px rgba(15, 23, 42, 0.12)',
                   zIndex: 200,
                   padding: '6px',
                 }}
               >
                 <div style={{ maxHeight: '180px', overflowY: 'auto' }}>
-                  {workspaces.map((ws) => (
-                    <div
-                      key={ws._id}
-                      onClick={() => handleSwitch(ws._id)}
-                      style={{
-                        padding: '8px 10px',
-                        borderRadius: 'var(--radius-sm)',
-                        cursor: 'pointer',
-                        fontSize: '0.8125rem',
-                        fontWeight: 600,
-                        color: ws._id === workspace?._id ? 'var(--color-primary)' : 'var(--text-primary)',
-                        background: ws._id === workspace?._id ? 'var(--color-primary-light)' : 'transparent',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                      }}
-                    >
-                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ws.name}</span>
-                      <span style={{ fontSize: '0.6875rem', color: 'var(--text-tertiary)', textTransform: 'capitalize' }}>{ws.role}</span>
-                    </div>
-                  ))}
+                  {workspaces.map((ws) => {
+                    const isSelected = ws._id === workspace?._id;
+                    return (
+                      <div
+                        key={ws._id}
+                        onClick={() => handleSwitch(ws._id)}
+                        style={{
+                          padding: '8px 10px',
+                          borderRadius: '8px',
+                          cursor: 'pointer',
+                          fontSize: '0.8125rem',
+                          fontWeight: isSelected ? 700 : 500,
+                          color: isSelected ? '#2563EB' : '#0F172A',
+                          background: isSelected ? '#EFF6FF' : 'transparent',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                        }}
+                      >
+                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          {ws.name}
+                        </span>
+                        {isSelected && <Check size={14} color="#2563EB" />}
+                      </div>
+                    );
+                  })}
                 </div>
 
-                <div style={{ borderTop: '1px solid var(--border-subtle)', marginTop: '4px', paddingTop: '4px' }}>
+                <div style={{ borderTop: '1px solid #F1F5F9', marginTop: '4px', paddingTop: '4px' }}>
                   <button
                     onClick={() => {
                       setDropdownOpen(false);
@@ -269,13 +339,16 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
                     style={{
                       width: '100%',
                       padding: '8px 10px',
-                      borderRadius: 'var(--radius-sm)',
+                      borderRadius: '8px',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '6px',
                       fontSize: '0.8125rem',
                       fontWeight: 600,
-                      color: 'var(--color-primary)',
+                      color: '#2563EB',
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
                     }}
                   >
                     <Plus size={14} /> Create Workspace
@@ -286,27 +359,31 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
           </div>
         )}
 
-        {/* Collapsed expand toggle button */}
-        {collapsed && (
-          <div style={{ display: 'flex', justifyContent: 'center', padding: 'var(--space-3) 0' }}>
+        {/* Collapsed Expand Toggle */}
+        {collapsed && onToggleCollapse && (
+          <div style={{ display: 'flex', justifyContent: 'center', padding: '12px 0' }}>
             <button
               onClick={onToggleCollapse}
               style={{
                 padding: '6px',
-                borderRadius: 'var(--radius-sm)',
-                color: 'var(--text-tertiary)',
+                borderRadius: '8px',
+                color: '#64748B',
+                background: '#F8FAFC',
+                border: '1px solid #E2E8F0',
+                cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
               }}
+              title="Expand Sidebar"
               aria-label="Expand sidebar"
             >
-              <ChevronRight size={18} />
+              <ChevronRight size={16} />
             </button>
           </div>
         )}
 
-        {/* Navigation Items */}
-        <nav style={{ flex: 1, padding: collapsed ? 'var(--space-2)' : '0 var(--space-4)', overflowY: 'auto' }}>
+        {/* Main Navigation Items with Gradient Active State */}
+        <nav style={{ flex: 1, padding: collapsed ? '8px 10px' : '8px 14px', overflowY: 'auto' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -314,54 +391,68 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
                 <NavLink
                   key={item.path}
                   to={item.path}
+                  end={item.end}
+                  className={({ isActive }) => `sidebar-nav-link ${isActive ? 'active' : ''}`}
                   style={({ isActive }) => ({
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: collapsed ? '0' : 'var(--space-3)',
                     justifyContent: collapsed ? 'center' : 'flex-start',
-                    padding: collapsed ? '12px 0' : '10px 14px',
-                    borderRadius: 'var(--radius-md)',
-                    fontSize: '0.875rem',
-                    fontWeight: isActive ? 600 : 500,
-                    color: isActive ? 'var(--color-primary)' : 'var(--text-secondary)',
-                    background: isActive ? 'var(--color-primary-light)' : 'transparent',
-                    transition: 'all var(--transition-fast)',
-                    textDecoration: 'none',
+                    padding: collapsed ? '10px 0' : '9px 12px',
                   })}
                   title={collapsed ? item.name : undefined}
                 >
-                  <Icon size={19} />
-                  {!collapsed && <span>{item.name}</span>}
+                  {/* Colourful Icon Box */}
+                  <div
+                    className="sidebar-icon-box"
+                    style={{
+                      width: '30px',
+                      height: '30px',
+                      borderRadius: '8px',
+                      background: item.lightBg,
+                      color: item.color,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                      transition: 'all 0.18s ease',
+                    }}
+                  >
+                    <Icon size={17} strokeWidth={2.2} />
+                  </div>
+
+                  {!collapsed && (
+                    <span style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {item.name}
+                    </span>
+                  )}
                 </NavLink>
               );
             })}
           </div>
         </nav>
 
-        {/* 3D Mascot AI Governance Widget */}
+        {/* 3D Mascot AI Governance Card */}
         {!collapsed && (
-          <div style={{ padding: '0 var(--space-4) var(--space-3) var(--space-4)' }}>
+          <div style={{ padding: '0 14px 10px 14px' }}>
             <div
               style={{
-                background: 'linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%)',
-                borderRadius: 'var(--radius-xl)',
+                background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.06) 0%, rgba(124, 58, 237, 0.08) 100%)',
+                borderRadius: '16px',
                 padding: '10px 12px',
-                border: '1px solid #BFDBFE',
+                border: '1px solid rgba(191, 219, 254, 0.8)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '10px',
               }}
             >
               <div
-                className="motion-mascot"
                 style={{
-                  width: '38px',
-                  height: '38px',
+                  width: '36px',
+                  height: '36px',
                   borderRadius: '50%',
                   overflow: 'hidden',
                   flexShrink: 0,
-                  boxShadow: '0 4px 10px rgba(37, 99, 235, 0.3)',
-                  border: '1.5px solid #93C5FD',
+                  boxShadow: '0 4px 10px rgba(37, 99, 235, 0.25)',
+                  border: '1.5px solid #BFDBFE',
+                  background: '#FFFFFF',
                 }}
               >
                 <img
@@ -370,12 +461,23 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                 />
               </div>
-              <div style={{ minWidth: 0 }}>
-                <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#1E40AF', display: 'block', lineHeight: 1.2 }}>
-                  InkGuard AI
-                </span>
-                <span style={{ fontSize: '0.6875rem', color: '#2563EB', fontWeight: 600 }}>
-                  Deterministic Engine
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#1E40AF', lineHeight: 1.2 }}>
+                    AI Guardrails
+                  </span>
+                  <span
+                    style={{
+                      width: '6px',
+                      height: '6px',
+                      borderRadius: '50%',
+                      background: '#10B981',
+                      display: 'inline-block',
+                    }}
+                  />
+                </div>
+                <span style={{ fontSize: '0.6875rem', color: '#6366F1', fontWeight: 600 }}>
+                  Deterministic Scans
                 </span>
               </div>
             </div>
@@ -385,62 +487,84 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
         {/* User Mini Profile Footer */}
         <div
           style={{
-            padding: collapsed ? 'var(--space-3) 0' : 'var(--space-4) var(--space-5)',
-            borderTop: '1px solid var(--border-subtle)',
+            padding: collapsed ? '12px 0' : '12px 16px',
+            borderTop: '1px solid #F1F5F9',
             display: 'flex',
             alignItems: 'center',
-            gap: 'var(--space-3)',
-            justifyContent: collapsed ? 'center' : 'flex-start',
+            gap: '10px',
+            justifyContent: collapsed ? 'center' : 'space-between',
           }}
         >
-          <div
-            style={{
-              width: '34px',
-              height: '34px',
-              borderRadius: 'var(--radius-full)',
-              background: 'linear-gradient(135deg, #4F46E5, #06B6D4)',
-              color: '#FFFFFF',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '0.875rem',
-              fontWeight: 700,
-              flexShrink: 0,
-            }}
-          >
-            {user?.name?.charAt(0) || 'U'}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
+            <div
+              style={{
+                width: '34px',
+                height: '34px',
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #2563EB 0%, #7C3AED 100%)',
+                color: '#FFFFFF',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '0.8125rem',
+                fontWeight: 700,
+                flexShrink: 0,
+                boxShadow: '0 2px 6px rgba(37, 99, 235, 0.25)',
+              }}
+            >
+              {user?.name?.charAt(0).toUpperCase() || 'U'}
+            </div>
+
+            {!collapsed && (
+              <div style={{ minWidth: 0 }}>
+                <span
+                  style={{
+                    display: 'block',
+                    fontSize: '0.8125rem',
+                    fontWeight: 700,
+                    color: '#0F172A',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {user?.name || 'Authenticated User'}
+                </span>
+                <span
+                  style={{
+                    display: 'inline-block',
+                    fontSize: '0.6875rem',
+                    fontWeight: 600,
+                    color: '#2563EB',
+                    textTransform: 'capitalize',
+                  }}
+                >
+                  {role || 'Admin'}
+                </span>
+              </div>
+            )}
           </div>
 
           {!collapsed && (
-            <div style={{ minWidth: 0, flex: 1 }}>
-              <span
-                style={{
-                  display: 'block',
-                  fontSize: '0.8125rem',
-                  fontWeight: 600,
-                  color: 'var(--text-primary)',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                {user?.name}
-              </span>
-              <span
-                style={{
-                  display: 'inline-block',
-                  fontSize: '0.6875rem',
-                  fontWeight: 600,
-                  color: 'var(--color-primary)',
-                  textTransform: 'capitalize',
-                  background: 'var(--color-primary-light)',
-                  padding: '1px 6px',
-                  borderRadius: 'var(--radius-sm)',
-                }}
-              >
-                {role || 'creator'}
-              </span>
-            </div>
+            <button
+              onClick={handleLogout}
+              style={{
+                padding: '6px',
+                borderRadius: '8px',
+                background: 'transparent',
+                border: 'none',
+                color: '#94A3B8',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                transition: 'color 0.15s ease',
+              }}
+              title="Sign Out"
+              aria-label="Sign out"
+            >
+              <LogOut size={16} />
+            </button>
           )}
         </div>
       </aside>
@@ -448,20 +572,27 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
       {/* Create Workspace Modal */}
       {showCreateModal && (
         <div className="modal-overlay">
-          <div className="modal-content" style={{ padding: 'var(--space-6)' }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: 'var(--space-2)' }}>Create Brand Workspace</h3>
-            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: 'var(--space-4)' }}>
-              Organize dedicated guidelines, rules, approved facts, and content reviews.
-            </p>
+          <div className="modal-content" style={{ maxWidth: '440px', padding: '24px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <h3 style={{ fontSize: '1.125rem', fontWeight: 800, color: '#0F172A' }}>
+                Create Brand Workspace
+              </h3>
+              <button
+                onClick={() => setShowCreateModal(false)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8' }}
+              >
+                <X size={18} />
+              </button>
+            </div>
 
             <form onSubmit={handleCreateWorkspace}>
               <div className="form-group">
                 <label className="form-label">Workspace Name *</label>
                 <input
                   type="text"
-                  className="form-input"
                   required
-                  placeholder="e.g. Apex Enterprise Communications"
+                  className="form-input"
+                  placeholder="e.g. Apex Global Brand"
                   value={newWsName}
                   onChange={(e) => setNewWsName(e.target.value)}
                 />
@@ -471,18 +602,26 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
                 <label className="form-label">Description (Optional)</label>
                 <textarea
                   className="form-textarea"
-                  rows={3}
-                  placeholder="Brand mission, focus, and target departments..."
+                  rows={2}
+                  placeholder="Brand division, subsidiary, or regional hub..."
                   value={newWsDesc}
                   onChange={(e) => setNewWsDesc(e.target.value)}
                 />
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-2)', marginTop: 'var(--space-4)' }}>
-                <button type="button" className="btn btn-secondary" onClick={() => setShowCreateModal(false)}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '20px' }}>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setShowCreateModal(false)}
+                >
                   Cancel
                 </button>
-                <button type="submit" className="btn btn-primary" disabled={creating}>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={creating}
+                >
                   {creating ? 'Creating...' : 'Create Workspace'}
                 </button>
               </div>

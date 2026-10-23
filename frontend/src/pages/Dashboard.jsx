@@ -13,7 +13,6 @@ import {
   CheckCircle2,
   Copy,
   Check,
-  ExternalLink,
   ChevronRight,
   Filter,
   Sparkles,
@@ -24,6 +23,8 @@ import {
   ShieldAlert,
   ShieldCheck,
   CheckSquare,
+  Zap,
+  Sparkle,
 } from 'lucide-react';
 import ComplianceScoreRing from '../components/ComplianceScoreRing';
 import { SeverityBadge, WorkflowStatusBadge } from '../components/Badges';
@@ -103,21 +104,20 @@ export default function Dashboard() {
     fetchFindings();
   }, [categoryFilter, severityFilter, statusFilter, workspace?._id]);
 
-  // Handle Finding Resolution
+  // Handle Finding Resolution with real API call
   const handleResolveFinding = async (finding) => {
-    if (!finding.draft?._id) return;
+    if (!finding.draft?._id && !finding.draft) return;
+    const draftId = finding.draft?._id || finding.draft;
     try {
       setResolvingId(finding._id);
-      const res = await api.drafts.updateFindingStatus(finding.draft._id, finding._id, {
+      const res = await api.drafts.updateFindingStatus(draftId, finding._id, {
         action: 'resolve',
       });
       if (res.success) {
         toast.success('Finding marked as resolved.');
-        // Update local state without full reload
         setFindings((prev) =>
           prev.map((f) => (f._id === finding._id ? { ...f, status: 'resolved' } : f))
         );
-        // Refresh metrics for score update
         fetchMetrics();
       }
     } catch (err) {
@@ -139,7 +139,7 @@ export default function Dashboard() {
   const formattedToday = new Date().toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',
-    month: 'long',
+    month: 'short',
     day: 'numeric',
   });
 
@@ -155,15 +155,15 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-        <div style={{ height: '72px' }} className="skeleton card" />
-        <div className="dashboard-grid-top">
-          <div style={{ height: '320px' }} className="skeleton card" />
-          <div style={{ height: '320px' }} className="skeleton card" />
+        <div style={{ height: '80px' }} className="skeleton card" />
+        <div className="dashboard-kpi-grid-5">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div key={i} style={{ height: '110px' }} className="skeleton card" />
+          ))}
         </div>
-        <div className="dashboard-grid-metrics">
-          <div style={{ height: '110px' }} className="skeleton card" />
-          <div style={{ height: '110px' }} className="skeleton card" />
-          <div style={{ height: '110px' }} className="skeleton card" />
+        <div className="dashboard-grid-top">
+          <div style={{ height: '340px' }} className="skeleton card" />
+          <div style={{ height: '340px' }} className="skeleton card" />
         </div>
         <div style={{ height: '280px' }} className="skeleton card" />
       </div>
@@ -172,11 +172,17 @@ export default function Dashboard() {
 
   if (error) {
     return (
-      <div className="card" style={{ textAlign: 'center', padding: '48px 24px' }}>
-        <ShieldAlert size={48} color="var(--severity-high)" style={{ margin: '0 auto 16px auto' }} />
-        <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '8px' }}>Unable to Load Dashboard Data</h3>
-        <p style={{ color: 'var(--text-secondary)', marginBottom: '16px' }}>{error}</p>
-        <button className="btn btn-primary" onClick={fetchMetrics}>
+      <div className="glass-card" style={{ textAlign: 'center', padding: '56px 24px' }}>
+        <div className="icon-tile icon-tile-coral" style={{ width: '56px', height: '56px', margin: '0 auto 16px auto' }}>
+          <ShieldAlert size={28} />
+        </div>
+        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', marginBottom: '8px' }}>
+          Unable to Load Governance Metrics
+        </h3>
+        <p style={{ color: '#64748B', maxWidth: '440px', margin: '0 auto 20px auto', fontSize: '0.875rem' }}>
+          {error}
+        </p>
+        <button className="btn btn-gradient-primary" onClick={fetchMetrics}>
           Retry Connection
         </button>
       </div>
@@ -216,21 +222,21 @@ export default function Dashboard() {
 
   // Status interpretation for Brand Health
   let healthStatusLabel = 'No Audit Data';
-  let healthStatusColor = 'var(--text-tertiary)';
-  let healthExplanation = 'Submit content to run deterministic brand governance audits.';
+  let healthStatusColor = '#64748B';
+  let healthExplanation = 'Submit copy to run deterministic brand governance audits.';
 
   if (averageScore > 0) {
     if (averageScore >= 85) {
       healthStatusLabel = 'Compliant';
       healthStatusColor = '#10B981';
-      healthExplanation = 'Your content complies with active brand guidelines, voice standards, and verified claims.';
+      healthExplanation = 'Content rigorously adheres to brand standards, tone of voice, and approved facts.';
     } else if (averageScore >= 70) {
       healthStatusLabel = 'Minor Inconsistencies';
       healthStatusColor = '#F59E0B';
       healthExplanation = 'Moderate findings detected. Resolve flagged terminology and claims to reach compliance target.';
     } else {
       healthStatusLabel = 'Action Required';
-      healthStatusColor = '#EF4444';
+      healthStatusColor = '#F43F5E';
       healthExplanation = 'High-risk deviations detected. Content requires revision prior to public dissemination.';
     }
   }
@@ -247,72 +253,322 @@ export default function Dashboard() {
   });
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      {/* 2. WELCOME HEADER */}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+      {/* ===================================================================
+          1. HERO HEADER: Vibrant Welcome & Fast CTA Actions
+          =================================================================== */}
       <section
+        className="glass-card"
         style={{
+          padding: '24px 28px',
           display: 'flex',
           flexWrap: 'wrap',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: '16px',
-          padding: '4px 0',
+          gap: '20px',
+          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.95) 100%)',
+          border: '1px solid rgba(226, 232, 240, 0.9)',
+          boxShadow: '0 10px 30px -5px rgba(37, 99, 235, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02)',
         }}
       >
         <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
+            <span
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '3px 10px',
+                borderRadius: '999px',
+                background: '#ECFDF5',
+                color: '#059669',
+                fontSize: '0.6875rem',
+                fontWeight: 700,
+                border: '1px solid #A7F3D0',
+                textTransform: 'uppercase',
+                letterSpacing: '0.04em',
+              }}
+            >
+              <span
+                className="motion-pulse-check"
+                style={{
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                  background: '#10B981',
+                  display: 'inline-block',
+                }}
+              />
+              Brand Governance Live
+            </span>
+            <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>•</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#64748B', fontSize: '0.75rem', fontWeight: 500 }}>
+              <Calendar size={13} color="#2563EB" />
+              {formattedToday}
+            </span>
+          </div>
+
           <h1
             style={{
-              fontSize: '1.625rem',
-              fontWeight: 800,
+              fontSize: '1.75rem',
+              fontWeight: 850,
               color: '#0F172A',
               letterSpacing: '-0.025em',
               lineHeight: 1.2,
+              margin: 0,
             }}
           >
             {getGreeting()}
           </h1>
-          <p
-            style={{
-              fontSize: '0.875rem',
-              color: '#64748B',
-              marginTop: '4px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-            }}
-          >
-            <span>Keep your brand consistent, credible and compliant across all content.</span>
-            <span style={{ color: '#CBD5E1' }}>•</span>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#64748B' }}>
-              <Calendar size={13} />
-              {formattedToday}
-            </span>
+          <p style={{ fontSize: '0.875rem', color: '#64748B', marginTop: '4px', margin: '4px 0 0 0' }}>
+            Protect brand equity across all channels with real-time deterministic audits.
           </p>
         </div>
 
-        <button
-          onClick={() => navigate('/review')}
-          className="btn btn-primary"
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
-            padding: '10px 18px',
-            borderRadius: 'var(--radius-lg)',
-            fontWeight: 600,
-            fontSize: '0.875rem',
-          }}
-          title="Run brand compliance audit on new content"
-        >
-          <Plus size={18} />
-          <span>Start New Review</span>
-        </button>
+        {/* Action Buttons */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+          <Link
+            to="/guidelines"
+            className="btn btn-secondary btn-sm"
+            style={{
+              padding: '9px 16px',
+              fontSize: '0.8125rem',
+              borderRadius: '12px',
+            }}
+          >
+            <BookOpen size={15} color="#7C3AED" />
+            <span>Guidelines</span>
+          </Link>
+
+          <Link
+            to="/assets"
+            className="btn btn-secondary btn-sm"
+            style={{
+              padding: '9px 16px',
+              fontSize: '0.8125rem',
+              borderRadius: '12px',
+            }}
+          >
+            <Palette size={15} color="#06B6D4" />
+            <span>Assets</span>
+          </Link>
+
+          <button
+            onClick={() => navigate('/review')}
+            className="btn btn-gradient-primary btn-sm"
+            style={{
+              padding: '9px 20px',
+              fontSize: '0.8125rem',
+              borderRadius: '12px',
+            }}
+            title="Run instant brand compliance audit on new content"
+          >
+            <Plus size={16} strokeWidth={2.5} />
+            <span>Start New Review</span>
+          </button>
+        </div>
       </section>
 
-      {/* TOP ROW: Brand Health Overview (Left) & Review Queue (Right) */}
-      <section className="dashboard-grid-top">
-        {/* 3. BRAND HEALTH OVERVIEW */}
-        <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+      {/* ===================================================================
+          2. COLOURFUL KPI CARDS (Rich Multi-Colour Palette of 5 Cards)
+          =================================================================== */}
+      <section className="dashboard-kpi-grid-5">
+        {/* KPI 1: Overall Compliance (Electric Blue / Cyan) */}
+        <div
+          className="kpi-card-vibrant kpi-card-blue"
+          onClick={() => {
+            const el = document.getElementById('brand-health-overview');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }}
+          title="Overall compliance score across workspace"
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              Compliance Score
+            </span>
+            <div className="icon-tile icon-tile-blue" style={{ width: '36px', height: '36px' }}>
+              <ShieldCheck size={18} strokeWidth={2.4} />
+            </div>
+          </div>
+          <div style={{ marginTop: '12px' }}>
+            <div style={{ fontSize: '2rem', fontWeight: 850, color: '#0F172A', lineHeight: 1 }}>
+              {averageScore}%
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '8px' }}>
+              {comparisonDiff !== null && comparisonDiff !== undefined && (
+                <span
+                  style={{
+                    fontSize: '0.6875rem',
+                    fontWeight: 700,
+                    padding: '2px 6px',
+                    borderRadius: '6px',
+                    background: comparisonDiff >= 0 ? '#ECFDF5' : '#FFF1F2',
+                    color: comparisonDiff >= 0 ? '#059669' : '#E11D48',
+                  }}
+                >
+                  {comparisonDiff >= 0 ? `+${comparisonDiff}%` : `${comparisonDiff}%`}
+                </span>
+              )}
+              <span style={{ fontSize: '0.75rem', color: '#64748B' }}>vs previous audit</span>
+            </div>
+          </div>
+        </div>
+
+        {/* KPI 2: High-Risk Issues (Coral) */}
+        <div
+          className="kpi-card-vibrant kpi-card-coral"
+          onClick={() => {
+            setSeverityFilter('high');
+            const el = document.getElementById('recent-findings-section');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }}
+          title="Click to filter findings by High Severity"
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              High-Risk Issues
+            </span>
+            <div className="icon-tile icon-tile-coral" style={{ width: '36px', height: '36px' }}>
+              <AlertTriangle size={18} strokeWidth={2.4} />
+            </div>
+          </div>
+          <div style={{ marginTop: '12px' }}>
+            <div style={{ fontSize: '2rem', fontWeight: 850, color: '#0F172A', lineHeight: 1 }}>
+              {openHighRiskCount}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '8px' }}>
+              <span
+                style={{
+                  fontSize: '0.6875rem',
+                  fontWeight: 700,
+                  padding: '2px 6px',
+                  borderRadius: '6px',
+                  background: openHighRiskCount > 0 ? '#FFF1F2' : '#ECFDF5',
+                  color: openHighRiskCount > 0 ? '#E11D48' : '#059669',
+                }}
+              >
+                {openHighRiskCount > 0 ? 'Action Required' : 'All Clear'}
+              </span>
+              <span style={{ fontSize: '0.75rem', color: '#64748B' }}>in open drafts</span>
+            </div>
+          </div>
+        </div>
+
+        {/* KPI 3: Pending Reviews (Soft Amber) */}
+        <div
+          className="kpi-card-vibrant kpi-card-amber"
+          onClick={() => navigate('/approvals')}
+          title="Click to open Approval Queue"
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              Pending Queue
+            </span>
+            <div className="icon-tile icon-tile-amber" style={{ width: '36px', height: '36px' }}>
+              <Clock size={18} strokeWidth={2.4} />
+            </div>
+          </div>
+          <div style={{ marginTop: '12px' }}>
+            <div style={{ fontSize: '2rem', fontWeight: 850, color: '#0F172A', lineHeight: 1 }}>
+              {pendingApprovalsCount}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '8px' }}>
+              <span
+                style={{
+                  fontSize: '0.6875rem',
+                  fontWeight: 700,
+                  padding: '2px 6px',
+                  borderRadius: '6px',
+                  background: '#FFFBEB',
+                  color: '#D97706',
+                }}
+              >
+                Awaiting Sign-off
+              </span>
+              <span style={{ fontSize: '0.75rem', color: '#64748B' }}>by reviewer</span>
+            </div>
+          </div>
+        </div>
+
+        {/* KPI 4: Audits Completed (Mint Green) */}
+        <div
+          className="kpi-card-vibrant kpi-card-mint"
+          onClick={() => navigate('/history')}
+          title="Click to open Review History"
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              Audited This Month
+            </span>
+            <div className="icon-tile icon-tile-mint" style={{ width: '36px', height: '36px' }}>
+              <TrendingUp size={18} strokeWidth={2.4} />
+            </div>
+          </div>
+          <div style={{ marginTop: '12px' }}>
+            <div style={{ fontSize: '2rem', fontWeight: 850, color: '#0F172A', lineHeight: 1 }}>
+              {reviewedThisMonthCount}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '8px' }}>
+              <span
+                style={{
+                  fontSize: '0.6875rem',
+                  fontWeight: 700,
+                  padding: '2px 6px',
+                  borderRadius: '6px',
+                  background: '#ECFDF5',
+                  color: '#059669',
+                }}
+              >
+                Scans Active
+              </span>
+              <span style={{ fontSize: '0.75rem', color: '#64748B' }}>deterministic</span>
+            </div>
+          </div>
+        </div>
+
+        {/* KPI 5: Active Rules (Violet) */}
+        <div
+          className="kpi-card-vibrant kpi-card-violet"
+          onClick={() => navigate('/guidelines')}
+          title="Click to manage Brand Rules"
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              Enforced Rules
+            </span>
+            <div className="icon-tile icon-tile-violet" style={{ width: '36px', height: '36px' }}>
+              <BookOpen size={18} strokeWidth={2.4} />
+            </div>
+          </div>
+          <div style={{ marginTop: '12px' }}>
+            <div style={{ fontSize: '2rem', fontWeight: 850, color: '#0F172A', lineHeight: 1 }}>
+              {totalActiveRules}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '8px' }}>
+              <span
+                style={{
+                  fontSize: '0.6875rem',
+                  fontWeight: 700,
+                  padding: '2px 6px',
+                  borderRadius: '6px',
+                  background: '#F5F3FF',
+                  color: '#7C3AED',
+                }}
+              >
+                Brand Guardrails
+              </span>
+              <span style={{ fontSize: '0.75rem', color: '#64748B' }}>across 6 pillars</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===================================================================
+          3. TOP ROW: Brand Compliance Chart (Left) & Review Queue (Right)
+          =================================================================== */}
+      <section className="dashboard-grid-top" id="brand-health-overview">
+        {/* BRAND HEALTH OVERVIEW & COMPLIANCE CHART */}
+        <div className="glass-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           <div>
             {/* Card Header */}
             <div
@@ -320,31 +576,19 @@ export default function Dashboard() {
                 display: 'flex',
                 alignItems: 'flex-start',
                 justifyContent: 'space-between',
-                marginBottom: '16px',
+                marginBottom: '18px',
               }}
             >
-              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                <div
-                  style={{
-                    width: '38px',
-                    height: '38px',
-                    borderRadius: '10px',
-                    background: '#EFF6FF',
-                    color: '#2563EB',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                  }}
-                >
-                  <Shield size={20} strokeWidth={2.2} />
+              <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
+                <div className="icon-tile icon-tile-blue" style={{ width: '42px', height: '42px' }}>
+                  <Shield size={22} strokeWidth={2.3} />
                 </div>
                 <div>
-                  <h2 style={{ fontSize: '1.0625rem', fontWeight: 700, color: '#0F172A', lineHeight: 1.2 }}>
-                    Brand Health Overview
+                  <h2 style={{ fontSize: '1.125rem', fontWeight: 800, color: '#0F172A', lineHeight: 1.2, margin: 0 }}>
+                    Brand Compliance & Health
                   </h2>
-                  <p style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '2px' }}>
-                    Overall brand compliance based on your content, guidelines and approved facts.
+                  <p style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '3px', margin: '3px 0 0 0' }}>
+                    Overall compliance score based on active guidelines, terminology, and approved facts.
                   </p>
                 </div>
               </div>
@@ -353,16 +597,13 @@ export default function Dashboard() {
               <select
                 value={healthDateRange}
                 onChange={(e) => setHealthDateRange(e.target.value)}
+                className="form-select"
                 style={{
-                  padding: '4px 8px',
-                  borderRadius: 'var(--radius-md)',
-                  border: '1px solid var(--border-light)',
+                  width: 'auto',
+                  padding: '5px 28px 5px 12px',
                   fontSize: '0.75rem',
-                  fontWeight: 600,
-                  color: 'var(--text-secondary)',
-                  background: '#FFFFFF',
-                  cursor: 'pointer',
-                  outline: 'none',
+                  fontWeight: 700,
+                  borderRadius: '10px',
                 }}
               >
                 <option value="30d">Last 30 Days</option>
@@ -371,34 +612,35 @@ export default function Dashboard() {
               </select>
             </div>
 
-            {/* Score & Health Summary */}
+            {/* Score & Health Summary Box */}
             <div
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: '24px',
-                padding: '12px 16px',
-                borderRadius: 'var(--radius-lg)',
-                background: '#F8FAFC',
+                padding: '16px 20px',
+                borderRadius: '16px',
+                background: 'linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%)',
                 border: '1px solid #E2E8F0',
                 marginBottom: '20px',
               }}
             >
-              <ComplianceScoreRing score={averageScore || 0} size={84} strokeWidth={8} showBadge={true} />
+              <ComplianceScoreRing score={averageScore || 0} size={86} strokeWidth={8} showBadge={true} />
 
               <div style={{ flex: 1 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px', flexWrap: 'wrap' }}>
                   <span
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center',
-                      gap: '4px',
+                      gap: '5px',
                       fontSize: '0.75rem',
                       fontWeight: 700,
-                      padding: '2px 8px',
-                      borderRadius: 'var(--radius-full)',
-                      background: averageScore >= 80 ? '#ECFDF5' : averageScore >= 60 ? '#FFFBEB' : '#FEF2F2',
+                      padding: '3px 10px',
+                      borderRadius: '999px',
+                      background: averageScore >= 80 ? '#ECFDF5' : averageScore >= 60 ? '#FFFBEB' : '#FFF1F2',
                       color: healthStatusColor,
+                      border: `1px solid ${averageScore >= 80 ? '#A7F3D0' : averageScore >= 60 ? '#FDE68A' : '#FECDD3'}`,
                     }}
                   >
                     <span
@@ -416,81 +658,93 @@ export default function Dashboard() {
                     <span
                       style={{
                         fontSize: '0.75rem',
-                        fontWeight: 600,
-                        color: comparisonDiff >= 0 ? '#10B981' : '#EF4444',
+                        fontWeight: 700,
+                        color: comparisonDiff >= 0 ? '#059669' : '#E11D48',
                         display: 'inline-flex',
                         alignItems: 'center',
-                        gap: '2px',
+                        gap: '3px',
                       }}
                     >
-                      {comparisonDiff >= 0 ? `+${comparisonDiff}%` : `${comparisonDiff}%`} vs last audit
+                      {comparisonDiff >= 0 ? `+${comparisonDiff}%` : `${comparisonDiff}%`} vs benchmark
                     </span>
                   )}
                 </div>
 
-                <p style={{ fontSize: '0.8125rem', color: '#475569', lineHeight: 1.4 }}>
+                <p style={{ fontSize: '0.8125rem', color: '#475569', lineHeight: 1.45, margin: 0 }}>
                   {healthExplanation}
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Compliance Trend Line Chart */}
+          {/* Interactive Compliance Trend Area Chart */}
           <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                Compliance Trend
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Compliance Timeline Trend
               </span>
-              {hoveredPoint && (
-                <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#2563EB' }}>
-                  {hoveredPoint.date}: {hoveredPoint.score}% ({hoveredPoint.draftTitle})
+              {hoveredPoint ? (
+                <span
+                  style={{
+                    fontSize: '0.75rem',
+                    fontWeight: 700,
+                    color: '#2563EB',
+                    background: '#EFF6FF',
+                    padding: '2px 8px',
+                    borderRadius: '6px',
+                    border: '1px solid #BFDBFE',
+                  }}
+                >
+                  {hoveredPoint.date}: {hoveredPoint.score}% • {hoveredPoint.draftTitle || 'Content Review'}
                 </span>
+              ) : (
+                <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>Hover points for audit details</span>
               )}
             </div>
 
             {filteredTrend.length > 0 ? (
-              <div style={{ position: 'relative', width: '100%', height: '120px' }}>
+              <div style={{ position: 'relative', width: '100%', height: '125px' }}>
                 <svg
                   viewBox="0 0 500 120"
                   style={{ width: '100%', height: '100%', overflow: 'visible' }}
                   preserveAspectRatio="none"
                 >
                   <defs>
-                    <linearGradient id="trendGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#2563EB" stopOpacity="0.22" />
-                      <stop offset="100%" stopColor="#2563EB" stopOpacity="0.0" />
+                    <linearGradient id="vibrantTrendGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#2563EB" stopOpacity="0.28" />
+                      <stop offset="50%" stopColor="#7C3AED" stopOpacity="0.12" />
+                      <stop offset="100%" stopColor="#06B6D4" stopOpacity="0.0" />
                     </linearGradient>
                   </defs>
 
-                  {/* Horizontal Guide Lines */}
-                  <line x1="0" y1="20" x2="500" y2="20" stroke="#E2E8F0" strokeDasharray="3 3" />
-                  <line x1="0" y1="60" x2="500" y2="60" stroke="#E2E8F0" strokeDasharray="3 3" />
-                  <line x1="0" y1="100" x2="500" y2="100" stroke="#E2E8F0" strokeDasharray="3 3" />
+                  {/* Benchmark Guide Lines */}
+                  <line x1="0" y1="20" x2="500" y2="20" stroke="#CBD5E1" strokeDasharray="3 3" opacity="0.6" />
+                  <line x1="0" y1="60" x2="500" y2="60" stroke="#CBD5E1" strokeDasharray="3 3" opacity="0.4" />
+                  <line x1="0" y1="100" x2="500" y2="100" stroke="#CBD5E1" strokeDasharray="3 3" opacity="0.3" />
 
                   {/* Build Polyline Path */}
                   {(() => {
                     const pointsCount = filteredTrend.length;
                     const coords = filteredTrend.map((p, idx) => {
                       const x = pointsCount === 1 ? 250 : (idx / (pointsCount - 1)) * 480 + 10;
-                      // Score from 0 to 100 maps to y=105 to y=15
                       const y = 105 - (p.score / 100) * 90;
                       return { x, y, ...p };
                     });
 
                     const linePointsStr = coords.map((c) => `${c.x},${c.y}`).join(' ');
-                    const areaPointsStr = `10,110 ${linePointsStr} ${coords[coords.length - 1].x},110`;
+                    const areaPointsStr = `10,115 ${linePointsStr} ${coords[coords.length - 1].x},115`;
 
                     return (
                       <>
                         {/* Shaded Area Fill */}
-                        <polygon points={areaPointsStr} fill="url(#trendGradient)" />
+                        <polygon points={areaPointsStr} fill="url(#vibrantTrendGrad)" />
 
                         {/* Trend Stroke Line */}
                         <polyline
                           points={linePointsStr}
                           fill="none"
                           stroke="#2563EB"
-                          strokeWidth="2.5"
+                          strokeWidth="2.8"
                           strokeLinecap="round"
                           strokeLinejoin="round"
                         />
@@ -501,16 +755,16 @@ export default function Dashboard() {
                             <circle
                               cx={c.x}
                               cy={c.y}
-                              r="4"
+                              r={hoveredPoint === c ? '6' : '4'}
                               fill="#FFFFFF"
                               stroke="#2563EB"
                               strokeWidth="2.5"
-                              style={{ cursor: 'pointer', transition: 'r 0.15s ease' }}
+                              style={{ cursor: 'pointer', transition: 'all 0.18s ease' }}
                               onMouseEnter={() => setHoveredPoint(c)}
                               onMouseLeave={() => setHoveredPoint(null)}
                             />
                             {hoveredPoint === c && (
-                              <circle cx={c.x} cy={c.y} r="7" fill="#2563EB" opacity="0.3" />
+                              <circle cx={c.x} cy={c.y} r="10" fill="#2563EB" opacity="0.2" />
                             )}
                           </g>
                         ))}
@@ -524,9 +778,10 @@ export default function Dashboard() {
                   style={{
                     display: 'flex',
                     justifyContent: 'space-between',
-                    marginTop: '4px',
+                    marginTop: '6px',
                     fontSize: '0.6875rem',
-                    color: 'var(--text-tertiary)',
+                    color: '#64748B',
+                    fontWeight: 500,
                   }}
                 >
                   <span>{filteredTrend[0]?.date}</span>
@@ -542,9 +797,10 @@ export default function Dashboard() {
                   padding: '24px 16px',
                   textAlign: 'center',
                   background: '#F8FAFC',
-                  borderRadius: 'var(--radius-md)',
-                  color: 'var(--text-tertiary)',
+                  borderRadius: '12px',
+                  color: '#64748B',
                   fontSize: '0.8125rem',
+                  border: '1px dashed #E2E8F0',
                 }}
               >
                 No historical trend data yet. Run reviews to build compliance timeline.
@@ -553,8 +809,8 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* 4. REVIEW QUEUE */}
-        <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        {/* REVIEW QUEUE (Right Column) */}
+        <div className="glass-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           <div>
             {/* Header */}
             <div
@@ -562,31 +818,19 @@ export default function Dashboard() {
                 display: 'flex',
                 alignItems: 'flex-start',
                 justifyContent: 'space-between',
-                marginBottom: '16px',
+                marginBottom: '18px',
               }}
             >
-              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                <div
-                  style={{
-                    width: '38px',
-                    height: '38px',
-                    borderRadius: '10px',
-                    background: '#F0FDF4',
-                    color: '#16A34A',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                  }}
-                >
-                  <FileText size={20} strokeWidth={2.2} />
+              <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
+                <div className="icon-tile icon-tile-mint" style={{ width: '42px', height: '42px' }}>
+                  <FileText size={22} strokeWidth={2.3} />
                 </div>
                 <div>
-                  <h2 style={{ fontSize: '1.0625rem', fontWeight: 700, color: '#0F172A', lineHeight: 1.2 }}>
+                  <h2 style={{ fontSize: '1.125rem', fontWeight: 800, color: '#0F172A', lineHeight: 1.2, margin: 0 }}>
                     Review Queue
                   </h2>
-                  <p style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '2px' }}>
-                    Recent content submitted for review and approval.
+                  <p style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '3px', margin: '3px 0 0 0' }}>
+                    Recent content submitted for brand verification and sign-off.
                   </p>
                 </div>
               </div>
@@ -595,7 +839,7 @@ export default function Dashboard() {
                 to="/approvals"
                 style={{
                   fontSize: '0.8125rem',
-                  fontWeight: 600,
+                  fontWeight: 700,
                   color: '#2563EB',
                   textDecoration: 'none',
                   display: 'inline-flex',
@@ -603,7 +847,7 @@ export default function Dashboard() {
                   gap: '4px',
                 }}
               >
-                View All <ChevronRight size={14} />
+                View Queue <ChevronRight size={14} />
               </Link>
             </div>
 
@@ -627,28 +871,23 @@ export default function Dashboard() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
-                        padding: '10px 12px',
-                        borderRadius: 'var(--radius-lg)',
-                        background: '#F8FAFC',
+                        padding: '10px 14px',
+                        borderRadius: '14px',
+                        background: '#FFFFFF',
                         border: '1px solid #E2E8F0',
                         gap: '12px',
-                        transition: 'all 0.15s ease',
+                        transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)',
+                        boxShadow: '0 1px 3px rgba(15, 23, 42, 0.02)',
                       }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0 }}>
-                        {/* Thumbnail Icon */}
+                        {/* Thumbnail Tile */}
                         <div
+                          className="icon-tile icon-tile-blue"
                           style={{
-                            width: '34px',
-                            height: '34px',
-                            borderRadius: 'var(--radius-md)',
-                            background: '#FFFFFF',
-                            border: '1px solid #E2E8F0',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: '#2563EB',
-                            flexShrink: 0,
+                            width: '36px',
+                            height: '36px',
+                            borderRadius: '10px',
                           }}
                         >
                           <FileText size={16} />
@@ -660,7 +899,7 @@ export default function Dashboard() {
                             to={`/review/${draft._id}`}
                             style={{
                               fontSize: '0.875rem',
-                              fontWeight: 600,
+                              fontWeight: 700,
                               color: '#0F172A',
                               textDecoration: 'none',
                               display: 'block',
@@ -675,13 +914,13 @@ export default function Dashboard() {
                             style={{
                               display: 'flex',
                               alignItems: 'center',
-                              gap: '8px',
+                              gap: '6px',
                               fontSize: '0.6875rem',
                               color: '#64748B',
                               marginTop: '2px',
                             }}
                           >
-                            <span style={{ textTransform: 'capitalize' }}>
+                            <span style={{ textTransform: 'capitalize', fontWeight: 600 }}>
                               {draft.contentType?.replace(/_/g, ' ') || 'Document'}
                             </span>
                             <span>•</span>
@@ -690,7 +929,7 @@ export default function Dashboard() {
                         </div>
                       </div>
 
-                      {/* Right: Badges & Review Action */}
+                      {/* Right: Badges & Review CTA */}
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
                         <WorkflowStatusBadge status={draft.status} />
 
@@ -699,10 +938,11 @@ export default function Dashboard() {
                             style={{
                               fontSize: '0.75rem',
                               fontWeight: 700,
-                              padding: '2px 6px',
-                              borderRadius: 'var(--radius-sm)',
-                              background: draft.latestComplianceScore >= 80 ? '#ECFDF5' : '#FEF2F2',
-                              color: draft.latestComplianceScore >= 80 ? '#059669' : '#DC2626',
+                              padding: '2px 8px',
+                              borderRadius: '6px',
+                              background: draft.latestComplianceScore >= 80 ? '#ECFDF5' : '#FFF1F2',
+                              color: draft.latestComplianceScore >= 80 ? '#059669' : '#E11D48',
+                              border: `1px solid ${draft.latestComplianceScore >= 80 ? '#A7F3D0' : '#FECDD3'}`,
                             }}
                             title={`Compliance Score: ${draft.latestComplianceScore}%`}
                           >
@@ -716,15 +956,15 @@ export default function Dashboard() {
                             width: '26px',
                             height: '26px',
                             borderRadius: '50%',
-                            background: '#CBD5E1',
-                            color: '#0F172A',
+                            background: 'linear-gradient(135deg, #2563EB, #7C3AED)',
+                            color: '#FFFFFF',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             fontSize: '0.6875rem',
                             fontWeight: 700,
                           }}
-                          title={`Author: ${draft.author?.name || 'Authorized Member'}`}
+                          title={`Author: ${draft.author?.name || 'Workspace Member'}`}
                         >
                           {authorInitials}
                         </div>
@@ -732,7 +972,7 @@ export default function Dashboard() {
                         <Link
                           to={`/review/${draft._id}`}
                           className="btn btn-secondary btn-sm"
-                          style={{ padding: '4px 8px', fontSize: '0.75rem' }}
+                          style={{ padding: '4px 10px', fontSize: '0.75rem', borderRadius: '8px' }}
                         >
                           Review
                         </Link>
@@ -741,17 +981,17 @@ export default function Dashboard() {
                   );
                 })
               ) : (
-                <div style={{ padding: '32px 16px', textAlign: 'center', color: '#64748B', fontSize: '0.875rem' }}>
+                <div style={{ padding: '36px 16px', textAlign: 'center', color: '#64748B', fontSize: '0.875rem' }}>
                   No drafts submitted for review yet.
                 </div>
               )}
             </div>
           </div>
 
-          <div style={{ paddingTop: '12px', marginTop: '12px', borderTop: '1px solid #F1F5F9' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#64748B' }}>
-              <span>Total Drafts in Workspace: {recentDrafts.length}</span>
-              <Link to="/review" style={{ color: '#2563EB', fontWeight: 600, textDecoration: 'none' }}>
+          <div style={{ paddingTop: '14px', marginTop: '14px', borderTop: '1px solid #F1F5F9' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem', color: '#64748B' }}>
+              <span>Total Workspace Submissions: <strong style={{ color: '#0F172A' }}>{recentDrafts.length}</strong></span>
+              <Link to="/review" style={{ color: '#2563EB', fontWeight: 700, textDecoration: 'none' }}>
                 + Submit New Draft
               </Link>
             </div>
@@ -759,162 +999,10 @@ export default function Dashboard() {
         </div>
       </section>
 
-      {/* 5. QUICK METRIC CARDS (ROW OF 3) */}
-      <section className="dashboard-grid-metrics">
-        {/* Card 1: High-Risk Issues */}
-        <div
-          className="card"
-          onClick={() => {
-            setSeverityFilter('high');
-            const el = document.getElementById('recent-findings-section');
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
-          }}
-          style={{
-            cursor: 'pointer',
-            borderLeft: '4px solid #EF4444',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            transition: 'transform 0.15s ease, box-shadow 0.15s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'none';
-            e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
-          }}
-          title="Click to filter findings by High Severity"
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <div>
-              <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#64748B' }}>High-Risk Issues</span>
-              <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0F172A', marginTop: '4px' }}>
-                {openHighRiskCount}
-              </div>
-            </div>
-            <div
-              style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: 'var(--radius-md)',
-                background: '#FEF2F2',
-                color: '#EF4444',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <AlertTriangle size={18} />
-            </div>
-          </div>
-          <p style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '8px' }}>
-            Requires immediate resolution before public release.
-          </p>
-        </div>
-
-        {/* Card 2: Pending Reviews */}
-        <div
-          className="card"
-          onClick={() => navigate('/approvals')}
-          style={{
-            cursor: 'pointer',
-            borderLeft: '4px solid #F59E0B',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            transition: 'transform 0.15s ease, box-shadow 0.15s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'none';
-            e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
-          }}
-          title="Click to view Approval Queue"
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <div>
-              <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#64748B' }}>Pending Reviews</span>
-              <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0F172A', marginTop: '4px' }}>
-                {pendingApprovalsCount}
-              </div>
-            </div>
-            <div
-              style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: 'var(--radius-md)',
-                background: '#FFFBEB',
-                color: '#F59E0B',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Clock size={18} />
-            </div>
-          </div>
-          <p style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '8px' }}>
-            Awaiting human reviewer or brand manager sign-off.
-          </p>
-        </div>
-
-        {/* Card 3: Reviewed This Month */}
-        <div
-          className="card"
-          onClick={() => navigate('/history')}
-          style={{
-            cursor: 'pointer',
-            borderLeft: '4px solid #10B981',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            transition: 'transform 0.15s ease, box-shadow 0.15s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'none';
-            e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
-          }}
-          title="Click to view Review History"
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <div>
-              <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#64748B' }}>Reviewed This Month</span>
-              <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0F172A', marginTop: '4px' }}>
-                {reviewedThisMonthCount}
-              </div>
-            </div>
-            <div
-              style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: 'var(--radius-md)',
-                background: '#ECFDF5',
-                color: '#10B981',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <TrendingUp size={18} />
-            </div>
-          </div>
-          <p style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '8px' }}>
-            Total automated compliance evaluations completed.
-          </p>
-        </div>
-      </section>
-
-      {/* 6. RECENT FINDINGS TABLE (FULL-WIDTH CARD) */}
-      <section className="card" id="recent-findings-section" style={{ padding: '20px 24px' }}>
+      {/* ===================================================================
+          4. RECENT FINDINGS TABLE (Interactive Resolution Hub)
+          =================================================================== */}
+      <section className="glass-card" id="recent-findings-section" style={{ padding: '24px' }}>
         {/* Table Header & Controls */}
         <div
           style={{
@@ -923,26 +1011,31 @@ export default function Dashboard() {
             alignItems: 'center',
             justifyContent: 'space-between',
             gap: '16px',
-            marginBottom: '16px',
+            marginBottom: '18px',
           }}
         >
-          <div>
-            <h2 style={{ fontSize: '1.125rem', fontWeight: 700, color: '#0F172A', lineHeight: 1.2 }}>
-              Recent Findings
-            </h2>
-            <p style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '2px' }}>
-              Latest issues detected in your content reviews with real-time resolution actions.
-            </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div className="icon-tile icon-tile-coral" style={{ width: '40px', height: '40px' }}>
+              <AlertTriangle size={20} strokeWidth={2.4} />
+            </div>
+            <div>
+              <h2 style={{ fontSize: '1.125rem', fontWeight: 800, color: '#0F172A', lineHeight: 1.2, margin: 0 }}>
+                Recent Governance Findings
+              </h2>
+              <p style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '3px', margin: '3px 0 0 0' }}>
+                Real-time rule deviations detected across drafts with single-click resolution.
+              </p>
+            </div>
           </div>
 
-          {/* Filters */}
+          {/* Filters Bar */}
           <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px' }}>
             {/* Category Filter */}
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
               className="form-select"
-              style={{ width: 'auto', padding: '6px 10px', fontSize: '0.8125rem' }}
+              style={{ width: 'auto', padding: '5px 28px 5px 10px', fontSize: '0.75rem', borderRadius: '10px' }}
             >
               <option value="">All Categories</option>
               <option value="Tone of voice">Tone of voice</option>
@@ -960,7 +1053,7 @@ export default function Dashboard() {
               value={severityFilter}
               onChange={(e) => setSeverityFilter(e.target.value)}
               className="form-select"
-              style={{ width: 'auto', padding: '6px 10px', fontSize: '0.8125rem' }}
+              style={{ width: 'auto', padding: '5px 28px 5px 10px', fontSize: '0.75rem', borderRadius: '10px' }}
             >
               <option value="">All Severities</option>
               <option value="high">High Severity</option>
@@ -973,7 +1066,7 @@ export default function Dashboard() {
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
               className="form-select"
-              style={{ width: 'auto', padding: '6px 10px', fontSize: '0.8125rem' }}
+              style={{ width: 'auto', padding: '5px 28px 5px 10px', fontSize: '0.75rem', borderRadius: '10px' }}
             >
               <option value="">All Statuses</option>
               <option value="open">Open</option>
@@ -981,13 +1074,27 @@ export default function Dashboard() {
               <option value="dismissed">Dismissed</option>
             </select>
 
+            {(categoryFilter || severityFilter || statusFilter) && (
+              <button
+                onClick={() => {
+                  setCategoryFilter('');
+                  setSeverityFilter('');
+                  setStatusFilter('');
+                }}
+                className="btn btn-secondary btn-sm"
+                style={{ padding: '4px 10px', fontSize: '0.75rem', borderRadius: '8px' }}
+              >
+                Clear Filters
+              </button>
+            )}
+
             <Link
               to="/approvals"
               className="btn btn-secondary btn-sm"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '6px 12px', borderRadius: '10px' }}
             >
               <span>View All</span>
-              <ArrowRight size={14} />
+              <ArrowRight size={13} />
             </Link>
           </div>
         </div>
@@ -999,7 +1106,7 @@ export default function Dashboard() {
               <tr>
                 <th style={{ width: '40px' }}>#</th>
                 <th>Content Title</th>
-                <th>Issue Category</th>
+                <th>Category</th>
                 <th>Flagged Excerpt</th>
                 <th>Relevant Rule / Source</th>
                 <th>Severity</th>
@@ -1010,15 +1117,15 @@ export default function Dashboard() {
             <tbody>
               {findingsLoading ? (
                 <tr>
-                  <td colSpan="8" style={{ textAlign: 'center', padding: '32px' }}>
-                    <div style={{ color: 'var(--text-tertiary)', fontSize: '0.875rem' }}>Loading findings...</div>
+                  <td colSpan="8" style={{ textAlign: 'center', padding: '36px' }}>
+                    <div style={{ color: '#64748B', fontSize: '0.875rem' }}>Filtering findings...</div>
                   </td>
                 </tr>
               ) : findings.length > 0 ? (
                 findings.map((f, idx) => (
                   <tr key={f._id}>
                     {/* Index */}
-                    <td style={{ color: 'var(--text-tertiary)', fontSize: '0.75rem', fontWeight: 600 }}>
+                    <td style={{ color: '#94A3B8', fontSize: '0.75rem', fontWeight: 600 }}>
                       {idx + 1}
                     </td>
 
@@ -1027,21 +1134,21 @@ export default function Dashboard() {
                       <Link
                         to={`/review/${f.draft?._id || f.draft}`}
                         style={{
-                          fontWeight: 600,
+                          fontWeight: 700,
                           color: '#0F172A',
                           textDecoration: 'none',
                           display: 'block',
-                          maxWidth: '180px',
+                          maxWidth: '190px',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
                           whiteSpace: 'nowrap',
                         }}
-                        title={f.draft?.title || 'View Draft Review'}
+                        title={f.draft?.title || 'Open Draft'}
                       >
                         {f.draft?.title || 'Submitted Content'}
                       </Link>
-                      <span style={{ fontSize: '0.6875rem', color: '#64748B' }}>
-                        {f.draft?.contentType || 'review'}
+                      <span style={{ fontSize: '0.6875rem', color: '#64748B', textTransform: 'capitalize' }}>
+                        {f.draft?.contentType?.replace(/_/g, ' ') || 'Document'}
                       </span>
                     </td>
 
@@ -1051,10 +1158,12 @@ export default function Dashboard() {
                         style={{
                           fontSize: '0.75rem',
                           fontWeight: 600,
-                          color: '#334155',
-                          background: '#F1F5F9',
+                          color: '#4338CA',
+                          background: '#EEF2FF',
                           padding: '3px 8px',
-                          borderRadius: 'var(--radius-sm)',
+                          borderRadius: '6px',
+                          border: '1px solid #E0E7FF',
+                          whiteSpace: 'nowrap',
                         }}
                       >
                         {f.category}
@@ -1066,14 +1175,15 @@ export default function Dashboard() {
                       <div
                         style={{
                           fontSize: '0.8125rem',
-                          color: '#DC2626',
-                          background: '#FEF2F2',
+                          color: '#E11D48',
+                          background: '#FFF1F2',
                           padding: '4px 8px',
-                          borderRadius: 'var(--radius-sm)',
-                          borderLeft: '3px solid #EF4444',
+                          borderRadius: '6px',
+                          borderLeft: '3px solid #F43F5E',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
                           whiteSpace: 'nowrap',
+                          fontWeight: 500,
                         }}
                         title={f.flaggedSnippet || f.explanation}
                       >
@@ -1091,6 +1201,7 @@ export default function Dashboard() {
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
                           whiteSpace: 'nowrap',
+                          fontWeight: 500,
                         }}
                         title={f.ruleRef?.name || f.factRef?.statement || f.explanation}
                       >
@@ -1112,7 +1223,7 @@ export default function Dashboard() {
                           fontWeight: 700,
                           textTransform: 'uppercase',
                           padding: '2px 8px',
-                          borderRadius: 'var(--radius-full)',
+                          borderRadius: '999px',
                           background:
                             f.status === 'resolved'
                               ? '#ECFDF5'
@@ -1125,6 +1236,13 @@ export default function Dashboard() {
                               : f.status === 'dismissed'
                               ? '#64748B'
                               : '#D97706',
+                          border: `1px solid ${
+                            f.status === 'resolved'
+                              ? '#A7F3D0'
+                              : f.status === 'dismissed'
+                              ? '#E2E8F0'
+                              : '#FDE68A'
+                          }`,
                         }}
                       >
                         {f.status}
@@ -1137,8 +1255,8 @@ export default function Dashboard() {
                         <Link
                           to={`/review/${f.draft?._id || f.draft}`}
                           className="btn btn-secondary btn-sm"
-                          style={{ padding: '4px 8px', fontSize: '0.75rem' }}
-                          title="Open Finding in Content Review Studio"
+                          style={{ padding: '4px 8px', fontSize: '0.75rem', borderRadius: '8px' }}
+                          title="Open Finding in Review Studio"
                         >
                           Review
                         </Link>
@@ -1151,10 +1269,11 @@ export default function Dashboard() {
                             style={{
                               padding: '4px 8px',
                               fontSize: '0.75rem',
-                              background: '#EFF6FF',
-                              color: '#2563EB',
-                              border: '1px solid #BFDBFE',
-                              fontWeight: 600,
+                              background: '#ECFDF5',
+                              color: '#059669',
+                              border: '1px solid #A7F3D0',
+                              fontWeight: 700,
+                              borderRadius: '8px',
                             }}
                             title="Resolve finding directly"
                           >
@@ -1167,13 +1286,15 @@ export default function Dashboard() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="8" style={{ textAlign: 'center', padding: '36px' }}>
-                    <CheckCircle2 size={32} color="#10B981" style={{ margin: '0 auto 8px auto' }} />
-                    <div style={{ fontSize: '0.875rem', fontWeight: 600, color: '#0F172A' }}>
-                      No findings match the selected criteria
+                  <td colSpan="8" style={{ textAlign: 'center', padding: '40px' }}>
+                    <div className="icon-tile icon-tile-mint" style={{ width: '44px', height: '44px', margin: '0 auto 8px auto' }}>
+                      <CheckCircle2 size={24} />
+                    </div>
+                    <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#0F172A' }}>
+                      No findings match the selected filters
                     </div>
                     <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '2px' }}>
-                      All reviewed content adheres to active governance rules.
+                      All reviewed copy adheres to current brand governance policies.
                     </div>
                   </td>
                 </tr>
@@ -1183,10 +1304,12 @@ export default function Dashboard() {
         </div>
       </section>
 
-      {/* BOTTOM ROW: Brand Identity Snapshot (Left) & Guideline Coverage (Right) */}
+      {/* ===================================================================
+          5. BOTTOM ROW: Brand Identity Panel (Left) & Guideline Coverage (Right)
+          =================================================================== */}
       <section className="dashboard-grid-bottom">
-        {/* 7. BOTTOM LEFT: BRAND IDENTITY SNAPSHOT */}
-        <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        {/* BRAND IDENTITY PANEL */}
+        <div className="glass-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           <div>
             {/* Header */}
             <div
@@ -1194,42 +1317,30 @@ export default function Dashboard() {
                 display: 'flex',
                 alignItems: 'flex-start',
                 justifyContent: 'space-between',
-                marginBottom: '16px',
+                marginBottom: '18px',
               }}
             >
-              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                <div
-                  style={{
-                    width: '38px',
-                    height: '38px',
-                    borderRadius: '10px',
-                    background: '#FAF5FF',
-                    color: '#9333EA',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                  }}
-                >
-                  <Palette size={20} strokeWidth={2.2} />
+              <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
+                <div className="icon-tile icon-tile-violet" style={{ width: '42px', height: '42px' }}>
+                  <Palette size={22} strokeWidth={2.3} />
                 </div>
                 <div>
-                  <h2 style={{ fontSize: '1.0625rem', fontWeight: 700, color: '#0F172A', lineHeight: 1.2 }}>
-                    Brand Identity Snapshot
+                  <h2 style={{ fontSize: '1.125rem', fontWeight: 800, color: '#0F172A', lineHeight: 1.2, margin: 0 }}>
+                    Brand Identity Panel
                   </h2>
-                  <p style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '2px' }}>
-                    Active typography, colour standards and logo assets.
+                  <p style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '3px', margin: '3px 0 0 0' }}>
+                    Active color standards, typography specs, and approved visual tokens.
                   </p>
                 </div>
               </div>
 
-              <Link to="/guidelines" className="btn btn-secondary btn-sm">
-                Manage
+              <Link to="/guidelines" className="btn btn-secondary btn-sm" style={{ borderRadius: '10px' }}>
+                Manage Specs
               </Link>
             </div>
 
             {brandProfile ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
                 {/* Brand Colors Swatches */}
                 <div>
                   <span
@@ -1237,61 +1348,62 @@ export default function Dashboard() {
                       fontSize: '0.75rem',
                       fontWeight: 700,
                       textTransform: 'uppercase',
-                      color: 'var(--text-tertiary)',
+                      color: '#64748B',
                       letterSpacing: '0.04em',
                       display: 'block',
-                      marginBottom: '8px',
+                      marginBottom: '10px',
                     }}
                   >
-                    Approved Colour Palette
+                    Approved Color Palette
                   </span>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: '8px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: '10px' }}>
                     {(brandProfile.brandColors || brandProfile.colors || []).length > 0 ? (
                       (brandProfile.brandColors || brandProfile.colors).map((c, i) => (
                         <div
                           key={i}
                           onClick={() => handleCopyHex(c.hex)}
                           style={{
-                            padding: '8px',
-                            borderRadius: 'var(--radius-md)',
-                            background: '#F8FAFC',
+                            padding: '10px',
+                            borderRadius: '12px',
+                            background: '#FFFFFF',
                             border: '1px solid #E2E8F0',
                             cursor: 'pointer',
                             display: 'flex',
                             flexDirection: 'column',
                             gap: '6px',
-                            transition: 'all 0.15s ease',
+                            transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)',
+                            boxShadow: '0 2px 4px rgba(15, 23, 42, 0.02)',
                           }}
                           title="Click to copy hex code"
                         >
                           <div
                             style={{
-                              height: '28px',
-                              borderRadius: 'var(--radius-sm)',
+                              height: '32px',
+                              borderRadius: '8px',
                               background: c.hex,
                               boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.1)',
                             }}
                           />
-                          <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#0F172A' }}>
+                          <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#0F172A', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {c.name || c.role || 'Brand Color'}
                           </div>
                           <div
                             style={{
                               fontSize: '0.6875rem',
-                              fontFamily: 'monospace',
-                              color: copiedHex === c.hex ? '#10B981' : '#64748B',
+                              fontFamily: 'var(--font-mono)',
+                              color: copiedHex === c.hex ? '#059669' : '#64748B',
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'space-between',
                             }}
                           >
                             <span>{c.hex}</span>
-                            {copiedHex === c.hex ? <Check size={12} /> : <Copy size={12} />}
+                            {copiedHex === c.hex ? <Check size={12} color="#059669" /> : <Copy size={12} />}
                           </div>
                         </div>
                       ))
                     ) : (
-                      <div style={{ fontSize: '0.8125rem', color: '#64748B' }}>No colours registered.</div>
+                      <div style={{ fontSize: '0.8125rem', color: '#64748B' }}>No registered colors.</div>
                     )}
                   </div>
                 </div>
@@ -1303,10 +1415,10 @@ export default function Dashboard() {
                       fontSize: '0.75rem',
                       fontWeight: 700,
                       textTransform: 'uppercase',
-                      color: 'var(--text-tertiary)',
+                      color: '#64748B',
                       letterSpacing: '0.04em',
                       display: 'block',
-                      marginBottom: '8px',
+                      marginBottom: '10px',
                     }}
                   >
                     Typography Settings
@@ -1315,24 +1427,24 @@ export default function Dashboard() {
                     style={{
                       display: 'grid',
                       gridTemplateColumns: '1fr 1fr',
-                      gap: '8px',
-                      padding: '10px 12px',
-                      borderRadius: 'var(--radius-md)',
+                      gap: '10px',
+                      padding: '12px 14px',
+                      borderRadius: '12px',
                       background: '#F8FAFC',
                       border: '1px solid #E2E8F0',
                     }}
                   >
                     <div>
-                      <div style={{ fontSize: '0.6875rem', color: '#64748B' }}>Primary Body Font</div>
-                      <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#0F172A' }}>
+                      <div style={{ fontSize: '0.6875rem', color: '#64748B', fontWeight: 600 }}>Primary Body Font</div>
+                      <div style={{ fontSize: '0.875rem', fontWeight: 800, color: '#0F172A', marginTop: '2px' }}>
                         {Array.isArray(brandProfile.typography)
                           ? brandProfile.typography.find((t) => t.role === 'Body')?.family || 'Inter'
-                          : brandProfile.typography?.primaryFont || 'Inter, -apple-system'}
+                          : brandProfile.typography?.primaryFont || 'Inter, sans-serif'}
                       </div>
                     </div>
                     <div>
-                      <div style={{ fontSize: '0.6875rem', color: '#64748B' }}>Heading Display Font</div>
-                      <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#0F172A' }}>
+                      <div style={{ fontSize: '0.6875rem', color: '#64748B', fontWeight: 600 }}>Display Heading Font</div>
+                      <div style={{ fontSize: '0.875rem', fontWeight: 800, color: '#0F172A', marginTop: '2px' }}>
                         {Array.isArray(brandProfile.typography)
                           ? brandProfile.typography.find((t) => t.role === 'Heading')?.family || 'Inter'
                           : brandProfile.typography?.headingFont || 'Plus Jakarta Sans'}
@@ -1344,30 +1456,37 @@ export default function Dashboard() {
             ) : (
               <div
                 style={{
-                  padding: '24px',
+                  padding: '32px 20px',
                   textAlign: 'center',
                   background: '#F8FAFC',
-                  borderRadius: 'var(--radius-md)',
+                  borderRadius: '14px',
                   color: '#64748B',
+                  border: '1px dashed #E2E8F0',
                 }}
               >
-                <p style={{ fontSize: '0.875rem', fontWeight: 600 }}>Brand profile not configured yet.</p>
-                <Link to="/guidelines" className="btn btn-primary btn-sm" style={{ marginTop: '8px' }}>
+                <Palette size={28} color="#7C3AED" style={{ margin: '0 auto 8px auto' }} />
+                <p style={{ fontSize: '0.875rem', fontWeight: 700, color: '#0F172A', margin: '0 0 6px 0' }}>
+                  Brand profile not configured yet
+                </p>
+                <p style={{ fontSize: '0.75rem', margin: '0 0 12px 0' }}>
+                  Set up approved color palettes, font pairings, and logo assets.
+                </p>
+                <Link to="/guidelines" className="btn btn-gradient-primary btn-sm">
                   Configure Brand Identity
                 </Link>
               </div>
             )}
           </div>
 
-          <div style={{ borderTop: '1px solid #F1F5F9', paddingTop: '10px', marginTop: '12px' }}>
+          <div style={{ borderTop: '1px solid #F1F5F9', paddingTop: '12px', marginTop: '16px' }}>
             <span style={{ fontSize: '0.75rem', color: '#64748B' }}>
-              Enforced by InkGuard Deterministic Visual Engine
+              Enforced automatically by InkGuard Deterministic Visual Engine
             </span>
           </div>
         </div>
 
-        {/* 8. BOTTOM RIGHT: GUIDELINE COVERAGE */}
-        <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        {/* GUIDELINE COVERAGE WIDGETS */}
+        <div className="glass-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           <div>
             {/* Header */}
             <div
@@ -1375,49 +1494,37 @@ export default function Dashboard() {
                 display: 'flex',
                 alignItems: 'flex-start',
                 justifyContent: 'space-between',
-                marginBottom: '16px',
+                marginBottom: '18px',
               }}
             >
-              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                <div
-                  style={{
-                    width: '38px',
-                    height: '38px',
-                    borderRadius: '10px',
-                    background: '#EFF6FF',
-                    color: '#2563EB',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                  }}
-                >
-                  <ShieldCheck size={20} strokeWidth={2.2} />
+              <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
+                <div className="icon-tile icon-tile-cyan" style={{ width: '42px', height: '42px' }}>
+                  <ShieldCheck size={22} strokeWidth={2.3} />
                 </div>
                 <div>
-                  <h2 style={{ fontSize: '1.0625rem', fontWeight: 700, color: '#0F172A', lineHeight: 1.2 }}>
-                    Guideline Coverage
+                  <h2 style={{ fontSize: '1.125rem', fontWeight: 800, color: '#0F172A', lineHeight: 1.2, margin: 0 }}>
+                    Guideline Coverage Widgets
                   </h2>
-                  <p style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '2px' }}>
-                    Active deterministic governance rules enforced across workspaces.
+                  <p style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '3px', margin: '3px 0 0 0' }}>
+                    Active deterministic rules enforced across 6 core governance pillars.
                   </p>
                 </div>
               </div>
 
-              <Link to="/guidelines" className="btn btn-secondary btn-sm">
-                View Guidelines
+              <Link to="/guidelines" className="btn btn-secondary btn-sm" style={{ borderRadius: '10px' }}>
+                View All Rules
               </Link>
             </div>
 
             {/* Coverage Tiles Grid */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '10px' }}>
               {[
-                { label: 'Messaging', key: 'Messaging', icon: BookOpen },
-                { label: 'Terminology', key: 'Terminology', icon: CheckSquare },
-                { label: 'Visual Identity', key: 'Visual identity', icon: Palette },
-                { label: 'Accessibility', key: 'Accessibility', icon: Layers },
-                { label: 'Promotional Claims', key: 'Promotional claims', icon: Sparkles },
-                { label: 'Tone of Voice', key: 'Tone of voice', icon: Info },
+                { label: 'Messaging', key: 'Messaging', icon: BookOpen, tileClass: 'icon-tile-blue' },
+                { label: 'Terminology', key: 'Terminology', icon: CheckSquare, tileClass: 'icon-tile-violet' },
+                { label: 'Visual Identity', key: 'Visual identity', icon: Palette, tileClass: 'icon-tile-cyan' },
+                { label: 'Accessibility', key: 'Accessibility', icon: Layers, tileClass: 'icon-tile-mint' },
+                { label: 'Promotional Claims', key: 'Promotional claims', icon: Sparkles, tileClass: 'icon-tile-coral' },
+                { label: 'Tone of Voice', key: 'Tone of voice', icon: Info, tileClass: 'icon-tile-amber' },
               ].map((cat, idx) => {
                 const count = getCategoryRuleCount(cat.key);
                 const IconComponent = cat.icon;
@@ -1426,23 +1533,27 @@ export default function Dashboard() {
                   <div
                     key={idx}
                     style={{
-                      padding: '12px',
-                      borderRadius: 'var(--radius-md)',
-                      background: '#F8FAFC',
+                      padding: '12px 14px',
+                      borderRadius: '14px',
+                      background: '#FFFFFF',
                       border: '1px solid #E2E8F0',
                       display: 'flex',
                       flexDirection: 'column',
                       justifyContent: 'space-between',
-                      minHeight: '76px',
+                      minHeight: '84px',
+                      boxShadow: '0 1px 3px rgba(15, 23, 42, 0.02)',
+                      transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)',
                     }}
                   >
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#475569' }}>{cat.label}</span>
-                      <IconComponent size={14} color="#2563EB" />
+                      <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569' }}>{cat.label}</span>
+                      <div className={`icon-tile ${cat.tileClass}`} style={{ width: '26px', height: '26px', borderRadius: '7px' }}>
+                        <IconComponent size={13} strokeWidth={2.4} />
+                      </div>
                     </div>
-                    <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', marginTop: '4px' }}>
+                    <div style={{ fontSize: '1.35rem', fontWeight: 850, color: '#0F172A', marginTop: '6px' }}>
                       {count}{' '}
-                      <span style={{ fontSize: '0.6875rem', fontWeight: 500, color: '#64748B' }}>
+                      <span style={{ fontSize: '0.6875rem', fontWeight: 600, color: '#64748B' }}>
                         {count === 1 ? 'rule' : 'rules'}
                       </span>
                     </div>
@@ -1455,8 +1566,8 @@ export default function Dashboard() {
           <div
             style={{
               borderTop: '1px solid #F1F5F9',
-              paddingTop: '10px',
-              marginTop: '12px',
+              paddingTop: '12px',
+              marginTop: '16px',
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
@@ -1469,7 +1580,7 @@ export default function Dashboard() {
               to="/guidelines"
               style={{
                 fontSize: '0.75rem',
-                fontWeight: 600,
+                fontWeight: 700,
                 color: '#2563EB',
                 textDecoration: 'none',
               }}

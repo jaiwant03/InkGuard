@@ -7,7 +7,7 @@
 
 :root {
   /* Surfaces */
-  --bg-app: #EFF6FF; /* Soft ambient royal tint */
+  --bg-app: #F8FAFC;
   --bg-canvas: #F8FAFC;
   --bg-surface: #FFFFFF;
   --bg-surface-secondary: #F8FAFC;
@@ -21,15 +21,39 @@
   --color-primary-subtle: #DBEAFE;
   --color-primary-dark: #1E40AF;
 
-  --color-indigo: #4F46E5;
-  --color-indigo-hover: #4338CA;
-  --color-indigo-light: #EEF2FF;
-  --color-indigo-subtle: #E0E7FF;
+  /* Rich Multi-Colour Palette */
+  --color-electric-blue: #2563EB;
+  --color-electric-blue-light: #EFF6FF;
+  --color-electric-blue-border: #BFDBFE;
 
-  --gradient-primary: linear-gradient(135deg, #2563EB 0%, #4F46E5 100%);
-  --gradient-accent: linear-gradient(135deg, #3B82F6 0%, #6366F1 50%, #8B5CF6 100%);
+  --color-violet: #7C3AED;
+  --color-violet-light: #F5F3FF;
+  --color-violet-border: #DDD6FE;
+
+  --color-cyan: #06B6D4;
+  --color-cyan-light: #ECFEFF;
+  --color-cyan-border: #A5F3FC;
+
+  --color-mint: #10B981;
+  --color-mint-light: #ECFDF5;
+  --color-mint-border: #A7F3D0;
+
+  --color-coral: #F43F5E;
+  --color-coral-light: #FFF1F2;
+  --color-coral-border: #FECDD3;
+
+  --color-amber: #F59E0B;
+  --color-amber-light: #FFFBEB;
+  --color-amber-border: #FDE68A;
+
+  /* Vibrant Modern Gradients */
+  --gradient-primary: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%);
+  --gradient-electric-violet: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%);
+  --gradient-cyan-blue: linear-gradient(135deg, #06B6D4 0%, #2563EB 100%);
+  --gradient-mint-cyan: linear-gradient(135deg, #10B981 0%, #06B6D4 100%);
+  --gradient-coral-rose: linear-gradient(135deg, #F43F5E 0%, #FB7185 100%);
+  --gradient-amber-orange: linear-gradient(135deg, #F59E0B 0%, #EA580C 100%);
   --gradient-card: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
-  --gradient-ring: linear-gradient(135deg, #2563EB 0%, #60A5FA 100%);
 
   /* Text Tokens */
   --text-primary: #0F172A;

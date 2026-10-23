@@ -272,58 +272,76 @@ export default function Dashboard() {
           boxShadow: '0 10px 30px -5px rgba(37, 99, 235, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02)',
         }}
       >
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
-            <span
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '3px 10px',
-                borderRadius: '999px',
-                background: '#ECFDF5',
-                color: '#059669',
-                fontSize: '0.6875rem',
-                fontWeight: 700,
-                border: '1px solid #A7F3D0',
-                textTransform: 'uppercase',
-                letterSpacing: '0.04em',
-              }}
-            >
-              <span
-                className="motion-pulse-check"
-                style={{
-                  width: '6px',
-                  height: '6px',
-                  borderRadius: '50%',
-                  background: '#10B981',
-                  display: 'inline-block',
-                }}
-              />
-              Brand Governance Live
-            </span>
-            <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>•</span>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#64748B', fontSize: '0.75rem', fontWeight: 500 }}>
-              <Calendar size={13} color="#2563EB" />
-              {formattedToday}
-            </span>
-          </div>
-
-          <h1
+        <div style={{ display: 'flex', alignItems: 'center', gap: '22px' }}>
+          <div
+            className="ui-integrated-graphic motion-mascot"
             style={{
-              fontSize: '1.75rem',
-              fontWeight: 850,
-              color: '#0F172A',
-              letterSpacing: '-0.025em',
-              lineHeight: 1.2,
-              margin: 0,
+              width: '64px',
+              height: '64px',
+              flexShrink: 0,
             }}
           >
-            {getGreeting()}
-          </h1>
-          <p style={{ fontSize: '0.875rem', color: '#64748B', marginTop: '4px', margin: '4px 0 0 0' }}>
-            Protect brand equity across all channels with real-time deterministic audits.
-          </p>
+            <img
+              src={ASSET_IMAGES.governanceShield}
+              alt="InkGuard Governance Shield"
+              className="ui-seamless-image"
+              style={{ width: '100%', height: '100%' }}
+            />
+          </div>
+
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '3px 10px',
+                  borderRadius: '999px',
+                  background: '#ECFDF5',
+                  color: '#059669',
+                  fontSize: '0.6875rem',
+                  fontWeight: 700,
+                  border: '1px solid #A7F3D0',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                }}
+              >
+                <span
+                  className="motion-pulse-check"
+                  style={{
+                    width: '6px',
+                    height: '6px',
+                    borderRadius: '50%',
+                    background: '#10B981',
+                    display: 'inline-block',
+                  }}
+                />
+                Brand Governance Live
+              </span>
+              <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>•</span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#64748B', fontSize: '0.75rem', fontWeight: 500 }}>
+                <Calendar size={13} color="#2563EB" />
+                {formattedToday}
+              </span>
+            </div>
+
+            <h1
+              style={{
+                fontSize: '1.75rem',
+                fontWeight: 850,
+                color: '#0F172A',
+                letterSpacing: '-0.025em',
+                lineHeight: 1.2,
+                margin: 0,
+              }}
+            >
+              {getGreeting()}
+            </h1>
+            <p style={{ fontSize: '0.875rem', color: '#64748B', marginTop: '4px', margin: '4px 0 0 0' }}>
+              Protect brand equity across all channels with real-time deterministic audits.
+            </p>
+          </div>
         </div>
 
         {/* Action Buttons */}

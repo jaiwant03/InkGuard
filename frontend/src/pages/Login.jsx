@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Lock, Mail, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail, ArrowRight, ShieldCheck, AlertCircle, Sparkles } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { ASSET_IMAGES } from '../assets/images';
-import { Check } from 'lucide-react';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -60,50 +59,37 @@ export default function Login() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'linear-gradient(135deg, #090D16 0%, #0F172A 50%, #1E1B4B 100%)',
+        background: '#FFFFFF',
         padding: 'var(--space-6)',
         position: 'relative',
-        overflow: 'hidden',
       }}
     >
-      {/* Background glow circle */}
-      <div
-        style={{
-          position: 'absolute',
-          width: '500px',
-          height: '500px',
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(37, 99, 235, 0.2) 0%, transparent 70%)',
-          filter: 'blur(60px)',
-          pointerEvents: 'none',
-        }}
-      />
-
       <div
         style={{
           width: '100%',
           maxWidth: '460px',
-          background: 'rgba(255, 255, 255, 0.98)',
-          borderRadius: 'var(--radius-2xl)',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.35)',
-          padding: 'var(--space-8)',
+          background: '#FFFFFF',
+          borderRadius: '24px',
+          border: '1px solid #E2E8F0',
+          boxShadow: '0 20px 45px -12px rgba(15, 23, 42, 0.08), 0 0 1px 1px rgba(15, 23, 42, 0.04)',
+          padding: '40px 36px',
           position: 'relative',
           zIndex: 1,
         }}
       >
-        {/* Brand Header with 3D Motion Mascot */}
-        <div style={{ textAlign: 'center', marginBottom: 'var(--space-6)' }}>
+        {/* Brand Header with Emblem */}
+        <div style={{ textAlign: 'center', marginBottom: '28px' }}>
           <div
             className="motion-mascot"
             style={{
               width: '84px',
               height: '84px',
-              margin: '0 auto var(--space-3) auto',
+              margin: '0 auto 16px auto',
               borderRadius: '50%',
               overflow: 'hidden',
-              boxShadow: '0 12px 28px -4px rgba(37, 99, 235, 0.4)',
-              border: '2px solid #DBEAFE',
-              background: 'radial-gradient(circle, #EFF6FF 0%, #DBEAFE 100%)',
+              boxShadow: '0 12px 28px -6px rgba(37, 99, 235, 0.22), 0 0 0 1px rgba(37, 99, 235, 0.1)',
+              border: '3px solid #FFFFFF',
+              background: '#FFFFFF',
             }}
           >
             <img
@@ -113,20 +99,59 @@ export default function Login() {
             />
           </div>
 
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', color: '#10B981', fontWeight: 600, background: '#ECFDF5', padding: '3px 10px', borderRadius: '999px', marginBottom: '8px' }}>
-            <span className="motion-pulse-check" style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#10B981', display: 'inline-block' }} />
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              fontSize: '0.75rem',
+              color: '#059669',
+              fontWeight: 600,
+              background: '#ECFDF5',
+              padding: '4px 12px',
+              borderRadius: '999px',
+              border: '1px solid #A7F3D0',
+              marginBottom: '10px',
+            }}
+          >
+            <span
+              className="motion-pulse-check"
+              style={{
+                width: '7px',
+                height: '7px',
+                borderRadius: '50%',
+                background: '#10B981',
+                display: 'inline-block',
+              }}
+            />
             Brand Governance Engine
           </div>
 
-          <h1 style={{ fontSize: '1.625rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+          <h1
+            style={{
+              fontSize: '1.75rem',
+              fontWeight: 850,
+              color: '#0F172A',
+              letterSpacing: '-0.025em',
+              marginBottom: '4px',
+            }}
+          >
             Welcome to INKGUARD
           </h1>
-          <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
+          <p style={{ fontSize: '0.875rem', color: '#64748B', margin: 0 }}>
             Create with confidence. Publish with consistency.
           </p>
 
           {/* Reference Palette Dot Matrix */}
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', marginTop: '10px' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '8px',
+              marginTop: '12px',
+            }}
+          >
             {['#2563EB', '#4F46E5', '#0284C7', '#10B981', '#F59E0B'].map((hex, idx) => (
               <span
                 key={idx}
@@ -138,25 +163,35 @@ export default function Login() {
           </div>
         </div>
 
-        {/* Demo Fast Login Buttons */}
+        {/* Demo Fast Login Options */}
         <div
           style={{
-            background: 'var(--bg-surface-secondary)',
-            borderRadius: 'var(--radius-lg)',
-            padding: '10px 12px',
-            marginBottom: 'var(--space-5)',
-            border: '1px solid var(--border-light)',
+            background: '#F8FAFC',
+            borderRadius: '14px',
+            padding: '12px 14px',
+            marginBottom: '24px',
+            border: '1px solid #E2E8F0',
           }}
         >
-          <span style={{ display: 'block', fontSize: '0.6875rem', fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', marginBottom: '6px' }}>
+          <span
+            style={{
+              display: 'block',
+              fontSize: '0.6875rem',
+              fontWeight: 700,
+              color: '#64748B',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              marginBottom: '8px',
+            }}
+          >
             ⚡ Fast Demo Roles Fill:
           </span>
-          <div style={{ display: 'flex', gap: '6px' }}>
+          <div style={{ display: 'flex', gap: '8px' }}>
             <button
               type="button"
               onClick={() => handleFastLogin('admin')}
               className="btn btn-secondary btn-sm"
-              style={{ flex: 1, fontSize: '0.75rem', padding: '4px 6px' }}
+              style={{ flex: 1, padding: '6px 8px', fontSize: '0.75rem' }}
             >
               Admin
             </button>
@@ -164,7 +199,7 @@ export default function Login() {
               type="button"
               onClick={() => handleFastLogin('reviewer')}
               className="btn btn-secondary btn-sm"
-              style={{ flex: 1, fontSize: '0.75rem', padding: '4px 6px' }}
+              style={{ flex: 1, padding: '6px 8px', fontSize: '0.75rem' }}
             >
               Reviewer
             </button>
@@ -172,7 +207,7 @@ export default function Login() {
               type="button"
               onClick={() => handleFastLogin('creator')}
               className="btn btn-secondary btn-sm"
-              style={{ flex: 1, fontSize: '0.75rem', padding: '4px 6px' }}
+              style={{ flex: 1, padding: '6px 8px', fontSize: '0.75rem' }}
             >
               Creator
             </button>
@@ -184,15 +219,15 @@ export default function Login() {
           <div
             style={{
               padding: '10px 14px',
-              borderRadius: 'var(--radius-md)',
-              background: 'var(--severity-high-bg)',
-              color: 'var(--severity-high)',
-              border: '1px solid var(--severity-high-border)',
+              borderRadius: '12px',
+              background: '#FEF2F2',
+              color: '#DC2626',
+              border: '1px solid #FCA5A5',
               fontSize: '0.8125rem',
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
-              marginBottom: 'var(--space-4)',
+              marginBottom: '20px',
             }}
           >
             <AlertCircle size={16} flexShrink={0} />
@@ -212,16 +247,18 @@ export default function Login() {
                 placeholder="name@company.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                style={{ paddingLeft: '38px' }}
+                style={{ paddingLeft: '40px' }}
               />
-              <Mail size={16} color="var(--text-tertiary)" style={{ position: 'absolute', left: '12px', top: '13px' }} />
+              <Mail
+                size={16}
+                color="#94A3B8"
+                style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }}
+              />
             </div>
           </div>
 
           <div className="form-group">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <label className="form-label">Password</label>
-            </div>
+            <label className="form-label">Password</label>
             <div style={{ position: 'relative' }}>
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -230,13 +267,30 @@ export default function Login() {
                 placeholder="••••••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                style={{ paddingLeft: '38px', paddingRight: '38px' }}
+                style={{ paddingLeft: '40px', paddingRight: '40px' }}
               />
-              <Lock size={16} color="var(--text-tertiary)" style={{ position: 'absolute', left: '12px', top: '13px' }} />
+              <Lock
+                size={16}
+                color="#94A3B8"
+                style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }}
+              />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                style={{ position: 'absolute', right: '12px', top: '11px', color: 'var(--text-tertiary)' }}
+                style={{
+                  position: 'absolute',
+                  right: '12px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  color: '#94A3B8',
+                  padding: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
                 aria-label="Toggle password visibility"
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -244,18 +298,35 @@ export default function Login() {
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--space-5)' }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8125rem', color: 'var(--text-secondary)', cursor: 'pointer' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: '24px',
+              marginTop: '4px',
+            }}
+          >
+            <label
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                fontSize: '0.8125rem',
+                color: '#475569',
+                cursor: 'pointer',
+                userSelect: 'none',
+              }}
+            >
               <input
                 type="checkbox"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
-                style={{ accentColor: 'var(--color-primary)' }}
               />
               Remember me
             </label>
-            <span style={{ fontSize: '0.8125rem', color: 'var(--text-tertiary)' }}>
-              Password recovery is managed by your Admin
+            <span style={{ fontSize: '0.8125rem', color: '#94A3B8' }}>
+              Managed by your Workspace Admin
             </span>
           </div>
 
@@ -263,13 +334,14 @@ export default function Login() {
             type="submit"
             className="btn btn-primary btn-lg"
             disabled={loading}
-            style={{ width: '100%', marginBottom: 'var(--space-4)' }}
+            style={{ width: '100%', marginBottom: '18px' }}
           >
             {loading ? 'Authenticating...' : 'Sign In to Workspace'}
+            {!loading && <ArrowRight size={16} />}
           </button>
         </form>
 
-        <div style={{ textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+        <div style={{ textAlign: 'center', fontSize: '0.875rem', color: '#64748B' }}>
           Don't have an account?{' '}
           <Link to="/register" style={{ fontWeight: 600, color: 'var(--color-primary)' }}>
             Register new workspace

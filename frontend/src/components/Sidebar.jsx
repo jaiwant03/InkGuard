@@ -458,7 +458,7 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
                 <img
                   src={ASSET_IMAGES.governanceShield}
                   alt="InkGuard Mascot"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  style={{ width: '100%', height: '100%', objectFit: 'contain', mixBlendMode: 'multiply' }}
                 />
               </div>
               <div style={{ minWidth: 0, flex: 1 }}>

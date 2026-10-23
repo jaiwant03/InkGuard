@@ -318,7 +318,7 @@ export default function BrandReferenceOverview({
                 onMouseLeave={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
               >
                 {asset.img ? (
-                  <img src={asset.img} alt={asset.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <img src={asset.img} alt={asset.name} style={{ width: '100%', height: '100%', objectFit: 'contain', mixBlendMode: 'multiply' }} />
                 ) : (
                   <svg viewBox="0 0 100 100" width="24" height="24">
                     <path

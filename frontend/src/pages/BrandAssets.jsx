@@ -368,10 +368,11 @@ export default function BrandAssets() {
                   src={asset.fileUrl}
                   alt={asset.name}
                   style={{
-                    maxWidth: '100%',
-                    maxHeight: '100%',
+                    maxWidth: '92%',
+                    maxHeight: '92%',
                     objectFit: 'contain',
-                    filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.06))',
+                    mixBlendMode: 'multiply',
+                    filter: 'drop-shadow(0 6px 14px rgba(15, 23, 42, 0.08))',
                   }}
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';

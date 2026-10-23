@@ -168,12 +168,14 @@ export default function BrandReferenceOverview({
             gap: '8px',
           }}
         >
-          <img
-            src={ASSET_IMAGES.governanceShield}
-            alt="Shield mascot"
-            className="motion-mascot"
-            style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'contain' }}
-          />
+          <div className="ui-integrated-graphic" style={{ width: '28px', height: '28px' }}>
+            <img
+              src={ASSET_IMAGES.governanceShield}
+              alt="Shield mascot"
+              className="ui-seamless-image motion-mascot"
+              style={{ width: '100%', height: '100%' }}
+            />
+          </div>
           <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
             Active Governance Watcher
           </span>
@@ -193,14 +195,10 @@ export default function BrandReferenceOverview({
 
         {/* 3D Floating Brochure & Guidelines Presentation */}
         <div
-          className="doc-mockup-frame"
+          className="ui-seamless-mockup-frame"
           style={{
             position: 'relative',
-            borderRadius: 'var(--radius-xl)',
-            overflow: 'hidden',
-            border: '1px solid #E2E8F0',
-            background: '#FFFFFF',
-            boxShadow: 'inset 0 0 40px rgba(241, 245, 249, 0.6)',
+            minHeight: '220px',
           }}
         >
           {/* 3D Rendered Animation Image with Floating Motion Effect */}
@@ -210,9 +208,8 @@ export default function BrandReferenceOverview({
               alt="3D Corporate Brochure Presentation"
               style={{
                 width: '100%',
-                maxHeight: '220px',
+                maxHeight: '210px',
                 objectFit: 'contain',
-                filter: 'drop-shadow(0 15px 25px rgba(37, 99, 235, 0.15))',
               }}
             />
           </div>

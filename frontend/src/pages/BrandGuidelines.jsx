@@ -245,20 +245,17 @@ export default function BrandGuidelines() {
             Brand Guidelines Manual
           </span>
           <div
-            className="motion-float"
+            className="ui-seamless-mockup-frame motion-float"
             style={{
-              borderRadius: 'var(--radius-xl)',
-              overflow: 'hidden',
-              boxShadow: '0 16px 36px -8px rgba(37, 99, 235, 0.28)',
-              border: '1px solid #E2E8F0',
-              background: '#FFFFFF',
-              maxHeight: '190px',
+              width: '180px',
+              height: '140px',
+              margin: '0 auto',
             }}
           >
             <img
               src={ASSET_IMAGES.brandDocPreview}
               alt="Brand Guidelines 3D Preview"
-              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+              style={{ width: '100%', height: '100%' }}
             />
           </div>
           <div style={{ marginTop: '8px', display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', color: '#10B981', fontWeight: 600, background: '#ECFDF5', padding: '3px 10px', borderRadius: '999px' }}>

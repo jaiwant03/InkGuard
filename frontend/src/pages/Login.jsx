@@ -80,22 +80,18 @@ export default function Login() {
         {/* Brand Header with Emblem */}
         <div style={{ textAlign: 'center', marginBottom: '28px' }}>
           <div
-            className="motion-mascot"
+            className="ui-integrated-graphic motion-mascot"
             style={{
               width: '84px',
               height: '84px',
-              margin: '0 auto 16px auto',
-              borderRadius: '50%',
-              overflow: 'hidden',
-              boxShadow: '0 12px 28px -6px rgba(37, 99, 235, 0.22), 0 0 0 1px rgba(37, 99, 235, 0.1)',
-              border: '3px solid #FFFFFF',
-              background: '#FFFFFF',
+              margin: '0 auto 14px auto',
             }}
           >
             <img
               src={ASSET_IMAGES.governanceShield}
               alt="Governance Mascot 3D"
-              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+              className="ui-seamless-image"
+              style={{ width: '100%', height: '100%' }}
             />
           </div>
 

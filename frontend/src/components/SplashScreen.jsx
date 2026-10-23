@@ -22,6 +22,7 @@ export default function SplashScreen({ onComplete }) {
 
   return (
     <div
+      className={`splash-container ${fadingOut ? 'splash-fade-out' : ''}`}
       style={{
         position: 'fixed',
         inset: 0,
@@ -31,38 +32,47 @@ export default function SplashScreen({ onComplete }) {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        transition: 'opacity 0.5s ease-out, transform 0.5s ease-out',
-        opacity: fadingOut ? 0 : 1,
-        transform: fadingOut ? 'scale(1.02)' : 'scale(1)',
-        pointerEvents: fadingOut ? 'none' : 'auto',
         userSelect: 'none',
+        overflow: 'hidden',
       }}
     >
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          textAlign: 'center',
-        }}
-      >
-        {/* Rotating Emblem Container */}
-        <div className="splash-logo-wrapper">
-          <div className="splash-rotating-ring" />
-          <div className="splash-logo-inner">
+      {/* Studio Ambient Radial Depth (Pure White Palette) */}
+      <div className="splash-ambient-glow" />
+
+      {/* Main Logo & Brand Presentation */}
+      <div className="splash-content-box">
+        {/* Dual Rotating High-Tech Precision Orbital Rings */}
+        <div className="splash-orbit-outer">
+          <div className="splash-orbit-tick" style={{ top: '0', left: '50%' }} />
+          <div className="splash-orbit-tick" style={{ bottom: '0', left: '50%' }} />
+          <div className="splash-orbit-tick" style={{ left: '0', top: '50%' }} />
+          <div className="splash-orbit-tick" style={{ right: '0', top: '50%' }} />
+        </div>
+        <div className="splash-orbit-inner" />
+
+        {/* 3D Shield Logo Stage */}
+        <div className="splash-logo-stage">
+          <div className="splash-logo-3d-wrapper">
             <img
               src={ASSET_IMAGES.governanceShield}
-              alt="InkGuard Logo"
-              className="splash-logo-img"
+              alt="InkGuard Brand Shield"
+              className="splash-shield-image"
             />
+            {/* Shimmer light reflection sweep */}
+            <div className="splash-light-glint" />
           </div>
+
+          {/* Dynamic 3D Contact Shadow beneath shield */}
+          <div className="splash-dynamic-shadow" />
         </div>
 
-        {/* Website Name with Rotating 3D Entrance */}
-        <h1 className="splash-website-title">
-          INKGUARD
-        </h1>
+        {/* Website Name with Kinetic 3D Perspective Reveal */}
+        <div className="splash-brand-text-wrapper">
+          <h1 className="splash-website-title">
+            INKGUARD
+          </h1>
+          <div className="splash-title-underline-glow" />
+        </div>
       </div>
     </div>
   );

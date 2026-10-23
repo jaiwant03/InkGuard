@@ -21,7 +21,7 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { api } from '../services/api';
 
-export default function TopNavigation({ onOpenSearch }) {
+export default function TopNavigation({ onOpenSearch, onToggleMobileSidebar, isSidebarLayout = false }) {
   const { user, workspace, role, logout, refreshUser, switchWorkspace } = useAuth();
   const [profileOpen, setProfileOpen] = useState(false);
   const [workspaceOpen, setWorkspaceOpen] = useState(false);

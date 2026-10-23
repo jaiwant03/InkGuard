@@ -329,6 +329,7 @@ html, body {
   margin: 0;
   background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 40%, #2563EB 75%, #1D4ED8 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: splashTitle3DReveal 1.3s cubic-bezier(0.16, 1, 0.3, 1) 0.35s backwards;
   text-shadow: 0 4px 20px rgba(37, 99, 235, 0.12);

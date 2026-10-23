@@ -63,13 +63,9 @@ function ProtectedRoute({ children }) {
 
 // Main App Router Flow
 function AppRouter() {
-  const [showSplash, setShowSplash] = useState(() => {
-    // Only show on first website load in session
-    return !sessionStorage.getItem('inkguard_splash_shown');
-  });
+  const [showSplash, setShowSplash] = useState(true);
 
   const handleSplashComplete = () => {
-    sessionStorage.setItem('inkguard_splash_shown', 'true');
     setShowSplash(false);
   };
 

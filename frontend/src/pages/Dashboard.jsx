@@ -1138,7 +1138,7 @@ export default function Dashboard() {
                           color: '#0F172A',
                           textDecoration: 'none',
                           display: 'block',
-                          maxWidth: '190px',
+                          maxWidth: '160px',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
                           whiteSpace: 'nowrap',
@@ -1171,7 +1171,7 @@ export default function Dashboard() {
                     </td>
 
                     {/* Flagged Excerpt */}
-                    <td style={{ maxWidth: '240px' }}>
+                    <td style={{ maxWidth: '190px' }}>
                       <div
                         style={{
                           fontSize: '0.8125rem',
@@ -1192,7 +1192,7 @@ export default function Dashboard() {
                     </td>
 
                     {/* Rule / Source */}
-                    <td style={{ maxWidth: '180px' }}>
+                    <td style={{ maxWidth: '140px' }}>
                       <span
                         style={{
                           fontSize: '0.75rem',

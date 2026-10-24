@@ -125,57 +125,27 @@ export default function ApprovalQueue() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
       {/* Clean Modern Page Header Banner */}
       <div className="page-header-clean">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
-          <div
-            className="ui-integrated-graphic motion-mascot"
-            style={{ width: '56px', height: '56px', flexShrink: 0 }}
-          >
-            <img
-              src={ASSET_IMAGES.governanceShield}
-              alt="Governance Mascot"
-              className="ui-seamless-image"
-              style={{ width: '100%', height: '100%' }}
-            />
+        <div className="page-header-info">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+            <span className="badge badge-warning">
+              <ClipboardList size={12} style={{ display: 'inline', marginRight: '4px' }} />
+              Sign-off Gatekeeper
+            </span>
+            <span style={{ fontSize: '0.8125rem', color: 'var(--text-tertiary)' }}>
+              {drafts.filter((d) => d.status === 'In Review').length} Awaiting Approval
+            </span>
           </div>
 
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-              <span
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '3px 10px',
-                  borderRadius: '999px',
-                  background: '#FFFBEB',
-                  color: '#D97706',
-                  fontSize: '0.6875rem',
-                  fontWeight: 700,
-                  border: '1px solid #FDE68A',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.04em',
-                }}
-              >
-                <ClipboardList size={12} color="#D97706" />
-                Sign-off Gatekeeper
-              </span>
-              <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>•</span>
-              <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
-                {drafts.filter((d) => d.status === 'In Review').length} Awaiting Approval
-              </span>
-            </div>
-
-            <h1 className="text-gradient-amber" style={{ fontSize: '1.75rem', fontWeight: 850, margin: 0 }}>
-              Human Review & Approval Queue
-            </h1>
-            <p style={{ fontSize: '0.875rem', color: '#64748B', marginTop: '4px', margin: '4px 0 0 0' }}>
-              Multi-stakeholder sign-off workflow ensuring content meets brand tone, legal policies, and approved claims.
-            </p>
-          </div>
+          <h1 className="page-header-title text-gradient-amber">
+            Approval Queue & Sign-Offs
+          </h1>
+          <p className="page-header-subtitle">
+            Multi-stakeholder sign-off workflow ensuring content meets brand tone, legal policies, and approved claims.
+          </p>
         </div>
 
         {/* Quick Metrics Bar */}
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center' }}>
           <div style={{ background: '#FFFFFF', padding: '8px 14px', borderRadius: '12px', border: '1px solid #E2E8F0', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
             <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block' }}>Awaiting Review</span>
             <span style={{ fontSize: '1.125rem', fontWeight: 800, color: '#D97706' }}>
@@ -191,7 +161,7 @@ export default function ApprovalQueue() {
         </div>
       </div>
 
-      {/* Header & Tabs */}
+      {/* Tabs */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
         <div>
           <h2 className="text-gradient-blue" style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0 }}>
@@ -199,20 +169,15 @@ export default function ApprovalQueue() {
           </h2>
           <p style={{ fontSize: '0.875rem', color: '#64748B', marginTop: '2px', margin: '2px 0 0 0' }}>
             Collaborative sign-off workflow for brand managers, legal reviewers, and content authors.
+          </p>
         </div>
 
-        <div style={{ display: 'flex', gap: 'var(--space-2)', background: 'var(--bg-surface-secondary)', padding: '4px', borderRadius: 'var(--radius-lg)' }}>
+        <div className="segmented-control">
           {tabs.map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className="btn btn-sm"
-              style={{
-                background: activeTab === tab ? 'var(--bg-surface)' : 'transparent',
-                color: activeTab === tab ? 'var(--color-primary)' : 'var(--text-secondary)',
-                boxShadow: activeTab === tab ? 'var(--shadow-sm)' : 'none',
-                fontWeight: 600,
-              }}
+              className={`segmented-btn ${activeTab === tab ? 'active' : ''}`}
             >
               {tab}
             </button>

@@ -119,14 +119,6 @@ export const api = {
     delete: (id) => request(`/approved-facts/${id}`, { method: 'DELETE' }),
   },
 
-  // Brand Assets
-  brandAssets: {
-    list: (params = {}) => request(`/brand-assets${toQueryString(params)}`),
-    upload: (formData) => request('/brand-assets', { method: 'POST', body: formData }),
-    updateStatus: (id, approvalStatus) => request(`/brand-assets/${id}/status`, { method: 'PATCH', body: JSON.stringify({ approvalStatus }) }),
-    delete: (id) => request(`/brand-assets/${id}`, { method: 'DELETE' }),
-  },
-
   // Drafts & Reviews
   drafts: {
     list: (params = {}) => request(`/drafts${toQueryString(params)}`),
@@ -150,11 +142,6 @@ export const api = {
     metrics: () => request('/dashboard/metrics'),
     findings: (params = {}) => request(`/dashboard/findings${toQueryString(params)}`),
     search: (q = '') => request(`/dashboard/search?q=${encodeURIComponent(q)}`),
-  },
-
-  // Governance Insights
-  insights: {
-    get: () => request('/insights'),
   },
 
   // Audit Logs

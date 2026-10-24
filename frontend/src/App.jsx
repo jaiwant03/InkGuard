@@ -14,6 +14,8 @@ import ContentReview from './pages/ContentReview';
 import ReviewResults from './pages/ReviewResults';
 import ApprovalQueue from './pages/ApprovalQueue';
 import ReviewHistory from './pages/ReviewHistory';
+import BrandAssets from './pages/BrandAssets';
+import GovernanceInsights from './pages/GovernanceInsights';
 import WorkspaceSettings from './pages/WorkspaceSettings';
 
 // Protected Route Wrapper
@@ -82,11 +84,9 @@ function AppRouter() {
         <Route path="review/:draftId" element={<ReviewResults />} />
         <Route path="approvals" element={<ApprovalQueue />} />
         <Route path="history" element={<ReviewHistory />} />
+        <Route path="assets" element={<BrandAssets />} />
+        <Route path="insights" element={<GovernanceInsights />} />
         <Route path="settings" element={<WorkspaceSettings />} />
-
-        {/* Legacy redirect fallbacks */}
-        <Route path="assets" element={<Navigate to="/guidelines" replace />} />
-        <Route path="insights" element={<Navigate to="/" replace />} />
       </Route>
 
       {/* Fallback route */}

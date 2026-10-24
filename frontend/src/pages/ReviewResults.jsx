@@ -62,13 +62,17 @@ export default function ReviewResults() {
       ]);
 
       if (draftRes.success) {
-        setDraft(draftRes.data);
-        setEditableContent(draftRes.data.currentContent);
-      }
-      if (findingsRes.success) {
-        setFindings(findingsRes.data);
-        if (findingsRes.data.length > 0 && !activeFindingId) {
-          const firstOpen = findingsRes.data.find((f) => f.status === 'open');
+        const d = draftRes.data.draft || draftRes.data;
+        setDraft(d);
+        setEditableContent(d?.currentContent || '');
+        const fList =
+          findingsRes?.success && findingsRes.data?.length > 0
+            ? findingsRes.data
+            : draftRes.data?.findings || [];
+        setFindings(fList);
+
+        if (fList.length > 0) {
+          const firstOpen = fList.find((f) => f.status === 'open');
           if (firstOpen) setActiveFindingId(firstOpen._id);
         }
       }

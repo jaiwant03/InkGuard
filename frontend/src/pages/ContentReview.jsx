@@ -12,11 +12,15 @@ import {
   AlertTriangle,
   Shield,
   Check,
+  FileCode,
+  Image as ImageIcon,
+  X,
+  FileQuestion,
+  RefreshCw,
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import { ASSET_IMAGES } from '../assets/images';
 
 const CONTENT_TYPES = [
   'General marketing text',
@@ -47,6 +51,12 @@ export default function ContentReview() {
   const [auditing, setAuditing] = useState(false);
   const [activeRules, setActiveRules] = useState([]);
 
+  // Multi-format upload & visual metadata states
+  const [extracting, setExtracting] = useState(false);
+  const [uploadedFileInfo, setUploadedFileInfo] = useState(null);
+  const [imageUrl, setImageUrl] = useState('');
+  const [imageAltText, setImageAltText] = useState('');
+
   const { workspace } = useAuth();
   const toast = useToast();
   const navigate = useNavigate();
@@ -63,34 +73,59 @@ export default function ContentReview() {
     loadRules();
   }, [workspace]);
 
-  const handleFileUpload = (e) => {
+  // Handle multi-format upload via backend extraction endpoint (TXT, MD, PDF, DOCX, Images)
+  const handleFileUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    if (!file.name.endsWith('.txt') && !file.name.endsWith('.md')) {
-      toast.error('Only .txt and .md text documents are supported.');
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('File size exceeds the 10MB limit.');
       return;
     }
 
-    if (file.size > 2 * 1024 * 1024) {
-      toast.error('File size exceeds the 2MB limit.');
-      return;
-    }
+    try {
+      setExtracting(true);
+      const formData = new FormData();
+      formData.append('file', file);
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      setContent(event.target.result);
-      if (!title) {
-        setTitle(file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' '));
+      const res = await api.drafts.extractText(formData);
+
+      if (res.isImage) {
+        setImageUrl(res.data.fileUrl);
+        setUploadedFileInfo({
+          fileName: res.data.fileName,
+          format: 'Image Asset (' + (file.name.split('.').pop() || 'IMG').toUpperCase() + ')',
+          fileSize: res.data.fileSize,
+        });
+        if (!title) {
+          setTitle(res.data.fileName.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' '));
+        }
+        toast.success('Uploaded image asset. Enter alt text below for accessibility validation.');
+      } else {
+        setContent(res.data.text || '');
+        setUploadedFileInfo({
+          fileName: res.data.fileName,
+          format: res.data.format,
+          wordCount: res.data.wordCount,
+          fileSize: res.data.fileSize,
+        });
+        if (!title) {
+          setTitle(res.data.fileName.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' '));
+        }
+        toast.success(res.message || `Extracted text from ${res.data.fileName}`);
       }
-      toast.success(`Loaded text from ${file.name}`);
-    };
-    reader.readAsText(file);
+    } catch (err) {
+      toast.error(err.message || 'Failed to extract text from document.');
+    } finally {
+      setExtracting(false);
+      // Reset input
+      e.target.value = '';
+    }
   };
 
   const handleSaveDraft = async () => {
-    if (!title.trim() || !content.trim()) {
-      toast.error('Please provide both a title and content text.');
+    if (!title.trim() || (!content.trim() && !imageUrl)) {
+      toast.error('Please provide a title and either content text or an attached visual asset.');
       return;
     }
     try {
@@ -98,7 +133,11 @@ export default function ContentReview() {
       const res = await api.drafts.create({
         title: title.trim(),
         contentType,
-        content: content.trim(),
+        content: content.trim() || 'Visual asset draft with metadata.',
+        imageUrl,
+        imageAltText,
+        originalFileName: uploadedFileInfo?.fileName || '',
+        originalFileFormat: uploadedFileInfo?.format || '',
       });
       if (res.success) {
         toast.success('Draft saved successfully.');
@@ -112,8 +151,8 @@ export default function ContentReview() {
   };
 
   const handleRunAudit = async () => {
-    if (!title.trim() || !content.trim()) {
-      toast.error('Please enter content before running the brand audit.');
+    if (!title.trim() || (!content.trim() && !imageUrl)) {
+      toast.error('Please enter content or attach an image before running the brand audit.');
       return;
     }
 
@@ -122,7 +161,11 @@ export default function ContentReview() {
       const draftRes = await api.drafts.create({
         title: title.trim(),
         contentType,
-        content: content.trim(),
+        content: content.trim() || 'Visual asset draft with metadata.',
+        imageUrl,
+        imageAltText,
+        originalFileName: uploadedFileInfo?.fileName || '',
+        originalFileFormat: uploadedFileInfo?.format || '',
       });
 
       if (!draftRes.success) throw new Error(draftRes.message);
@@ -140,7 +183,7 @@ export default function ContentReview() {
     }
   };
 
-  const wordCount = content.trim() ? content.trim().split(/\s+/).length : 0;
+  const wordCount = content.trim() ? content.trim().split(/\s+/).filter(Boolean).length : 0;
   const charCount = content.length;
 
   return (
@@ -158,45 +201,42 @@ export default function ContentReview() {
                 borderRadius: '999px',
                 background: '#FFF1F2',
                 color: '#E11D48',
-                fontSize: '0.6875rem',
+                fontSize: '0.75rem',
                 fontWeight: 700,
-                border: '1px solid #FECDD3',
-                textTransform: 'uppercase',
-                letterSpacing: '0.04em',
+                border: '1px solid #FFE4E6',
               }}
             >
-              <FileCheck2 size={12} color="#E11D48" />
-              Pre-Flight Review Studio
+              <FileCheck2 size={12} />
+              Pre-Publication Gatekeeper
             </span>
             <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>•</span>
             <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
-              {activeRules.length} Active Rules Enforced
+              Explainable Review Studio
             </span>
           </div>
-
-          <h1 className="page-header-title text-gradient-primary">
-            Content Review Studio
-          </h1>
-          <p className="page-header-subtitle">
-            Audit drafts in real-time against active brand guidelines, prohibited terminology, and approved facts.
+          <h1 className="page-header-title">Submit Content for Review</h1>
+          <p className="page-header-desc">
+            Submit marketing copy, social posts, PDFs, or DOCX documents to audit tone, terminology, claims, and accessibility before public distribution.
           </p>
         </div>
 
-        {/* Quick Demo Pre-fillers */}
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+        {/* Quick-Fill Sample Buttons */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
           <button
             type="button"
             onClick={() => {
-              setTitle('Q4 Cloud Announcement (Violation Sample)');
+              setTitle('New ACE Platform Launch (Contains Brand Violations)');
               setContentType('Website copy');
               setContent(VIOLATION_SAMPLE);
+              setImageUrl('');
+              setUploadedFileInfo(null);
             }}
             className="btn btn-secondary btn-sm"
             style={{ fontSize: '0.8125rem', padding: '8px 16px', borderRadius: '12px' }}
-            title="Loads copy with prohibited terms and expired fact for test inspection"
+            title="Loads unvetted copy with prohibited claims and terms"
           >
             <AlertTriangle size={14} color="#EF4444" />
-            <span>Violation Sample</span>
+            <span>Load Sample with Violations</span>
           </button>
           <button
             type="button"
@@ -204,6 +244,8 @@ export default function ContentReview() {
               setTitle('High-Scale Cloud Overview (Compliant Sample)');
               setContentType('Website copy');
               setContent(COMPLIANT_SAMPLE);
+              setImageUrl('');
+              setUploadedFileInfo(null);
             }}
             className="btn btn-secondary btn-sm"
             style={{ fontSize: '0.8125rem', padding: '8px 16px', borderRadius: '12px' }}
@@ -242,6 +284,111 @@ export default function ContentReview() {
             </div>
           </div>
 
+          {/* Uploaded File Extraction Banner */}
+          {uploadedFileInfo && (
+            <div
+              style={{
+                marginBottom: '16px',
+                padding: '10px 14px',
+                background: '#F0FDF4',
+                border: '1px solid #BBF7D0',
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <CheckCircle2 size={18} color="#16A34A" />
+                <div>
+                  <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#166534' }}>
+                    {uploadedFileInfo.fileName}
+                  </span>
+                  <span style={{ fontSize: '0.75rem', color: '#15803D', marginLeft: '8px' }}>
+                    ({uploadedFileInfo.format} • {uploadedFileInfo.wordCount ? `${uploadedFileInfo.wordCount} words` : `${Math.round(uploadedFileInfo.fileSize / 1024)} KB`})
+                  </span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setUploadedFileInfo(null)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#166534' }}
+              >
+                <X size={14} />
+              </button>
+            </div>
+          )}
+
+          {/* Attached Visual Asset Card (if image uploaded) */}
+          {imageUrl && (
+            <div
+              style={{
+                marginBottom: '16px',
+                padding: '14px',
+                background: '#FAF5FF',
+                border: '1px solid #E9D5FF',
+                borderRadius: '14px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <ImageIcon size={18} color="#7C3AED" />
+                  <span style={{ fontSize: '0.875rem', fontWeight: 700, color: '#581C87' }}>
+                    Attached Visual Asset
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setImageUrl('');
+                    setImageAltText('');
+                  }}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#7C3AED' }}
+                  title="Remove image"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: '14px', alignItems: 'center' }}>
+                <div
+                  style={{
+                    height: '80px',
+                    borderRadius: '8px',
+                    background: '#FFFFFF',
+                    border: '1px solid #E2E8F0',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <img src={imageUrl} alt="Thumbnail preview" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                </div>
+
+                <div className="form-group" style={{ margin: 0 }}>
+                  <label className="form-label" style={{ fontSize: '0.75rem', marginBottom: '4px' }}>
+                    Image Alternative Text (Accessibility WCAG Check) *
+                  </label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    value={imageAltText}
+                    onChange={(e) => setImageAltText(e.target.value)}
+                    placeholder="e.g. Apex Cloud high availability architecture diagram"
+                    style={{ fontSize: '0.8125rem', height: '36px' }}
+                  />
+                  <span style={{ fontSize: '0.6875rem', color: '#6B21A8', marginTop: '2px', display: 'block' }}>
+                    Descriptive alt text is audited against screen reader accessibility guidelines.
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Main Text Input Area */}
           <div className="form-group">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
@@ -253,16 +400,30 @@ export default function ContentReview() {
                 <label
                   style={{
                     fontSize: '0.75rem',
-                    color: 'var(--color-primary)',
-                    cursor: 'pointer',
+                    color: extracting ? 'var(--text-tertiary)' : 'var(--color-primary)',
+                    cursor: extracting ? 'wait' : 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '4px',
                     fontWeight: 600,
                   }}
                 >
-                  <Upload size={13} /> Import .txt / .md
-                  <input type="file" accept=".txt,.md" style={{ display: 'none' }} onChange={handleFileUpload} />
+                  {extracting ? (
+                    <>
+                      <RefreshCw size={13} className="spin-icon" /> Extracting Document...
+                    </>
+                  ) : (
+                    <>
+                      <Upload size={13} /> Upload File (.txt, .md, .pdf, .docx, Image)
+                    </>
+                  )}
+                  <input
+                    type="file"
+                    accept=".txt,.md,.pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/png,image/jpeg,image/webp,image/svg+xml"
+                    style={{ display: 'none' }}
+                    onChange={handleFileUpload}
+                    disabled={extracting}
+                  />
                 </label>
               </div>
             </div>
@@ -270,7 +431,7 @@ export default function ContentReview() {
             <textarea
               className="form-textarea"
               rows={14}
-              placeholder="Paste or write your marketing text, announcement, ad copy, or social update here..."
+              placeholder="Paste or write your marketing text, announcement, ad copy, or social update here, or upload a PDF/DOCX above..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
               style={{
@@ -292,7 +453,7 @@ export default function ContentReview() {
               <button
                 type="button"
                 className="btn btn-secondary"
-                disabled={savingDraft || auditing}
+                disabled={savingDraft || auditing || extracting}
                 onClick={handleSaveDraft}
                 style={{ padding: '10px 20px', borderRadius: '12px' }}
               >
@@ -302,7 +463,7 @@ export default function ContentReview() {
               <button
                 type="button"
                 className="btn btn-gradient-primary btn-lg"
-                disabled={auditing || savingDraft}
+                disabled={auditing || savingDraft || extracting}
                 onClick={handleRunAudit}
                 style={{ minWidth: '190px', padding: '10px 24px', borderRadius: '12px' }}
               >
@@ -320,85 +481,87 @@ export default function ContentReview() {
           </div>
         </div>
 
-      {/* Right Side Pane: Live Metrics & Governance Pre-Flight Reference */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
-        {/* Live Content Statistics */}
-        <div className="card" style={{ padding: '20px' }}>
-          <h3 className="text-gradient-blue" style={{ fontSize: '0.9375rem', fontWeight: 800, marginBottom: '14px' }}>
-            Live Content Metrics
-          </h3>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-            <div style={{ background: '#F8FAFC', padding: '10px 12px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
-              <span style={{ fontSize: '0.6875rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase' }}>Words</span>
-              <div style={{ fontSize: '1.25rem', fontWeight: 850, color: '#0F172A', marginTop: '2px' }}>{wordCount}</div>
-            </div>
-            <div style={{ background: '#F8FAFC', padding: '10px 12px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
-              <span style={{ fontSize: '0.6875rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase' }}>Characters</span>
-              <div style={{ fontSize: '1.25rem', fontWeight: 850, color: '#0F172A', marginTop: '2px' }}>{charCount}</div>
-            </div>
-            <div style={{ background: '#F8FAFC', padding: '10px 12px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
-              <span style={{ fontSize: '0.6875rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase' }}>Reading Time</span>
-              <div style={{ fontSize: '1.125rem', fontWeight: 850, color: '#2563EB', marginTop: '2px' }}>
-                {Math.ceil(wordCount / 200) || 1} min
-              </div>
-            </div>
-            <div style={{ background: '#F8FAFC', padding: '10px 12px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
-              <span style={{ fontSize: '0.6875rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase' }}>Target Format</span>
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#0F172A', marginTop: '4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {contentType}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Active Governance Rules Enforced */}
-        <div className="card" style={{ padding: '20px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
-            <div className="icon-tile icon-tile-blue" style={{ width: '32px', height: '32px' }}>
-              <Shield size={16} strokeWidth={2.4} />
-            </div>
-            <div>
-              <h3 className="text-gradient-primary" style={{ fontSize: '0.9375rem', fontWeight: 800, margin: 0 }}>
-                Deterministic Engine Active
+        {/* Right Sidebar: Active Policy Preview */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+          {/* Policy Card */}
+          <div className="card" style={{ padding: '20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
+              <Shield size={18} color="#2563EB" />
+              <h3 style={{ fontSize: '0.9375rem', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
+                Active Governance Rules
               </h3>
-              <span style={{ fontSize: '0.6875rem', color: '#64748B' }}>
-                {activeRules.length} rules loaded for audit
-              </span>
+            </div>
+            <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', marginBottom: '14px', lineHeight: 1.4 }}>
+              Content is checked against {activeRules.length} active rules tailored for <strong>{workspace?.name}</strong>.
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '380px', overflowY: 'auto' }}>
+              {activeRules.map((rule) => (
+                <div
+                  key={rule._id}
+                  style={{
+                    padding: '10px 12px',
+                    borderRadius: '10px',
+                    background: '#F8FAFC',
+                    border: '1px solid #E2E8F0',
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                    <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#0F172A' }}>
+                      {rule.title}
+                    </span>
+                    <span
+                      style={{
+                        fontSize: '0.6875rem',
+                        fontWeight: 700,
+                        padding: '1px 6px',
+                        borderRadius: '4px',
+                        background:
+                          rule.severity === 'High' ? '#FEE2E2' : rule.severity === 'Medium' ? '#FEF3C7' : '#EFF6FF',
+                        color:
+                          rule.severity === 'High' ? '#DC2626' : rule.severity === 'Medium' ? '#D97706' : '#2563EB',
+                      }}
+                    >
+                      {rule.severity}
+                    </span>
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: '#64748B', lineHeight: 1.3 }}>
+                    {rule.description}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {[
-              { label: 'Prohibited Phrasing', desc: 'Auto-flags non-compliant wording' },
-              { label: 'Tone of Voice Check', desc: 'Detects informal or unapproved tone' },
-              { label: 'Approved Fact Verifier', desc: 'Validates marketing statistics & claims' },
-              { label: 'Required Disclaimers', desc: 'Checks for mandatory legal copy' },
-            ].map((item, idx) => (
-              <div
-                key={idx}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  padding: '8px 10px',
-                  borderRadius: '10px',
-                  background: '#F8FAFC',
-                  border: '1px solid #F1F5F9',
-                }}
-              >
-                <div style={{ width: '16px', height: '16px', borderRadius: '50%', background: '#ECFDF5', color: '#059669', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Check size={10} strokeWidth={3} />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#1E293B' }}>{item.label}</div>
-                  <div style={{ fontSize: '0.6875rem', color: '#64748B' }}>{item.desc}</div>
-                </div>
+          {/* Supported Formats Card */}
+          <div className="card" style={{ padding: '20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+              <FileCode size={18} color="#7C3AED" />
+              <h3 style={{ fontSize: '0.9375rem', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
+                Supported Document Formats
+              </h3>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.8125rem', color: '#475569' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Check size={14} color="#10B981" />
+                <span><strong>PDF Documents:</strong> Server-side text extraction</span>
               </div>
-            ))}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Check size={14} color="#10B981" />
+                <span><strong>Word (.docx):</strong> Structured XML text extraction</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Check size={14} color="#10B981" />
+                <span><strong>Markdown & Plain Text:</strong> UTF-8 parsing</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Check size={14} color="#10B981" />
+                <span><strong>Visual Assets (PNG/JPG/SVG):</strong> Visual brand check</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
     </div>
   );
 }

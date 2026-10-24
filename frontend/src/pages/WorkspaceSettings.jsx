@@ -255,7 +255,7 @@ export default function WorkspaceSettings() {
           <div className="card">
             <div className="card-header">
               <div>
-                <h3 className="card-title">
+                <h3 className="card-title text-gradient-emerald">
                   <Users size={18} /> Team Members & Role Permissions ({members.length})
                 </h3>
                 <p className="card-subtitle">Controls who can author, review, or administer brand rules</p>

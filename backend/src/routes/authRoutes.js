@@ -182,6 +182,7 @@ router.post('/login', authLimiter, async (req, res, next) => {
       success: true,
       message: 'Signed in successfully.',
       data: {
+        token,
         user,
         workspace,
         role: membership ? membership.role : 'admin',

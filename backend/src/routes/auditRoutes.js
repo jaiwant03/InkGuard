@@ -30,4 +30,39 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+// DELETE /api/audit - Clear all audit trail logs for the workspace
+router.delete('/', async (req, res, next) => {
+  try {
+    const result = await AuditEvent.deleteMany({ workspace: req.workspace._id });
+    return res.status(200).json({
+      success: true,
+      message: `Successfully cleared ${result.deletedCount} audit records.`,
+      deletedCount: result.deletedCount,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// DELETE /api/audit/:id - Delete a specific audit record
+router.delete('/:id', async (req, res, next) => {
+  try {
+    const event = await AuditEvent.findOneAndDelete({
+      _id: req.params.id,
+      workspace: req.workspace._id,
+    });
+
+    if (!event) {
+      return res.status(404).json({ success: false, message: 'Audit record not found.' });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Audit record deleted.',
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default router;

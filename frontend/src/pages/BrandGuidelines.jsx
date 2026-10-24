@@ -16,6 +16,7 @@ import {
   ShieldAlert,
   Info,
   X,
+  XCircle,
 } from 'lucide-react';
 import { SeverityBadge } from '../components/Badges';
 import { api } from '../services/api';

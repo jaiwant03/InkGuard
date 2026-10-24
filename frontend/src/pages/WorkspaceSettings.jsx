@@ -357,7 +357,7 @@ export default function WorkspaceSettings() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
           {/* Roles Permission Matrix */}
           <div className="card">
-            <h3 className="card-title" style={{ fontSize: '0.9375rem', marginBottom: 'var(--space-3)' }}>
+            <h3 className="card-title text-gradient-violet" style={{ fontSize: '0.9375rem', marginBottom: 'var(--space-3)' }}>
               <Shield size={16} /> Role Access Matrix
             </h3>
 

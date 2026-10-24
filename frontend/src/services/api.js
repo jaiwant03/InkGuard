@@ -160,5 +160,7 @@ export const api = {
   // Audit Logs
   audit: {
     list: (params = {}) => request(`/audit${toQueryString(params)}`),
+    clear: () => request('/audit', { method: 'DELETE' }),
+    delete: (id) => request(`/audit/${id}`, { method: 'DELETE' }),
   },
 };

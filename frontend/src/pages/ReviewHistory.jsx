@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   History,
   Shield,
@@ -21,12 +22,16 @@ import {
   Filter,
   Layers,
   Calendar,
+  Plus,
+  UserCheck,
+  BookOpen,
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 
 export default function ReviewHistory() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('audit'); // 'audit' | 'versions'
   const [auditLogs, setAuditLogs] = useState([]);
   const [drafts, setDrafts] = useState([]);
@@ -188,7 +193,7 @@ export default function ReviewHistory() {
     const entries = Object.entries(details);
 
     return (
-      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '8px' }}>
+      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '10px' }}>
         {entries.map(([key, val]) => {
           let displayVal = typeof val === 'object' ? JSON.stringify(val) : String(val);
           let label = key === 'ip' ? 'IP' : key.replace(/([A-Z])/g, ' $1').toLowerCase();
@@ -205,7 +210,7 @@ export default function ReviewHistory() {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '4px',
-                  padding: '2px 8px',
+                  padding: '3px 10px',
                   borderRadius: '6px',
                   fontSize: '0.75rem',
                   fontWeight: 700,
@@ -229,7 +234,7 @@ export default function ReviewHistory() {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '4px',
-                  padding: '2px 8px',
+                  padding: '3px 10px',
                   borderRadius: '6px',
                   fontSize: '0.75rem',
                   fontWeight: 700,
@@ -251,8 +256,8 @@ export default function ReviewHistory() {
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '4px',
-                  padding: '2px 8px',
+                  gap: '5px',
+                  padding: '3px 10px',
                   borderRadius: '6px',
                   fontSize: '0.75rem',
                   fontWeight: 650,
@@ -276,7 +281,7 @@ export default function ReviewHistory() {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '4px',
-                  padding: '2px 8px',
+                  padding: '3px 10px',
                   borderRadius: '6px',
                   fontSize: '0.75rem',
                   fontWeight: 650,
@@ -291,7 +296,7 @@ export default function ReviewHistory() {
           }
 
           return (
-            <span key={key} className="audit-tag-pill">
+            <span key={key} className="audit-tag-pill" style={{ padding: '3px 10px', fontSize: '0.75rem' }}>
               <span style={{ color: '#94A3B8', textTransform: 'capitalize' }}>{label}:</span>
               <span style={{ color: '#0F172A', fontWeight: 650 }}>{displayVal}</span>
             </span>
@@ -302,11 +307,11 @@ export default function ReviewHistory() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '28px', maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
       {/* Modern Page Header */}
-      <div className="page-header-clean">
+      <div className="page-header-clean" style={{ padding: '24px 28px', borderRadius: '18px' }}>
         <div className="page-header-info">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
             <span
               style={{
                 display: 'inline-flex',
@@ -332,16 +337,16 @@ export default function ReviewHistory() {
             </span>
           </div>
 
-          <h1 className="page-header-title text-gradient-primary">
+          <h1 className="page-header-title text-gradient-primary" style={{ fontSize: '1.75rem', fontWeight: 850 }}>
             Review History & Audit Trail
           </h1>
-          <p className="page-header-subtitle">
+          <p className="page-header-subtitle" style={{ fontSize: '0.875rem', color: '#64748B', marginTop: '6px' }}>
             Immutable corporate governance log, revision comparisons, and approval timelines ensuring complete compliance accountability.
           </p>
         </div>
 
         {/* Action Controls: Tabs & Delete All History Button */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
           <div className="segmented-control">
             <button
               onClick={() => setActiveTab('audit')}
@@ -367,11 +372,11 @@ export default function ReviewHistory() {
               className="btn btn-secondary btn-sm"
               style={{
                 borderRadius: '10px',
-                padding: '8px 16px',
+                padding: '9px 18px',
                 fontWeight: 700,
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '6px',
+                gap: '7px',
                 color: auditLogs.length > 0 ? '#DC2626' : '#94A3B8',
                 background: auditLogs.length > 0 ? '#FEF2F2' : '#F8FAFC',
                 borderColor: auditLogs.length > 0 ? '#FECACA' : '#E2E8F0',
@@ -389,13 +394,13 @@ export default function ReviewHistory() {
 
       {/* TAB 1: AUDIT TRAIL TIMELINE */}
       {activeTab === 'audit' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           {/* Executive Metric Ribbon */}
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-              gap: '14px',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))',
+              gap: '18px',
             }}
           >
             {/* Metric 1 */}
@@ -403,12 +408,13 @@ export default function ReviewHistory() {
               style={{
                 background: '#FFFFFF',
                 border: '1px solid #E2E8F0',
-                borderRadius: '14px',
-                padding: '16px 20px',
+                borderRadius: '16px',
+                padding: '20px 24px',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '8px',
+                gap: '10px',
                 boxShadow: '0 1px 3px rgba(15, 23, 42, 0.03)',
+                transition: 'all 0.2s ease',
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -417,9 +423,9 @@ export default function ReviewHistory() {
                 </span>
                 <div
                   style={{
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '8px',
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '10px',
                     background: '#EFF6FF',
                     color: '#2563EB',
                     display: 'flex',
@@ -427,10 +433,10 @@ export default function ReviewHistory() {
                     justifyContent: 'center',
                   }}
                 >
-                  <History size={16} />
+                  <History size={18} />
                 </div>
               </div>
-              <div style={{ fontSize: '1.65rem', fontWeight: 850, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1 }}>
+              <div style={{ fontSize: '1.85rem', fontWeight: 850, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1 }}>
                 {auditLogs.length}
               </div>
               <span style={{ fontSize: '0.75rem', color: '#64748B' }}>Recorded Ledger Events</span>
@@ -441,12 +447,13 @@ export default function ReviewHistory() {
               style={{
                 background: '#FFFFFF',
                 border: '1px solid #E2E8F0',
-                borderRadius: '14px',
-                padding: '16px 20px',
+                borderRadius: '16px',
+                padding: '20px 24px',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '8px',
+                gap: '10px',
                 boxShadow: '0 1px 3px rgba(15, 23, 42, 0.03)',
+                transition: 'all 0.2s ease',
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -455,9 +462,9 @@ export default function ReviewHistory() {
                 </span>
                 <div
                   style={{
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '8px',
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '10px',
                     background: '#ECFDF5',
                     color: '#059669',
                     display: 'flex',
@@ -465,10 +472,10 @@ export default function ReviewHistory() {
                     justifyContent: 'center',
                   }}
                 >
-                  <CheckCircle2 size={16} />
+                  <CheckCircle2 size={18} />
                 </div>
               </div>
-              <div style={{ fontSize: '1.65rem', fontWeight: 850, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1 }}>
+              <div style={{ fontSize: '1.85rem', fontWeight: 850, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1 }}>
                 {reviewCount}
               </div>
               <span style={{ fontSize: '0.75rem', color: '#64748B' }}>Compliance Evaluations</span>
@@ -479,12 +486,13 @@ export default function ReviewHistory() {
               style={{
                 background: '#FFFFFF',
                 border: '1px solid #E2E8F0',
-                borderRadius: '14px',
-                padding: '16px 20px',
+                borderRadius: '16px',
+                padding: '20px 24px',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '8px',
+                gap: '10px',
                 boxShadow: '0 1px 3px rgba(15, 23, 42, 0.03)',
+                transition: 'all 0.2s ease',
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -493,9 +501,9 @@ export default function ReviewHistory() {
                 </span>
                 <div
                   style={{
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '8px',
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '10px',
                     background: '#EEF2FF',
                     color: '#4F46E5',
                     display: 'flex',
@@ -503,10 +511,10 @@ export default function ReviewHistory() {
                     justifyContent: 'center',
                   }}
                 >
-                  <FileText size={16} />
+                  <FileText size={18} />
                 </div>
               </div>
-              <div style={{ fontSize: '1.65rem', fontWeight: 850, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1 }}>
+              <div style={{ fontSize: '1.85rem', fontWeight: 850, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1 }}>
                 {draftActionCount}
               </div>
               <span style={{ fontSize: '0.75rem', color: '#64748B' }}>Document Lifecycles</span>
@@ -517,12 +525,13 @@ export default function ReviewHistory() {
               style={{
                 background: '#FFFFFF',
                 border: '1px solid #E2E8F0',
-                borderRadius: '14px',
-                padding: '16px 20px',
+                borderRadius: '16px',
+                padding: '20px 24px',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '8px',
+                gap: '10px',
                 boxShadow: '0 1px 3px rgba(15, 23, 42, 0.03)',
+                transition: 'all 0.2s ease',
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -531,9 +540,9 @@ export default function ReviewHistory() {
                 </span>
                 <div
                   style={{
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '8px',
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '10px',
                     background: '#FFFBEB',
                     color: '#D97706',
                     display: 'flex',
@@ -541,32 +550,81 @@ export default function ReviewHistory() {
                     justifyContent: 'center',
                   }}
                 >
-                  <ShieldCheck size={16} />
+                  <ShieldCheck size={18} />
                 </div>
               </div>
-              <div style={{ fontSize: '1.65rem', fontWeight: 850, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1 }}>
+              <div style={{ fontSize: '1.85rem', fontWeight: 850, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1 }}>
                 {policyActionCount}
               </div>
               <span style={{ fontSize: '0.75rem', color: '#64748B' }}>Rules & Verification Updates</span>
             </div>
           </div>
 
-          {/* Interactive Search & Filter Toolbar */}
-          <div className="facts-toolbar" style={{ flexWrap: 'wrap', gap: '12px' }}>
+          {/* Interactive Search & Filter Toolbar with Free Spacing */}
+          <div
+            style={{
+              background: '#FFFFFF',
+              border: '1px solid #E2E8F0',
+              borderRadius: '16px',
+              padding: '16px 22px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '16px',
+              boxShadow: '0 1px 4px rgba(15, 23, 42, 0.03)',
+            }}
+          >
             {/* Search Input */}
-            <div className="facts-toolbar-search" style={{ minWidth: '280px', flex: 1 }}>
-              <Search size={15} color="var(--text-tertiary)" />
+            <div style={{ position: 'relative', minWidth: '300px', flex: 1 }}>
+              <Search
+                size={16}
+                color="#94A3B8"
+                style={{
+                  position: 'absolute',
+                  left: '14px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  pointerEvents: 'none',
+                }}
+              />
               <input
                 type="text"
                 placeholder="Search audit records by action, actor, or entity ID..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                style={{
+                  width: '100%',
+                  height: '44px',
+                  padding: '8px 36px 8px 40px',
+                  borderRadius: '12px',
+                  border: '1px solid #E2E8F0',
+                  background: '#F8FAFC',
+                  fontSize: '0.875rem',
+                  color: '#0F172A',
+                  outline: 'none',
+                  transition: 'all 0.2s ease',
+                }}
+                onFocus={(e) => {
+                  e.target.style.background = '#FFFFFF';
+                  e.target.style.borderColor = '#3B82F6';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.12)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.background = '#F8FAFC';
+                  e.target.style.borderColor = '#E2E8F0';
+                  e.target.style.boxShadow = 'none';
+                }}
               />
               {searchQuery && (
                 <button
                   type="button"
                   onClick={() => setSearchQuery('')}
                   style={{
+                    position: 'absolute',
+                    right: '12px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
                     background: 'none',
                     border: 'none',
                     color: '#94A3B8',
@@ -581,12 +639,12 @@ export default function ReviewHistory() {
             </div>
 
             {/* Category Filter Pills */}
-            <div className="segmented-control" style={{ background: '#F1F5F9' }}>
+            <div className="segmented-control" style={{ background: '#F1F5F9', padding: '4px' }}>
               <button
                 type="button"
                 onClick={() => setSelectedCategory('all')}
                 className={`segmented-option ${selectedCategory === 'all' ? 'active' : ''}`}
-                style={{ fontSize: '0.75rem', padding: '6px 12px' }}
+                style={{ fontSize: '0.8125rem', padding: '7px 14px' }}
               >
                 All ({auditLogs.length})
               </button>
@@ -594,7 +652,7 @@ export default function ReviewHistory() {
                 type="button"
                 onClick={() => setSelectedCategory('reviews')}
                 className={`segmented-option ${selectedCategory === 'reviews' ? 'active' : ''}`}
-                style={{ fontSize: '0.75rem', padding: '6px 12px' }}
+                style={{ fontSize: '0.8125rem', padding: '7px 14px' }}
               >
                 Reviews ({reviewCount})
               </button>
@@ -602,7 +660,7 @@ export default function ReviewHistory() {
                 type="button"
                 onClick={() => setSelectedCategory('drafts')}
                 className={`segmented-option ${selectedCategory === 'drafts' ? 'active' : ''}`}
-                style={{ fontSize: '0.75rem', padding: '6px 12px' }}
+                style={{ fontSize: '0.8125rem', padding: '7px 14px' }}
               >
                 Drafts ({draftActionCount})
               </button>
@@ -610,57 +668,308 @@ export default function ReviewHistory() {
                 type="button"
                 onClick={() => setSelectedCategory('rules')}
                 className={`segmented-option ${selectedCategory === 'rules' ? 'active' : ''}`}
-                style={{ fontSize: '0.75rem', padding: '6px 12px' }}
+                style={{ fontSize: '0.8125rem', padding: '7px 14px' }}
               >
                 Policies ({policyActionCount})
               </button>
             </div>
           </div>
 
-          {/* Audit Records Timeline */}
+          {/* Spaced Audit Records or Empty Clearance State */}
           {filteredLogs.length === 0 ? (
-            <div className="card" style={{ padding: 'var(--space-12)', textAlign: 'center', color: 'var(--text-tertiary)' }}>
-              <History size={42} color="#CBD5E1" style={{ margin: '0 auto 12px auto' }} />
-              <h3 style={{ fontSize: '1rem', fontWeight: 750, color: '#334155', marginBottom: '4px' }}>
-                {auditLogs.length === 0 ? 'Audit Ledger is Empty' : 'No Matching Audit Records Found'}
-              </h3>
-              <p style={{ fontSize: '0.8125rem', color: '#64748B', maxWidth: '440px', margin: '0 auto' }}>
-                {auditLogs.length === 0
-                  ? 'All events performed by team members and deterministic AI compliance scans will be securely recorded here.'
-                  : `No records match your query "${searchQuery}". Try adjusting your search or category filter.`}
-              </p>
-              {searchQuery && (
+            auditLogs.length === 0 ? (
+              /* High-End Enterprise Empty State: Spaced Freely */
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                <div
+                  style={{
+                    padding: '56px 32px 50px 32px',
+                    borderRadius: '20px',
+                    border: '1px solid #E2E8F0',
+                    background:
+                      'radial-gradient(circle at 50% 20%, rgba(37, 99, 235, 0.05) 0%, rgba(255, 255, 255, 1) 75%), #FFFFFF',
+                    textAlign: 'center',
+                    boxShadow: '0 4px 20px -5px rgba(15, 23, 42, 0.04)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <div style={{ marginBottom: '14px' }}>
+                    <span
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        padding: '4px 14px',
+                        borderRadius: '999px',
+                        background: '#EFF6FF',
+                        color: '#2563EB',
+                        fontSize: '0.75rem',
+                        fontWeight: 700,
+                        border: '1px solid #DBEAFE',
+                      }}
+                    >
+                      <ShieldCheck size={14} color="#2563EB" />
+                      Cryptographic Ledger Initialized • Zero Tamper History
+                    </span>
+                  </div>
+
+                  <div
+                    style={{
+                      width: '68px',
+                      height: '68px',
+                      borderRadius: '20px',
+                      background: 'linear-gradient(135deg, #EFF6FF 0%, #EDE9FE 100%)',
+                      border: '1px solid #DBEAFE',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#2563EB',
+                      boxShadow: '0 8px 24px -4px rgba(37, 99, 235, 0.15)',
+                      marginBottom: '16px',
+                    }}
+                  >
+                    <History size={32} />
+                  </div>
+
+                  <h3
+                    style={{
+                      fontSize: '1.4rem',
+                      fontWeight: 850,
+                      color: '#0F172A',
+                      letterSpacing: '-0.02em',
+                      marginBottom: '8px',
+                    }}
+                  >
+                    Audit Ledger is Ready & Empty
+                  </h3>
+
+                  <p
+                    style={{
+                      fontSize: '0.9rem',
+                      color: '#64748B',
+                      maxWidth: '540px',
+                      margin: '0 auto 28px auto',
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    All governance actions performed by team members, deterministic compliance scans, and reviewer decisions will be permanently logged here in real-time.
+                  </p>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                    <button
+                      onClick={() => navigate('/review')}
+                      className="btn btn-gradient-primary"
+                      style={{
+                        padding: '11px 24px',
+                        borderRadius: '12px',
+                        fontWeight: 700,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        boxShadow: '0 4px 16px rgba(79, 70, 229, 0.3)',
+                      }}
+                    >
+                      <Plus size={16} strokeWidth={2.5} />
+                      <span>Run Content Pre-Audit</span>
+                    </button>
+
+                    <button
+                      onClick={() => navigate('/guidelines')}
+                      className="btn btn-secondary"
+                      style={{
+                        padding: '11px 22px',
+                        borderRadius: '12px',
+                        fontWeight: 600,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                      }}
+                    >
+                      <BookOpen size={15} />
+                      <span>Explore Brand Rules</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* 3-Column Governance Reassurance Ribbon: Spaced Freely */}
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                    gap: '20px',
+                  }}
+                >
+                  <div
+                    style={{
+                      background: '#FFFFFF',
+                      border: '1px solid #E2E8F0',
+                      borderRadius: '16px',
+                      padding: '22px 24px',
+                      boxShadow: '0 1px 3px rgba(15, 23, 42, 0.03)',
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: '38px',
+                        height: '38px',
+                        borderRadius: '10px',
+                        background: '#EFF6FF',
+                        border: '1px solid #DBEAFE',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginBottom: '14px',
+                      }}
+                    >
+                      <Clock size={18} color="#2563EB" />
+                    </div>
+                    <h4 style={{ fontSize: '0.9375rem', fontWeight: 750, color: '#0F172A', marginBottom: '6px' }}>
+                      1. Cryptographic Chronology
+                    </h4>
+                    <p style={{ fontSize: '0.8125rem', color: '#64748B', margin: 0, lineHeight: 1.55 }}>
+                      Every automated scan, finding fix, and draft revision is indexed with high-resolution UTC timestamps for audit integrity.
+                    </p>
+                  </div>
+
+                  <div
+                    style={{
+                      background: '#FFFFFF',
+                      border: '1px solid #E2E8F0',
+                      borderRadius: '16px',
+                      padding: '22px 24px',
+                      boxShadow: '0 1px 3px rgba(15, 23, 42, 0.03)',
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: '38px',
+                        height: '38px',
+                        borderRadius: '10px',
+                        background: '#ECFDF5',
+                        border: '1px solid #A7F3D0',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginBottom: '14px',
+                      }}
+                    >
+                      <UserCheck size={18} color="#059669" />
+                    </div>
+                    <h4 style={{ fontSize: '0.9375rem', fontWeight: 750, color: '#0F172A', marginBottom: '6px' }}>
+                      2. Direct Actor Attribution
+                    </h4>
+                    <p style={{ fontSize: '0.8125rem', color: '#64748B', margin: 0, lineHeight: 1.55 }}>
+                      Granular role-based tracking clearly shows whether actions were authored by an enterprise reviewer, team member, or system engine.
+                    </p>
+                  </div>
+
+                  <div
+                    style={{
+                      background: '#FFFFFF',
+                      border: '1px solid #E2E8F0',
+                      borderRadius: '16px',
+                      padding: '22px 24px',
+                      boxShadow: '0 1px 3px rgba(15, 23, 42, 0.03)',
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: '38px',
+                        height: '38px',
+                        borderRadius: '10px',
+                        background: '#F5F3FF',
+                        border: '1px solid #DDD6FE',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginBottom: '14px',
+                      }}
+                    >
+                      <ShieldCheck size={18} color="#7C3AED" />
+                    </div>
+                    <h4 style={{ fontSize: '0.9375rem', fontWeight: 750, color: '#0F172A', marginBottom: '6px' }}>
+                      3. Zero Silent Overwrites
+                    </h4>
+                    <p style={{ fontSize: '0.8125rem', color: '#64748B', margin: 0, lineHeight: 1.55 }}>
+                      Multi-version draft snapshots prevent retroactive tampering and maintain full visibility across corporate publication lifecycles.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              /* No Search Matches State */
+              <div
+                style={{
+                  background: '#FFFFFF',
+                  border: '1px solid #E2E8F0',
+                  borderRadius: '18px',
+                  padding: '50px 24px',
+                  textAlign: 'center',
+                  boxShadow: '0 1px 3px rgba(15, 23, 42, 0.03)',
+                }}
+              >
+                <Search size={40} color="#94A3B8" style={{ margin: '0 auto 12px auto' }} />
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 750, color: '#0F172A', marginBottom: '6px' }}>
+                  No Records Match Your Filters
+                </h3>
+                <p style={{ fontSize: '0.875rem', color: '#64748B', maxWidth: '440px', margin: '0 auto 20px auto' }}>
+                  No event entries match query "<strong>{searchQuery}</strong>" in the selected category.
+                </p>
                 <button
                   type="button"
-                  onClick={() => setSearchQuery('')}
+                  onClick={() => {
+                    setSearchQuery('');
+                    setSelectedCategory('all');
+                  }}
                   className="btn btn-secondary btn-sm"
-                  style={{ marginTop: '16px', borderRadius: '8px' }}
+                  style={{ borderRadius: '10px', padding: '8px 20px' }}
                 >
-                  Clear Search
+                  Reset Search & Filters
                 </button>
-              )}
-            </div>
+              </div>
+            )
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            /* Timeline Cards: Spaced Freely with 16px Gap */
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {filteredLogs.map((log) => {
                 const actionBadgeType = getActionBadgeClass(log.action, log.entityType);
 
                 return (
-                  <div key={log._id} className="audit-timeline-item">
+                  <div
+                    key={log._id}
+                    className="audit-timeline-item"
+                    style={{
+                      padding: '20px 24px',
+                      borderRadius: '16px',
+                      border: '1px solid #E2E8F0',
+                      background: '#FFFFFF',
+                      boxShadow: '0 1px 4px rgba(15, 23, 42, 0.02)',
+                    }}
+                  >
                     {/* Action Icon Box */}
-                    <div className={`audit-icon-box ${actionBadgeType}`}>
+                    <div
+                      className={`audit-icon-box ${actionBadgeType}`}
+                      style={{
+                        width: '42px',
+                        height: '42px',
+                        borderRadius: '12px',
+                        flexShrink: 0,
+                      }}
+                    >
                       {actionBadgeType === 'login' ? (
-                        <LogIn size={18} />
+                        <LogIn size={20} />
                       ) : actionBadgeType === 'review' ? (
-                        <CheckCircle2 size={18} />
+                        <CheckCircle2 size={20} />
                       ) : actionBadgeType === 'draft' ? (
-                        <FileText size={18} />
+                        <FileText size={20} />
                       ) : actionBadgeType === 'rule' ? (
-                        <GitCommit size={18} />
+                        <GitCommit size={20} />
                       ) : actionBadgeType === 'fact' ? (
-                        <ShieldCheck size={18} />
+                        <ShieldCheck size={20} />
                       ) : (
-                        <Shield size={18} />
+                        <Shield size={20} />
                       )}
                     </div>
 
@@ -672,17 +981,17 @@ export default function ReviewHistory() {
                           justifyContent: 'space-between',
                           alignItems: 'center',
                           flexWrap: 'wrap',
-                          gap: '6px',
-                          marginBottom: '3px',
+                          gap: '8px',
+                          marginBottom: '4px',
                         }}
                       >
-                        <span style={{ fontSize: '0.9375rem', fontWeight: 750, color: '#0F172A' }}>
+                        <span style={{ fontSize: '1rem', fontWeight: 800, color: '#0F172A', letterSpacing: '-0.01em' }}>
                           {formatActionName(log.action)}
                         </span>
 
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.75rem', color: '#64748B' }}>
-                            <Clock size={12} color="#94A3B8" />
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.78rem', color: '#64748B' }}>
+                            <Clock size={13} color="#94A3B8" />
                             <span>{new Date(log.createdAt).toLocaleString()}</span>
                           </div>
 
@@ -695,7 +1004,7 @@ export default function ReviewHistory() {
                               background: 'transparent',
                               color: '#94A3B8',
                               cursor: 'pointer',
-                              padding: '3px 6px',
+                              padding: '4px 6px',
                               borderRadius: '6px',
                               transition: 'all 0.18s ease',
                               display: 'flex',
@@ -711,25 +1020,25 @@ export default function ReviewHistory() {
                               e.currentTarget.style.background = 'transparent';
                             }}
                           >
-                            <Trash2 size={13} />
+                            <Trash2 size={14} />
                           </button>
                         </div>
                       </div>
 
                       {/* Actor & Entity Info */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8125rem', color: '#475569', flexWrap: 'wrap' }}>
-                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8125rem', color: '#475569', flexWrap: 'wrap', marginTop: '2px' }}>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
                           <span
                             style={{
-                              width: '18px',
-                              height: '18px',
+                              width: '20px',
+                              height: '20px',
                               borderRadius: '50%',
                               background: '#2563EB',
                               color: '#FFFFFF',
                               display: 'inline-flex',
                               alignItems: 'center',
                               justifyContent: 'center',
-                              fontSize: '0.625rem',
+                              fontSize: '0.6875rem',
                               fontWeight: 700,
                             }}
                           >
@@ -740,7 +1049,7 @@ export default function ReviewHistory() {
                         <span style={{ color: '#CBD5E1' }}>•</span>
                         <span>
                           Entity: <strong style={{ color: '#0F172A' }}>{log.entityType}</strong>{' '}
-                          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.72rem', color: '#64748B', background: '#F1F5F9', padding: '1px 6px', borderRadius: '4px' }}>
+                          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.72rem', color: '#64748B', background: '#F1F5F9', padding: '2px 7px', borderRadius: '5px' }}>
                             #{log.entityId ? log.entityId.slice(-6) : 'sys'}
                           </span>
                         </span>
@@ -759,19 +1068,19 @@ export default function ReviewHistory() {
 
       {/* TAB 2: VERSIONS COMPARISON */}
       {activeTab === 'versions' && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(280px, 320px) 1fr', gap: 'var(--space-6)', alignItems: 'start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(280px, 320px) 1fr', gap: '24px', alignItems: 'start' }}>
           {/* Draft selector */}
-          <div className="card" style={{ padding: '20px' }}>
-            <h3 className="card-title text-gradient-violet" style={{ fontSize: '0.9375rem', marginBottom: 'var(--space-3)' }}>
+          <div className="card" style={{ padding: '22px', borderRadius: '16px' }}>
+            <h3 className="card-title text-gradient-violet" style={{ fontSize: '0.9375rem', marginBottom: '16px' }}>
               Select Document
             </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {drafts.map((d) => (
                 <div
                   key={d._id}
                   onClick={() => setSelectedDraftId(d._id)}
                   style={{
-                    padding: '12px 14px',
+                    padding: '14px 16px',
                     borderRadius: '12px',
                     cursor: 'pointer',
                     fontSize: '0.8125rem',
@@ -794,31 +1103,31 @@ export default function ReviewHistory() {
           </div>
 
           {/* Versions list */}
-          <div className="card" style={{ padding: '24px' }}>
-            <div className="card-header" style={{ marginBottom: '16px' }}>
+          <div className="card" style={{ padding: '26px', borderRadius: '16px' }}>
+            <div className="card-header" style={{ marginBottom: '18px' }}>
               <h3 className="card-title text-gradient-emerald">Version Snapshots ({versions.length})</h3>
             </div>
 
             {versions.length === 0 ? (
-              <div style={{ padding: 'var(--space-8)', textAlign: 'center', color: 'var(--text-tertiary)' }}>
+              <div style={{ padding: '40px 20px', textAlign: 'center', color: 'var(--text-tertiary)' }}>
                 No version records found for this document.
               </div>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
                 {versions.map((v) => (
                   <div
                     key={v._id}
                     style={{
                       border: '1px solid #E2E8F0',
                       borderRadius: '14px',
-                      padding: '18px',
+                      padding: '20px',
                       background: '#F8FAFC',
                     }}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                       <span
                         style={{
-                          padding: '3px 10px',
+                          padding: '4px 12px',
                           borderRadius: '6px',
                           background: '#E2E8F0',
                           color: '#0F172A',
@@ -834,14 +1143,14 @@ export default function ReviewHistory() {
                       </span>
                     </div>
 
-                    <div style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#2563EB', marginBottom: '10px' }}>
+                    <div style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#2563EB', marginBottom: '12px' }}>
                       {v.changeSummary}
                     </div>
 
                     <div
                       style={{
                         background: '#FFFFFF',
-                        padding: '14px',
+                        padding: '16px',
                         borderRadius: '10px',
                         fontSize: '0.875rem',
                         lineHeight: 1.6,
@@ -904,8 +1213,8 @@ export default function ReviewHistory() {
               </p>
               <div
                 style={{
-                  marginTop: '12px',
-                  padding: '10px 14px',
+                  marginTop: '14px',
+                  padding: '12px 14px',
                   borderRadius: '10px',
                   background: '#FFFBEB',
                   border: '1px solid #FDE68A',

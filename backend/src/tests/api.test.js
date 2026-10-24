@@ -220,6 +220,13 @@ describe('INKGUARD Backend API & Governance Architecture Test Suite', () => {
   });
 
   it('Cross-Workspace Security: User cannot access records of a workspace they do not belong to', async () => {
+    // Log in as reviewer (who is a regular user, not superadmin)
+    const loginRes = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'reviewer@inkguard.demo', password: 'Password123!' });
+    const reviewerCookies = loginRes.headers['set-cookie'];
+    const reviewerCookie = reviewerCookies.map((c) => c.split(';')[0]).join('; ');
+
     // Create an independent workspace
     const rogueWorkspace = await Workspace.create({
       name: 'Confidential Subsidiary Workspace',
@@ -230,10 +237,10 @@ describe('INKGUARD Backend API & Governance Architecture Test Suite', () => {
 
     const res = await request(app)
       .get('/api/brand-rules')
-      .set('Cookie', authCookie)
+      .set('Cookie', reviewerCookie)
       .set('x-workspace-id', rogueWorkspace._id.toString());
 
-    // Must be denied with 403 Forbidden
+    // Must be strictly denied with 403 Forbidden
     expect(res.status).toBe(403);
     expect(res.body.success).toBe(false);
     expect(res.body.message).toContain('not a member of this workspace');

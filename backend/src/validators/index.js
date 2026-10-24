@@ -55,6 +55,12 @@ export const contentDraftSchema = z.object({
   title: z.string().min(2, 'Title is required').max(200),
   contentType: z.enum(CONTENT_TYPES).default('General marketing text'),
   content: z.string().min(5, 'Content must be at least 5 characters'),
+  attachedAsset: z.string().optional().nullable(),
+  imageUrl: z.string().optional().default(''),
+  imageAltText: z.string().optional().default(''),
+  detectedColors: z.array(z.string()).optional().default([]),
+  originalFileName: z.string().optional().default(''),
+  originalFileFormat: z.string().optional().default(''),
 });
 
 export const findingActionSchema = z.object({
@@ -65,6 +71,7 @@ export const findingActionSchema = z.object({
 export const approvalActionSchema = z.object({
   decision: z.enum(['approve', 'request_changes', 'reject']),
   comment: z.string().optional().default(''),
+  overrideReason: z.string().optional().default(''),
 });
 
 export const commentSchema = z.object({

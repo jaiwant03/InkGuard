@@ -18,6 +18,7 @@ import {
   X,
   XCircle,
   Shield,
+  ShieldCheck,
   FileCheck,
   Check,
 } from 'lucide-react';
@@ -371,204 +372,206 @@ export default function BrandGuidelines() {
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fill, minmax(480px, 1fr))',
-                gap: '20px',
+                gap: '22px',
               }}
             >
               {rules.map((rule) => {
                 const sevKey = (rule.severity || 'medium').toLowerCase();
+                const dotColorClass = sevKey === 'high' ? 'red' : sevKey === 'medium' ? 'amber' : 'blue';
+
                 return (
                   <div
                     key={rule._id}
-                    className="rule-card"
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'space-between',
-                      opacity: rule.isActive ? 1 : 0.65,
-                      minHeight: '220px',
-                      padding: '20px 22px 18px 24px',
-                    }}
+                    className="rule-card-modern"
+                    style={{ opacity: rule.isActive ? 1 : 0.65 }}
                   >
-                    <div className={`rule-accent-stripe ${sevKey}`} />
+                    {/* Sleek Top Accent Line */}
+                    <div className={`rule-top-accent ${sevKey}`} />
 
-                    <div>
-                      {/* Card Header Row: Badges on left, action controls on right */}
-                      <div
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          gap: '12px',
-                          marginBottom: '10px',
-                        }}
-                      >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                          <span
-                            style={{
-                              fontSize: '0.6875rem',
-                              fontWeight: 700,
-                              padding: '2.5px 8px',
-                              borderRadius: '6px',
-                              background: '#F1F5F9',
-                              color: '#334155',
-                              border: '1px solid #E2E8F0',
-                              letterSpacing: '0.02em',
-                            }}
-                          >
-                            {rule.category}
-                          </span>
-                          <SeverityBadge severity={rule.severity} />
-                          {!rule.isActive && (
-                            <span
-                              style={{
-                                fontSize: '0.6875rem',
-                                fontWeight: 700,
-                                color: '#64748B',
-                                background: '#F8FAFC',
-                                border: '1px solid #E2E8F0',
-                                padding: '2px 8px',
-                                borderRadius: '6px',
-                              }}
-                            >
-                              Inactive
+                    <div className="rule-card-inner">
+                      <div>
+                        {/* Header Row: Category & Severity Badges on Left, Modern Switch & Controls on Right */}
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            gap: '12px',
+                            marginBottom: '12px',
+                          }}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                            <span className="rule-category-pill">
+                              {rule.category}
                             </span>
+                            <span className={`severity-pill-modern ${sevKey}`}>
+                              <span className={`status-dot ${dotColorClass}`} />
+                              <span>{rule.severity} Risk</span>
+                            </span>
+                            {!rule.isActive && (
+                              <span className="status-badge-paused">
+                                Paused
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Action Controls */}
+                          {isReviewer && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              {/* Modern iOS/Linear style toggle switch */}
+                              <button
+                                type="button"
+                                onClick={() => handleToggleRule(rule._id)}
+                                className={`modern-switch-btn ${rule.isActive ? 'active' : ''}`}
+                                title={rule.isActive ? 'Deactivate rule enforcement' : 'Activate rule enforcement'}
+                                aria-label="Toggle rule enforcement"
+                              >
+                                <span className="modern-switch-thumb" />
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => handleOpenEditRule(rule)}
+                                className="ghost-action-btn"
+                                title="Edit rule"
+                              >
+                                <Edit2 size={13} />
+                              </button>
+
+                              {isAdmin && (
+                                <button
+                                  type="button"
+                                  onClick={() => setDeleteRuleConfirm(rule)}
+                                  className="ghost-action-btn danger"
+                                  title="Delete rule"
+                                >
+                                  <Trash2 size={13} />
+                                </button>
+                              )}
+                            </div>
                           )}
                         </div>
 
-                        {/* Action Toolbar */}
-                        {isReviewer && (
-                          <div
-                            style={{
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: '2px',
-                              background: '#F8FAFC',
-                              border: '1px solid #E2E8F0',
-                              borderRadius: '10px',
-                              padding: '2px',
-                            }}
-                          >
-                            <button
-                              onClick={() => handleToggleRule(rule._id)}
-                              className={`action-icon-btn ${rule.isActive ? 'active-toggle' : ''}`}
-                              title={rule.isActive ? 'Deactivate rule' : 'Activate rule'}
-                              style={{ width: '28px', height: '28px', borderRadius: '7px' }}
-                            >
-                              {rule.isActive ? <ToggleRight size={17} color="#10B981" /> : <ToggleLeft size={17} color="#94A3B8" />}
-                            </button>
-                            <button
-                              onClick={() => handleOpenEditRule(rule)}
-                              className="action-icon-btn"
-                              title="Edit rule"
-                              style={{ width: '28px', height: '28px', borderRadius: '7px' }}
-                            >
-                              <Edit2 size={13} color="#475569" />
-                            </button>
-                            {isAdmin && (
-                              <button
-                                onClick={() => setDeleteRuleConfirm(rule)}
-                                className="action-icon-btn danger"
-                                title="Delete rule"
-                                style={{ width: '28px', height: '28px', borderRadius: '7px' }}
-                              >
-                                <Trash2 size={13} color="#EF4444" />
-                              </button>
-                            )}
-                          </div>
-                        )}
+                        {/* Rule Title */}
+                        <h4
+                          style={{
+                            fontSize: '1.0625rem',
+                            fontWeight: 750,
+                            color: '#0F172A',
+                            margin: '0 0 6px 0',
+                            lineHeight: 1.4,
+                            letterSpacing: '-0.015em',
+                          }}
+                        >
+                          {rule.title}
+                        </h4>
+
+                        {/* Rule Description */}
+                        <p
+                          style={{
+                            fontSize: '0.84375rem',
+                            color: '#64748B',
+                            margin: '0 0 14px 0',
+                            lineHeight: 1.55,
+                          }}
+                        >
+                          {rule.description}
+                        </p>
+
+                        {/* Modern Phrasing Guidance Studio */}
+                        <div className="phrasing-studio">
+                          {/* Recommended / Preferred Wording */}
+                          {rule.preferredWording && (
+                            <div className="guidance-panel do">
+                              <div className="guidance-panel-header">
+                                <span className="guidance-badge do">
+                                  <CheckCircle2 size={13} strokeWidth={2.5} />
+                                  Preferred Wording
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() => copyToClipboard(rule.preferredWording, 'preferred wording')}
+                                  className="copy-mini-btn"
+                                  title="Copy approved phrasing"
+                                >
+                                  <Copy size={11} />
+                                  <span>Copy</span>
+                                </button>
+                              </div>
+                              <p className="guidance-quote">
+                                "{rule.preferredWording}"
+                              </p>
+                            </div>
+                          )}
+
+                          {/* Prohibited Phrases */}
+                          {rule.prohibitedPhrases && rule.prohibitedPhrases.length > 0 && (
+                            <div className="guidance-panel dont">
+                              <div className="guidance-panel-header">
+                                <span className="guidance-badge dont">
+                                  <XCircle size={13} strokeWidth={2.5} />
+                                  Prohibited Phrases
+                                </span>
+                                <span style={{ fontSize: '0.6875rem', fontWeight: 700, color: '#991B1B' }}>
+                                  {rule.prohibitedPhrases.length} restricted
+                                </span>
+                              </div>
+                              <div className="prohibited-chips-wrap">
+                                {rule.prohibitedPhrases.map((phrase, pIdx) => (
+                                  <span key={pIdx} className="prohibited-chip">
+                                    <span className="prohibited-chip-x">✕</span>
+                                    <span>{phrase}</span>
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Mandatory / Required Phrases */}
+                          {rule.requiredPhrases && rule.requiredPhrases.length > 0 && (
+                            <div className="guidance-panel mandatory">
+                              <div className="guidance-panel-header">
+                                <span className="guidance-badge mandatory">
+                                  <ShieldCheck size={13} strokeWidth={2.5} />
+                                  Required Phrasing
+                                </span>
+                                <span style={{ fontSize: '0.6875rem', fontWeight: 700, color: '#1D4ED8' }}>
+                                  Mandatory
+                                </span>
+                              </div>
+                              <div className="required-chips-wrap">
+                                {rule.requiredPhrases.map((phrase, rIdx) => (
+                                  <span key={rIdx} className="required-chip">
+                                    <Check size={11} strokeWidth={3} />
+                                    <span>{phrase}</span>
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       </div>
 
-                      {/* Rule Title */}
-                      <h4
-                        style={{
-                          fontSize: '1.0625rem',
-                          fontWeight: 750,
-                          color: '#0F172A',
-                          margin: '0 0 6px 0',
-                          lineHeight: 1.35,
-                        }}
-                      >
-                        {rule.title}
-                      </h4>
-
-                      {/* Rule Description */}
-                      <p
-                        style={{
-                          fontSize: '0.84375rem',
-                          color: '#475569',
-                          margin: '0 0 14px 0',
-                          lineHeight: 1.5,
-                        }}
-                      >
-                        {rule.description}
-                      </p>
-
-                      {/* Phrasing Showcase */}
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '14px' }}>
-                        {rule.preferredWording && (
-                          <div className="pill-badge-preferred" style={{ width: '100%', justifyContent: 'flex-start' }}>
-                            <Check size={13} strokeWidth={2.5} style={{ flexShrink: 0 }} />
-                            <strong>Preferred:</strong>
-                            <span style={{ overflowWrap: 'anywhere' }}>{rule.preferredWording}</span>
-                          </div>
-                        )}
-                        {rule.prohibitedPhrases && rule.prohibitedPhrases.length > 0 && (
-                          <div className="pill-badge-prohibited" style={{ width: '100%', justifyContent: 'flex-start' }}>
-                            <X size={13} strokeWidth={2.5} style={{ flexShrink: 0 }} />
-                            <strong>Prohibited:</strong>
-                            <span style={{ overflowWrap: 'anywhere' }}>{rule.prohibitedPhrases.join(', ')}</span>
-                          </div>
-                        )}
-                        {rule.requiredPhrases && rule.requiredPhrases.length > 0 && (
-                          <div
-                            style={{
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: '6px',
-                              padding: '4px 10px',
-                              borderRadius: '8px',
-                              background: '#EFF6FF',
-                              border: '1px solid #BFDBFE',
-                              fontSize: '0.8125rem',
-                              lineHeight: 1.4,
-                              width: '100%',
-                            }}
-                          >
-                            <CheckCircle2 size={13} color="#2563EB" strokeWidth={2.5} style={{ flexShrink: 0 }} />
-                            <strong style={{ color: '#1E40AF' }}>Required:</strong>
-                            <span style={{ color: '#1D4ED8', overflowWrap: 'anywhere' }}>{rule.requiredPhrases.join(', ')}</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Card Footer */}
-                    <div
-                      style={{
-                        borderTop: '1px solid #F1F5F9',
-                        paddingTop: '10px',
-                        marginTop: 'auto',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        fontSize: '0.75rem',
-                        color: '#64748B',
-                      }}
-                    >
-                      {rule.sourceReference ? (
-                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                          <Info size={13} color="#94A3B8" style={{ flexShrink: 0 }} />
+                      {/* Card Footer Bar */}
+                      <div className="rule-footer-bar">
+                        <div className="rule-footer-source">
+                          <BookOpen size={13} color="#94A3B8" style={{ flexShrink: 0 }} />
                           <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                            Source: <strong>{rule.sourceReference}</strong>
+                            Policy Ref: <strong>{rule.sourceReference || 'Standard Corporate Governance Policy'}</strong>
                           </span>
                         </div>
-                      ) : (
-                        <span style={{ color: '#94A3B8' }}>Standard Corporate Policy</span>
-                      )}
 
-                      <span style={{ fontSize: '0.6875rem', fontWeight: 600, color: rule.isActive ? '#059669' : '#94A3B8', flexShrink: 0, marginLeft: '8px' }}>
-                        {rule.isActive ? 'Active Check' : 'Inactive'}
-                      </span>
+                        {rule.isActive ? (
+                          <span className="status-badge-enforced">
+                            <span className="status-dot green" />
+                            Live Enforced
+                          </span>
+                        ) : (
+                          <span className="status-badge-paused">
+                            Paused
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 );

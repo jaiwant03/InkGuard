@@ -17,13 +17,15 @@ import {
   Info,
   X,
   XCircle,
+  Shield,
+  FileCheck,
+  Check,
 } from 'lucide-react';
 import { SeverityBadge } from '../components/Badges';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { ASSET_IMAGES } from '../assets/images';
-import { Check } from 'lucide-react';
 
 const RULE_CATEGORIES = [
   'Tone of voice',

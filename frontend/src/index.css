@@ -1367,14 +1367,14 @@ input[type="radio"]:focus-visible {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.6);
+  background: rgba(15, 23, 42, 0.65);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 20px;
+  padding: 24px;
   animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -1390,10 +1390,10 @@ input[type="radio"]:focus-visible {
 .modal-content {
   background: #FFFFFF;
   border-radius: 20px;
-  box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.3), 0 0 0 1px rgba(15, 23, 42, 0.08);
   width: 100%;
-  max-width: 640px;
-  max-height: 90vh;
+  max-width: 740px;
+  max-height: 88vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -1413,10 +1413,10 @@ input[type="radio"]:focus-visible {
 }
 
 .modal-header {
-  padding: 22px 26px 18px 26px;
+  padding: 20px 28px;
   border-bottom: 1px solid #F1F5F9;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   background: #FFFFFF;
   flex-shrink: 0;
@@ -1425,7 +1425,7 @@ input[type="radio"]:focus-visible {
 .modal-header-content {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
 }
 
 .modal-title {
@@ -1433,6 +1433,7 @@ input[type="radio"]:focus-visible {
   font-weight: 800;
   color: #0F172A;
   margin: 0;
+  letter-spacing: -0.02em;
 }
 
 .modal-subtitle {
@@ -1443,9 +1444,9 @@ input[type="radio"]:focus-visible {
 }
 
 .modal-close-btn {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
   border: 1px solid #E2E8F0;
   background: #F8FAFC;
   color: #64748B;
@@ -1455,49 +1456,50 @@ input[type="radio"]:focus-visible {
   cursor: pointer;
   transition: all 0.18s ease;
   flex-shrink: 0;
-  margin-left: 12px;
+  margin-left: 14px;
 }
 
 .modal-close-btn:hover {
   background: #F1F5F9;
   color: #0F172A;
   border-color: #CBD5E1;
-  transform: scale(1.05);
+  transform: scale(1.06);
 }
 
 .modal-body {
-  padding: 22px 26px;
+  padding: 22px 28px;
   overflow-y: auto;
   flex: 1;
-  scrollbar-width: thin;
-  scrollbar-color: #CBD5E1 transparent;
+  min-height: 0;
 }
 
+/* Custom WebKit floating scrollbar (no Windows OS arrow buttons or grey tracks) */
 .modal-body::-webkit-scrollbar {
   width: 6px;
 }
 
 .modal-body::-webkit-scrollbar-track {
   background: transparent;
+  margin: 10px 0;
 }
 
 .modal-body::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+  background: rgba(148, 163, 184, 0.45);
   border-radius: 999px;
 }
 
 .modal-body::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: rgba(100, 116, 139, 0.7);
 }
 
 .modal-footer {
-  padding: 16px 26px;
+  padding: 16px 28px;
   border-top: 1px solid #F1F5F9;
   background: #F8FAFC;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 12px;
   flex-shrink: 0;
 }
 

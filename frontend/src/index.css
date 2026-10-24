@@ -93,8 +93,9 @@
   --shadow-float: 0 20px 40px -10px rgba(37, 99, 235, 0.2);
   --shadow-dropdown: 0 12px 32px rgba(15, 23, 42, 0.12);
 
-  /* Typography */
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* Modern Typography Tokens */
+  --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
   /* Spacing */
@@ -138,6 +139,98 @@ html, body {
   color: var(--text-primary);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ==========================================================================
+   MODERN VIBRANT COLORED HEADINGS (Brand Gradient & Chromatic Palette)
+   ========================================================================== */
+h1, .page-header-title, .page-title {
+  font-family: var(--font-heading);
+  font-weight: 850;
+  letter-spacing: -0.03em;
+  line-height: 1.22;
+  background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 50%, #7C3AED 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 4px 18px rgba(37, 99, 235, 0.08);
+}
+
+h2, .section-heading, .section-title {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+  background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 55%, #2563EB 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+h3, .card-title {
+  font-family: var(--font-heading);
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  color: #1E293B;
+}
+
+h4 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: #0F172A;
+}
+
+/* Colored Heading & Text Gradient Utilities */
+.text-gradient-primary {
+  background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 50%, #7C3AED 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+.text-gradient-blue {
+  background: linear-gradient(135deg, #1E40AF 0%, #2563EB 60%, #60A5FA 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+.text-gradient-violet {
+  background: linear-gradient(135deg, #4C1D95 0%, #7C3AED 60%, #A855F7 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+.text-gradient-cyan {
+  background: linear-gradient(135deg, #0E7490 0%, #06B6D4 55%, #3B82F6 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+.text-gradient-emerald {
+  background: linear-gradient(135deg, #065F46 0%, #059669 60%, #34D399 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+.text-gradient-coral {
+  background: linear-gradient(135deg, #9F1239 0%, #E11D48 60%, #FB7185 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+.text-gradient-amber {
+  background: linear-gradient(135deg, #92400E 0%, #D97706 60%, #F59E0B 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
 }
 
 #root {

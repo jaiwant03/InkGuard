@@ -74,23 +74,54 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
+async function detectRuleConflicts(workspaceId, ruleData, excludeRuleId = null) {
+  const warnings = [];
+  const query = { workspace: workspaceId, isActive: true };
+  if (excludeRuleId) query._id = { $ne: excludeRuleId };
+
+  const existingRules = await BrandRule.find(query);
+
+  const cleanProhibited = (ruleData.prohibitedPhrases || []).map((p) => p.trim().toLowerCase()).filter(Boolean);
+  const cleanRequired = (ruleData.requiredPhrases || []).map((p) => p.trim().toLowerCase()).filter(Boolean);
+  const cleanPreferred = (ruleData.preferredWording || '').trim().toLowerCase();
+
+  for (const r of existingRules) {
+    const rProhibited = (r.prohibitedPhrases || []).map((p) => p.trim().toLowerCase());
+    const rRequired = (r.requiredPhrases || []).map((p) => p.trim().toLowerCase());
+    const rPreferred = (r.preferredWording || '').trim().toLowerCase();
+
+    // 1. Prohibited phrase matches another rule's required phrases or preferred wording
+    for (const p of cleanProhibited) {
+      if (rRequired.includes(p)) {
+        warnings.push(`Conflict: Phrase "${p}" is marked as prohibited here, but is required by rule "${r.title}".`);
+      }
+      if (rPreferred === p) {
+        warnings.push(`Ambiguity: Phrase "${p}" is prohibited here, but is configured as preferred wording in rule "${r.title}".`);
+      }
+    }
+
+    // 2. Required phrase matches another rule's prohibited phrases
+    for (const reqP of cleanRequired) {
+      if (rProhibited.includes(reqP)) {
+        warnings.push(`Conflict: Phrase "${reqP}" is marked as required here, but is prohibited by rule "${r.title}".`);
+      }
+    }
+
+    // 3. Preferred wording matches another rule's prohibited phrases
+    if (cleanPreferred && rProhibited.includes(cleanPreferred)) {
+      warnings.push(`Ambiguity: Preferred wording "${ruleData.preferredWording}" is marked as prohibited in rule "${r.title}".`);
+    }
+  }
+
+  return warnings;
+}
+
 // POST /api/brand-rules - Create new rule (Admin and Reviewer)
 router.post('/', requireRole(['admin', 'reviewer']), async (req, res, next) => {
   try {
     const validated = brandRuleSchema.parse(req.body);
 
-    // Potential conflict check: warning if a prohibited phrase is in another rule's required phrases
-    let conflictWarning = null;
-    if (validated.prohibitedPhrases && validated.prohibitedPhrases.length > 0) {
-      const existingRules = await BrandRule.find({
-        workspace: req.workspace._id,
-        isActive: true,
-        requiredPhrases: { $in: validated.prohibitedPhrases },
-      });
-      if (existingRules.length > 0) {
-        conflictWarning = `Caution: The prohibited phrase is currently marked as required in rule "${existingRules[0].title}".`;
-      }
-    }
+    const conflictWarnings = await detectRuleConflicts(req.workspace._id, validated);
 
     const rule = await BrandRule.create({
       ...validated,
@@ -114,7 +145,8 @@ router.post('/', requireRole(['admin', 'reviewer']), async (req, res, next) => {
       success: true,
       message: 'Brand rule created successfully.',
       data: rule,
-      conflictWarning,
+      conflictWarnings: conflictWarnings.length > 0 ? conflictWarnings : null,
+      conflictWarning: conflictWarnings.length > 0 ? conflictWarnings[0] : null,
     });
   } catch (error) {
     next(error);
@@ -130,6 +162,8 @@ router.put('/:id', requireRole(['admin', 'reviewer']), async (req, res, next) =>
     if (!rule) {
       return res.status(404).json({ success: false, message: 'Brand rule not found.' });
     }
+
+    const conflictWarnings = await detectRuleConflicts(req.workspace._id, validated, rule._id);
 
     Object.assign(rule, validated);
     rule.updatedBy = req.user._id;
@@ -150,6 +184,8 @@ router.put('/:id', requireRole(['admin', 'reviewer']), async (req, res, next) =>
       success: true,
       message: 'Brand rule updated successfully.',
       data: rule,
+      conflictWarnings: conflictWarnings.length > 0 ? conflictWarnings : null,
+      conflictWarning: conflictWarnings.length > 0 ? conflictWarnings[0] : null,
     });
   } catch (error) {
     next(error);

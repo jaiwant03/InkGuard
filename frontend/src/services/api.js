@@ -135,6 +135,22 @@ export const api = {
     versions: (id) => request(`/drafts/${id}/versions`),
     comments: (id) => request(`/drafts/${id}/comments`),
     addComment: (id, commentData) => request(`/drafts/${id}/comments`, { method: 'POST', body: JSON.stringify(commentData) }),
+    extractText: (formData) => request('/drafts/extract-text', { method: 'POST', body: formData }),
+    visualCheck: (data) => request('/drafts/visual-check', { method: 'POST', body: JSON.stringify(data) }),
+  },
+
+  // Brand Assets
+  brandAssets: {
+    list: (params = {}) => request(`/brand-assets${toQueryString(params)}`),
+    get: (id) => request(`/brand-assets/${id}`),
+    upload: (formData) => request('/brand-assets', { method: 'POST', body: formData }),
+    update: (id, data) => request(`/brand-assets/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+    delete: (id) => request(`/brand-assets/${id}`, { method: 'DELETE' }),
+  },
+
+  // Governance Insights
+  insights: {
+    get: () => request('/insights'),
   },
 
   // Dashboard

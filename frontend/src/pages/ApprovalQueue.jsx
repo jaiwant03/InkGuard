@@ -32,6 +32,7 @@ export default function ApprovalQueue() {
   const [selectedDraft, setSelectedDraft] = useState(null);
   const [decisionModal, setDecisionModal] = useState(null); // 'approve' | 'request_changes' | 'reject'
   const [commentText, setCommentText] = useState('');
+  const [overrideReason, setOverrideReason] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   // Comments state for modal
@@ -64,6 +65,7 @@ export default function ApprovalQueue() {
     setSelectedDraft(draft);
     setDecisionModal(decision);
     setCommentText('');
+    setOverrideReason('');
 
     // Fetch comments
     try {
@@ -90,6 +92,7 @@ export default function ApprovalQueue() {
       const res = await api.drafts.decision(selectedDraft._id, {
         decision: decisionModal,
         comment: commentText.trim(),
+        overrideReason: overrideReason.trim(),
       });
 
       if (res.success) {
@@ -99,7 +102,7 @@ export default function ApprovalQueue() {
         loadQueue();
       }
     } catch (err) {
-      toast.error('Decision failed: ' + err.message);
+      toast.error(err.message || 'Decision failed.');
     } finally {
       setSubmitting(false);
     }

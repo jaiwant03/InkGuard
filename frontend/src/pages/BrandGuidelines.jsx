@@ -647,117 +647,175 @@ export default function BrandGuidelines() {
 
       {/* Add / Edit Rule Modal */}
       {showRuleModal && (
-        <div className="modal-overlay">
-          <div className="modal-content" style={{ padding: 'var(--space-6)' }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: 'var(--space-2)' }}>
-              {editingRule ? 'Edit Brand Rule' : 'Create New Brand Rule'}
-            </h3>
-            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: 'var(--space-4)' }}>
-              Configure deterministic compliance checks for terminology, tone, and legal disclaimers.
-            </p>
-
-            <form onSubmit={handleSaveRule}>
-              <div className="form-group">
-                <label className="form-label">Rule Title *</label>
-                <input
-                  type="text"
-                  required
-                  className="form-input"
-                  placeholder="e.g. Standardize Enterprise Product Naming"
-                  value={ruleFormData.title}
-                  onChange={(e) => setRuleFormData({ ...ruleFormData, title: e.target.value })}
-                />
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)' }}>
-                <div className="form-group">
-                  <label className="form-label">Category *</label>
-                  <select
-                    className="form-select"
-                    value={ruleFormData.category}
-                    onChange={(e) => setRuleFormData({ ...ruleFormData, category: e.target.value })}
+        <div className="modal-overlay" onClick={() => setShowRuleModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            {/* Modal Header */}
+            <div className="modal-header">
+              <div className="modal-header-content">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                      padding: '2px 8px',
+                      borderRadius: '999px',
+                      background: '#EFF6FF',
+                      color: '#2563EB',
+                      fontSize: '0.6875rem',
+                      fontWeight: 700,
+                      border: '1px solid #DBEAFE',
+                    }}
                   >
-                    {RULE_CATEGORIES.map((c) => (
-                      <option key={c} value={c}>{c}</option>
-                    ))}
-                  </select>
+                    <BookOpen size={11} color="#2563EB" />
+                    Governance Policy
+                  </span>
+                  <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>•</span>
+                  <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
+                    Deterministic Engine
+                  </span>
                 </div>
 
-                <div className="form-group">
-                  <label className="form-label">Severity Level *</label>
-                  <select
-                    className="form-select"
-                    value={ruleFormData.severity}
-                    onChange={(e) => setRuleFormData({ ...ruleFormData, severity: e.target.value })}
-                  >
-                    <option value="High">High (Legal/Brand Risk)</option>
-                    <option value="Medium">Medium (Terminology/Tone)</option>
-                    <option value="Low">Low (Accessibility/Style)</option>
-                  </select>
+                <h3 className="modal-title text-gradient-primary">
+                  {editingRule ? 'Edit Brand Rule' : 'Create New Brand Rule'}
+                </h3>
+                <p className="modal-subtitle">
+                  Configure deterministic compliance checks for terminology, tone, and legal disclaimers.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                className="modal-close-btn"
+                onClick={() => setShowRuleModal(false)}
+                title="Close dialog"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* Modal Form */}
+            <form onSubmit={handleSaveRule} style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
+              <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div className="form-group" style={{ margin: 0 }}>
+                  <label className="form-label">Rule Title *</label>
+                  <input
+                    type="text"
+                    required
+                    className="form-input"
+                    placeholder="e.g. Standardize Enterprise Product Naming"
+                    value={ruleFormData.title}
+                    onChange={(e) => setRuleFormData({ ...ruleFormData, title: e.target.value })}
+                  />
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                  <div className="form-group" style={{ margin: 0 }}>
+                    <label className="form-label">Category *</label>
+                    <select
+                      className="form-select"
+                      value={ruleFormData.category}
+                      onChange={(e) => setRuleFormData({ ...ruleFormData, category: e.target.value })}
+                    >
+                      {RULE_CATEGORIES.map((c) => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="form-group" style={{ margin: 0 }}>
+                    <label className="form-label">Severity Level *</label>
+                    <select
+                      className="form-select"
+                      value={ruleFormData.severity}
+                      onChange={(e) => setRuleFormData({ ...ruleFormData, severity: e.target.value })}
+                    >
+                      <option value="High">High (Legal/Brand Risk)</option>
+                      <option value="Medium">Medium (Terminology/Tone)</option>
+                      <option value="Low">Low (Accessibility/Style)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="form-group" style={{ margin: 0 }}>
+                  <label className="form-label">Rule Explanation / Instruction *</label>
+                  <textarea
+                    className="form-textarea"
+                    rows={2}
+                    required
+                    placeholder="Why does this rule exist? What standard should creators adhere to?"
+                    value={ruleFormData.description}
+                    onChange={(e) => setRuleFormData({ ...ruleFormData, description: e.target.value })}
+                  />
+                </div>
+
+                <div className="form-group" style={{ margin: 0 }}>
+                  <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <CheckCircle2 size={13} color="#059669" />
+                    <span>Preferred Wording / Suggested Replacement</span>
+                  </label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder="e.g. Apex Cloud Enterprise"
+                    value={ruleFormData.preferredWording}
+                    onChange={(e) => setRuleFormData({ ...ruleFormData, preferredWording: e.target.value })}
+                  />
+                </div>
+
+                <div className="form-group" style={{ margin: 0 }}>
+                  <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <XCircle size={13} color="#DC2626" />
+                    <span>Prohibited Phrases (Comma-separated)</span>
+                  </label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder="e.g. ACE platform, Apex Ent, 100% hack-proof"
+                    value={ruleFormData.prohibitedPhrases}
+                    onChange={(e) => setRuleFormData({ ...ruleFormData, prohibitedPhrases: e.target.value })}
+                  />
+                </div>
+
+                <div className="form-group" style={{ margin: 0 }}>
+                  <label className="form-label">Required Phrases (Comma-separated)</label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder="e.g. registered trademark, SLA terms"
+                    value={ruleFormData.requiredPhrases}
+                    onChange={(e) => setRuleFormData({ ...ruleFormData, requiredPhrases: e.target.value })}
+                  />
+                </div>
+
+                <div className="form-group" style={{ margin: 0 }}>
+                  <label className="form-label">Source Reference / Policy Code</label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder="e.g. Legal Compliance Manual §4.2"
+                    value={ruleFormData.sourceReference}
+                    onChange={(e) => setRuleFormData({ ...ruleFormData, sourceReference: e.target.value })}
+                  />
                 </div>
               </div>
 
-              <div className="form-group">
-                <label className="form-label">Rule Explanation / Instruction *</label>
-                <textarea
-                  className="form-textarea"
-                  rows={2}
-                  required
-                  placeholder="Why does this rule exist? What standard should creators adhere to?"
-                  value={ruleFormData.description}
-                  onChange={(e) => setRuleFormData({ ...ruleFormData, description: e.target.value })}
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Preferred Wording / Suggested Replacement</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="e.g. Apex Cloud Enterprise"
-                  value={ruleFormData.preferredWording}
-                  onChange={(e) => setRuleFormData({ ...ruleFormData, preferredWording: e.target.value })}
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Prohibited Phrases (Comma-separated)</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="e.g. ACE platform, Apex Ent, 100% hack-proof"
-                  value={ruleFormData.prohibitedPhrases}
-                  onChange={(e) => setRuleFormData({ ...ruleFormData, prohibitedPhrases: e.target.value })}
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Required Phrases (Comma-separated)</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="e.g. registered trademark, SLA terms"
-                  value={ruleFormData.requiredPhrases}
-                  onChange={(e) => setRuleFormData({ ...ruleFormData, requiredPhrases: e.target.value })}
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Source Reference / Policy Code</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="e.g. Legal Compliance Manual §4.2"
-                  value={ruleFormData.sourceReference}
-                  onChange={(e) => setRuleFormData({ ...ruleFormData, sourceReference: e.target.value })}
-                />
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-2)', marginTop: 'var(--space-5)' }}>
-                <button type="button" className="btn btn-secondary" onClick={() => setShowRuleModal(false)}>
+              {/* Modal Footer */}
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => setShowRuleModal(false)}
+                  style={{ borderRadius: '10px', padding: '8px 18px' }}
+                >
                   Cancel
                 </button>
-                <button type="submit" className="btn btn-primary" disabled={savingRule}>
+                <button
+                  type="submit"
+                  className="btn btn-gradient-primary btn-sm"
+                  disabled={savingRule}
+                  style={{ borderRadius: '10px', padding: '8px 20px' }}
+                >
                   {savingRule ? 'Saving Rule...' : editingRule ? 'Update Rule' : 'Create Rule'}
                 </button>
               </div>
@@ -768,20 +826,31 @@ export default function BrandGuidelines() {
 
       {/* Delete Rule Confirmation Modal */}
       {deleteRuleConfirm && (
-        <div className="modal-overlay">
-          <div className="modal-content" style={{ padding: 'var(--space-6)', maxWidth: '440px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', color: 'var(--severity-high)', marginBottom: 'var(--space-3)' }}>
-              <ShieldAlert size={28} />
-              <h3 style={{ fontSize: '1.125rem', fontWeight: 700 }}>Delete Brand Rule?</h3>
+        <div className="modal-overlay" onClick={() => setDeleteRuleConfirm(null)}>
+          <div className="modal-content" style={{ maxWidth: '440px' }} onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#DC2626' }}>
+                <ShieldAlert size={22} />
+                <h3 className="modal-title" style={{ fontSize: '1.125rem' }}>Delete Brand Rule?</h3>
+              </div>
+              <button
+                type="button"
+                className="modal-close-btn"
+                onClick={() => setDeleteRuleConfirm(null)}
+              >
+                <X size={16} />
+              </button>
             </div>
-            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: 'var(--space-5)' }}>
-              Are you sure you want to permanently delete rule <strong>"{deleteRuleConfirm.title}"</strong>? Future content reviews will no longer evaluate against this rule.
-            </p>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-2)' }}>
-              <button className="btn btn-secondary" onClick={() => setDeleteRuleConfirm(null)}>
+            <div className="modal-body">
+              <p style={{ fontSize: '0.875rem', color: '#64748B', margin: 0, lineHeight: 1.5 }}>
+                Are you sure you want to permanently delete rule <strong>"{deleteRuleConfirm.title}"</strong>? Future content reviews will no longer evaluate against this rule.
+              </p>
+            </div>
+            <div className="modal-footer">
+              <button className="btn btn-secondary btn-sm" onClick={() => setDeleteRuleConfirm(null)}>
                 Cancel
               </button>
-              <button className="btn btn-danger" onClick={handleDeleteRule}>
+              <button className="btn btn-danger btn-sm" onClick={handleDeleteRule}>
                 Delete Rule
               </button>
             </div>

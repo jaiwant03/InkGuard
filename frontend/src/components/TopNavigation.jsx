@@ -193,13 +193,15 @@ export default function TopNavigation({ onOpenSearch }) {
     return name.slice(0, 2).toUpperCase();
   };
 
-  // The 6 Essential Core Brand Governance Pillars
+  // Core Brand Governance Pillars
   const navTabs = [
     { label: 'Dashboard', path: '/', icon: LayoutDashboard, color: '#2563EB', lightBg: '#EFF6FF', end: true },
     { label: 'Brand Guidelines', path: '/guidelines', icon: BookOpen, color: '#7C3AED', lightBg: '#F5F3FF' },
     { label: 'Approved Facts', path: '/facts', icon: CheckCircle2, color: '#10B981', lightBg: '#ECFDF5' },
     { label: 'Content Review', path: '/review', icon: FileText, color: '#F43F5E', lightBg: '#FFF1F2' },
     { label: 'Approval Queue', path: '/approvals', icon: ClipboardList, color: '#F59E0B', lightBg: '#FFFBEB' },
+    { label: 'Brand Assets', path: '/assets', icon: Palette, color: '#8B5CF6', lightBg: '#F5F3FF' },
+    { label: 'Governance Insights', path: '/insights', icon: TrendingUp, color: '#06B6D4', lightBg: '#ECFEFF' },
     { label: 'Review History', path: '/history', icon: History, color: '#3B82F6', lightBg: '#EFF6FF' },
   ];
 

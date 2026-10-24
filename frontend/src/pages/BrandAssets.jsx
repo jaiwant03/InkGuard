@@ -10,6 +10,7 @@ import {
   ExternalLink,
   Shield,
   FileCheck,
+  Palette,
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';

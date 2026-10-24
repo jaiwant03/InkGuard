@@ -307,17 +307,17 @@ export default function ReviewHistory() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '28px', maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', maxWidth: '1440px', margin: '0 auto', width: '100%', paddingBottom: '32px' }}>
       {/* Modern Page Header */}
-      <div className="page-header-clean" style={{ padding: '24px 28px', borderRadius: '18px' }}>
+      <div className="page-header-clean" style={{ padding: '28px 32px', borderRadius: '20px' }}>
         <div className="page-header-info">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
             <span
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '6px',
-                padding: '3px 10px',
+                padding: '4px 12px',
                 borderRadius: '999px',
                 background: '#EFF6FF',
                 color: '#2563EB',
@@ -337,20 +337,21 @@ export default function ReviewHistory() {
             </span>
           </div>
 
-          <h1 className="page-header-title text-gradient-primary" style={{ fontSize: '1.75rem', fontWeight: 850 }}>
+          <h1 className="page-header-title text-gradient-primary" style={{ fontSize: '1.85rem', fontWeight: 850 }}>
             Review History & Audit Trail
           </h1>
-          <p className="page-header-subtitle" style={{ fontSize: '0.875rem', color: '#64748B', marginTop: '6px' }}>
+          <p className="page-header-subtitle" style={{ fontSize: '0.9rem', color: '#64748B', marginTop: '8px', lineHeight: 1.55 }}>
             Immutable corporate governance log, revision comparisons, and approval timelines ensuring complete compliance accountability.
           </p>
         </div>
 
         {/* Action Controls: Tabs & Delete All History Button */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
-          <div className="segmented-control">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+          <div className="segmented-control" style={{ padding: '4px' }}>
             <button
               onClick={() => setActiveTab('audit')}
               className={`segmented-option ${activeTab === 'audit' ? 'active' : ''}`}
+              style={{ padding: '8px 18px' }}
             >
               <Shield size={14} />
               <span>Audit Trail ({auditLogs.length})</span>
@@ -358,6 +359,7 @@ export default function ReviewHistory() {
             <button
               onClick={() => setActiveTab('versions')}
               className={`segmented-option ${activeTab === 'versions' ? 'active' : ''}`}
+              style={{ padding: '8px 18px' }}
             >
               <GitBranch size={14} />
               <span>Version History</span>
@@ -371,12 +373,12 @@ export default function ReviewHistory() {
               disabled={auditLogs.length === 0}
               className="btn btn-secondary btn-sm"
               style={{
-                borderRadius: '10px',
-                padding: '9px 18px',
+                borderRadius: '12px',
+                padding: '10px 20px',
                 fontWeight: 700,
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '7px',
+                gap: '8px',
                 color: auditLogs.length > 0 ? '#DC2626' : '#94A3B8',
                 background: auditLogs.length > 0 ? '#FEF2F2' : '#F8FAFC',
                 borderColor: auditLogs.length > 0 ? '#FECACA' : '#E2E8F0',
@@ -394,13 +396,13 @@ export default function ReviewHistory() {
 
       {/* TAB 1: AUDIT TRAIL TIMELINE */}
       {activeTab === 'audit' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
           {/* Executive Metric Ribbon */}
           <div
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))',
-              gap: '18px',
+              gap: '20px',
             }}
           >
             {/* Metric 1 */}
@@ -408,12 +410,12 @@ export default function ReviewHistory() {
               style={{
                 background: '#FFFFFF',
                 border: '1px solid #E2E8F0',
-                borderRadius: '16px',
-                padding: '20px 24px',
+                borderRadius: '18px',
+                padding: '22px 26px',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '10px',
-                boxShadow: '0 1px 3px rgba(15, 23, 42, 0.03)',
+                gap: '12px',
+                boxShadow: '0 1px 4px rgba(15, 23, 42, 0.03)',
                 transition: 'all 0.2s ease',
               }}
             >
@@ -423,8 +425,8 @@ export default function ReviewHistory() {
                 </span>
                 <div
                   style={{
-                    width: '36px',
-                    height: '36px',
+                    width: '38px',
+                    height: '38px',
                     borderRadius: '10px',
                     background: '#EFF6FF',
                     color: '#2563EB',
@@ -436,10 +438,10 @@ export default function ReviewHistory() {
                   <History size={18} />
                 </div>
               </div>
-              <div style={{ fontSize: '1.85rem', fontWeight: 850, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1 }}>
+              <div style={{ fontSize: '2rem', fontWeight: 850, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1 }}>
                 {auditLogs.length}
               </div>
-              <span style={{ fontSize: '0.75rem', color: '#64748B' }}>Recorded Ledger Events</span>
+              <span style={{ fontSize: '0.78rem', color: '#64748B' }}>Recorded Ledger Events</span>
             </div>
 
             {/* Metric 2 */}
@@ -447,12 +449,12 @@ export default function ReviewHistory() {
               style={{
                 background: '#FFFFFF',
                 border: '1px solid #E2E8F0',
-                borderRadius: '16px',
-                padding: '20px 24px',
+                borderRadius: '18px',
+                padding: '22px 26px',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '10px',
-                boxShadow: '0 1px 3px rgba(15, 23, 42, 0.03)',
+                gap: '12px',
+                boxShadow: '0 1px 4px rgba(15, 23, 42, 0.03)',
                 transition: 'all 0.2s ease',
               }}
             >
@@ -462,8 +464,8 @@ export default function ReviewHistory() {
                 </span>
                 <div
                   style={{
-                    width: '36px',
-                    height: '36px',
+                    width: '38px',
+                    height: '38px',
                     borderRadius: '10px',
                     background: '#ECFDF5',
                     color: '#059669',
@@ -475,10 +477,10 @@ export default function ReviewHistory() {
                   <CheckCircle2 size={18} />
                 </div>
               </div>
-              <div style={{ fontSize: '1.85rem', fontWeight: 850, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1 }}>
+              <div style={{ fontSize: '2rem', fontWeight: 850, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1 }}>
                 {reviewCount}
               </div>
-              <span style={{ fontSize: '0.75rem', color: '#64748B' }}>Compliance Evaluations</span>
+              <span style={{ fontSize: '0.78rem', color: '#64748B' }}>Compliance Evaluations</span>
             </div>
 
             {/* Metric 3 */}
@@ -486,12 +488,12 @@ export default function ReviewHistory() {
               style={{
                 background: '#FFFFFF',
                 border: '1px solid #E2E8F0',
-                borderRadius: '16px',
-                padding: '20px 24px',
+                borderRadius: '18px',
+                padding: '22px 26px',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '10px',
-                boxShadow: '0 1px 3px rgba(15, 23, 42, 0.03)',
+                gap: '12px',
+                boxShadow: '0 1px 4px rgba(15, 23, 42, 0.03)',
                 transition: 'all 0.2s ease',
               }}
             >
@@ -501,8 +503,8 @@ export default function ReviewHistory() {
                 </span>
                 <div
                   style={{
-                    width: '36px',
-                    height: '36px',
+                    width: '38px',
+                    height: '38px',
                     borderRadius: '10px',
                     background: '#EEF2FF',
                     color: '#4F46E5',
@@ -514,10 +516,10 @@ export default function ReviewHistory() {
                   <FileText size={18} />
                 </div>
               </div>
-              <div style={{ fontSize: '1.85rem', fontWeight: 850, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1 }}>
+              <div style={{ fontSize: '2rem', fontWeight: 850, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1 }}>
                 {draftActionCount}
               </div>
-              <span style={{ fontSize: '0.75rem', color: '#64748B' }}>Document Lifecycles</span>
+              <span style={{ fontSize: '0.78rem', color: '#64748B' }}>Document Lifecycles</span>
             </div>
 
             {/* Metric 4 */}
@@ -525,12 +527,12 @@ export default function ReviewHistory() {
               style={{
                 background: '#FFFFFF',
                 border: '1px solid #E2E8F0',
-                borderRadius: '16px',
-                padding: '20px 24px',
+                borderRadius: '18px',
+                padding: '22px 26px',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '10px',
-                boxShadow: '0 1px 3px rgba(15, 23, 42, 0.03)',
+                gap: '12px',
+                boxShadow: '0 1px 4px rgba(15, 23, 42, 0.03)',
                 transition: 'all 0.2s ease',
               }}
             >
@@ -540,8 +542,8 @@ export default function ReviewHistory() {
                 </span>
                 <div
                   style={{
-                    width: '36px',
-                    height: '36px',
+                    width: '38px',
+                    height: '38px',
                     borderRadius: '10px',
                     background: '#FFFBEB',
                     color: '#D97706',
@@ -553,36 +555,36 @@ export default function ReviewHistory() {
                   <ShieldCheck size={18} />
                 </div>
               </div>
-              <div style={{ fontSize: '1.85rem', fontWeight: 850, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1 }}>
+              <div style={{ fontSize: '2rem', fontWeight: 850, color: '#0F172A', letterSpacing: '-0.02em', lineHeight: 1 }}>
                 {policyActionCount}
               </div>
-              <span style={{ fontSize: '0.75rem', color: '#64748B' }}>Rules & Verification Updates</span>
+              <span style={{ fontSize: '0.78rem', color: '#64748B' }}>Rules & Verification Updates</span>
             </div>
           </div>
 
-          {/* Interactive Search & Filter Toolbar with Free Spacing */}
+          {/* Interactive Search & Filter Toolbar Spaced Freely */}
           <div
             style={{
               background: '#FFFFFF',
               border: '1px solid #E2E8F0',
-              borderRadius: '16px',
-              padding: '16px 22px',
+              borderRadius: '18px',
+              padding: '18px 24px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               flexWrap: 'wrap',
-              gap: '16px',
+              gap: '18px',
               boxShadow: '0 1px 4px rgba(15, 23, 42, 0.03)',
             }}
           >
             {/* Search Input */}
-            <div style={{ position: 'relative', minWidth: '300px', flex: 1 }}>
+            <div style={{ position: 'relative', minWidth: '320px', flex: 1 }}>
               <Search
-                size={16}
+                size={17}
                 color="#94A3B8"
                 style={{
                   position: 'absolute',
-                  left: '14px',
+                  left: '16px',
                   top: '50%',
                   transform: 'translateY(-50%)',
                   pointerEvents: 'none',
@@ -595,8 +597,8 @@ export default function ReviewHistory() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 style={{
                   width: '100%',
-                  height: '44px',
-                  padding: '8px 36px 8px 40px',
+                  height: '46px',
+                  padding: '10px 38px 10px 44px',
                   borderRadius: '12px',
                   border: '1px solid #E2E8F0',
                   background: '#F8FAFC',
@@ -622,7 +624,7 @@ export default function ReviewHistory() {
                   onClick={() => setSearchQuery('')}
                   style={{
                     position: 'absolute',
-                    right: '12px',
+                    right: '14px',
                     top: '50%',
                     transform: 'translateY(-50%)',
                     background: 'none',
@@ -633,7 +635,7 @@ export default function ReviewHistory() {
                     display: 'flex',
                   }}
                 >
-                  <X size={14} />
+                  <X size={15} />
                 </button>
               )}
             </div>
@@ -644,7 +646,7 @@ export default function ReviewHistory() {
                 type="button"
                 onClick={() => setSelectedCategory('all')}
                 className={`segmented-option ${selectedCategory === 'all' ? 'active' : ''}`}
-                style={{ fontSize: '0.8125rem', padding: '7px 14px' }}
+                style={{ fontSize: '0.8125rem', padding: '8px 16px' }}
               >
                 All ({auditLogs.length})
               </button>
@@ -652,7 +654,7 @@ export default function ReviewHistory() {
                 type="button"
                 onClick={() => setSelectedCategory('reviews')}
                 className={`segmented-option ${selectedCategory === 'reviews' ? 'active' : ''}`}
-                style={{ fontSize: '0.8125rem', padding: '7px 14px' }}
+                style={{ fontSize: '0.8125rem', padding: '8px 16px' }}
               >
                 Reviews ({reviewCount})
               </button>
@@ -660,7 +662,7 @@ export default function ReviewHistory() {
                 type="button"
                 onClick={() => setSelectedCategory('drafts')}
                 className={`segmented-option ${selectedCategory === 'drafts' ? 'active' : ''}`}
-                style={{ fontSize: '0.8125rem', padding: '7px 14px' }}
+                style={{ fontSize: '0.8125rem', padding: '8px 16px' }}
               >
                 Drafts ({draftActionCount})
               </button>
@@ -668,7 +670,7 @@ export default function ReviewHistory() {
                 type="button"
                 onClick={() => setSelectedCategory('rules')}
                 className={`segmented-option ${selectedCategory === 'rules' ? 'active' : ''}`}
-                style={{ fontSize: '0.8125rem', padding: '7px 14px' }}
+                style={{ fontSize: '0.8125rem', padding: '8px 16px' }}
               >
                 Policies ({policyActionCount})
               </button>
@@ -678,12 +680,12 @@ export default function ReviewHistory() {
           {/* Spaced Audit Records or Empty Clearance State */}
           {filteredLogs.length === 0 ? (
             auditLogs.length === 0 ? (
-              /* High-End Enterprise Empty State: Spaced Freely */
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              /* High-End Enterprise Empty State: Freely Spaced */
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
                 <div
                   style={{
-                    padding: '56px 32px 50px 32px',
-                    borderRadius: '20px',
+                    padding: '64px 36px 56px 36px',
+                    borderRadius: '22px',
                     border: '1px solid #E2E8F0',
                     background:
                       'radial-gradient(circle at 50% 20%, rgba(37, 99, 235, 0.05) 0%, rgba(255, 255, 255, 1) 75%), #FFFFFF',
@@ -693,15 +695,16 @@ export default function ReviewHistory() {
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    minHeight: '380px',
                   }}
                 >
-                  <div style={{ marginBottom: '14px' }}>
+                  <div style={{ marginBottom: '18px' }}>
                     <span
                       style={{
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '6px',
-                        padding: '4px 14px',
+                        padding: '5px 16px',
                         borderRadius: '999px',
                         background: '#EFF6FF',
                         color: '#2563EB',
@@ -717,9 +720,9 @@ export default function ReviewHistory() {
 
                   <div
                     style={{
-                      width: '68px',
-                      height: '68px',
-                      borderRadius: '20px',
+                      width: '72px',
+                      height: '72px',
+                      borderRadius: '22px',
                       background: 'linear-gradient(135deg, #EFF6FF 0%, #EDE9FE 100%)',
                       border: '1px solid #DBEAFE',
                       display: 'flex',
@@ -727,19 +730,19 @@ export default function ReviewHistory() {
                       justifyContent: 'center',
                       color: '#2563EB',
                       boxShadow: '0 8px 24px -4px rgba(37, 99, 235, 0.15)',
-                      marginBottom: '16px',
+                      marginBottom: '20px',
                     }}
                   >
-                    <History size={32} />
+                    <History size={34} />
                   </div>
 
                   <h3
                     style={{
-                      fontSize: '1.4rem',
+                      fontSize: '1.5rem',
                       fontWeight: 850,
                       color: '#0F172A',
                       letterSpacing: '-0.02em',
-                      marginBottom: '8px',
+                      marginBottom: '10px',
                     }}
                   >
                     Audit Ledger is Ready & Empty
@@ -747,22 +750,22 @@ export default function ReviewHistory() {
 
                   <p
                     style={{
-                      fontSize: '0.9rem',
+                      fontSize: '0.9375rem',
                       color: '#64748B',
-                      maxWidth: '540px',
-                      margin: '0 auto 28px auto',
-                      lineHeight: 1.6,
+                      maxWidth: '560px',
+                      margin: '0 auto 32px auto',
+                      lineHeight: 1.65,
                     }}
                   >
                     All governance actions performed by team members, deterministic compliance scans, and reviewer decisions will be permanently logged here in real-time.
                   </p>
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
                     <button
                       onClick={() => navigate('/review')}
                       className="btn btn-gradient-primary"
                       style={{
-                        padding: '11px 24px',
+                        padding: '12px 26px',
                         borderRadius: '12px',
                         fontWeight: 700,
                         display: 'inline-flex',
@@ -779,7 +782,7 @@ export default function ReviewHistory() {
                       onClick={() => navigate('/guidelines')}
                       className="btn btn-secondary"
                       style={{
-                        padding: '11px 22px',
+                        padding: '12px 24px',
                         borderRadius: '12px',
                         fontWeight: 600,
                         display: 'inline-flex',
@@ -793,42 +796,42 @@ export default function ReviewHistory() {
                   </div>
                 </div>
 
-                {/* 3-Column Governance Reassurance Ribbon: Spaced Freely */}
+                {/* 3-Column Governance Reassurance Ribbon: Freely Spaced */}
                 <div
                   style={{
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                    gap: '20px',
+                    gap: '24px',
                   }}
                 >
                   <div
                     style={{
                       background: '#FFFFFF',
                       border: '1px solid #E2E8F0',
-                      borderRadius: '16px',
-                      padding: '22px 24px',
-                      boxShadow: '0 1px 3px rgba(15, 23, 42, 0.03)',
+                      borderRadius: '18px',
+                      padding: '24px 26px',
+                      boxShadow: '0 1px 4px rgba(15, 23, 42, 0.03)',
                     }}
                   >
                     <div
                       style={{
-                        width: '38px',
-                        height: '38px',
-                        borderRadius: '10px',
+                        width: '42px',
+                        height: '42px',
+                        borderRadius: '12px',
                         background: '#EFF6FF',
                         border: '1px solid #DBEAFE',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        marginBottom: '14px',
+                        marginBottom: '16px',
                       }}
                     >
-                      <Clock size={18} color="#2563EB" />
+                      <Clock size={20} color="#2563EB" />
                     </div>
-                    <h4 style={{ fontSize: '0.9375rem', fontWeight: 750, color: '#0F172A', marginBottom: '6px' }}>
+                    <h4 style={{ fontSize: '0.975rem', fontWeight: 750, color: '#0F172A', marginBottom: '8px' }}>
                       1. Cryptographic Chronology
                     </h4>
-                    <p style={{ fontSize: '0.8125rem', color: '#64748B', margin: 0, lineHeight: 1.55 }}>
+                    <p style={{ fontSize: '0.84rem', color: '#64748B', margin: 0, lineHeight: 1.6 }}>
                       Every automated scan, finding fix, and draft revision is indexed with high-resolution UTC timestamps for audit integrity.
                     </p>
                   </div>
@@ -837,30 +840,30 @@ export default function ReviewHistory() {
                     style={{
                       background: '#FFFFFF',
                       border: '1px solid #E2E8F0',
-                      borderRadius: '16px',
-                      padding: '22px 24px',
-                      boxShadow: '0 1px 3px rgba(15, 23, 42, 0.03)',
+                      borderRadius: '18px',
+                      padding: '24px 26px',
+                      boxShadow: '0 1px 4px rgba(15, 23, 42, 0.03)',
                     }}
                   >
                     <div
                       style={{
-                        width: '38px',
-                        height: '38px',
-                        borderRadius: '10px',
+                        width: '42px',
+                        height: '42px',
+                        borderRadius: '12px',
                         background: '#ECFDF5',
                         border: '1px solid #A7F3D0',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        marginBottom: '14px',
+                        marginBottom: '16px',
                       }}
                     >
-                      <UserCheck size={18} color="#059669" />
+                      <UserCheck size={20} color="#059669" />
                     </div>
-                    <h4 style={{ fontSize: '0.9375rem', fontWeight: 750, color: '#0F172A', marginBottom: '6px' }}>
+                    <h4 style={{ fontSize: '0.975rem', fontWeight: 750, color: '#0F172A', marginBottom: '8px' }}>
                       2. Direct Actor Attribution
                     </h4>
-                    <p style={{ fontSize: '0.8125rem', color: '#64748B', margin: 0, lineHeight: 1.55 }}>
+                    <p style={{ fontSize: '0.84rem', color: '#64748B', margin: 0, lineHeight: 1.6 }}>
                       Granular role-based tracking clearly shows whether actions were authored by an enterprise reviewer, team member, or system engine.
                     </p>
                   </div>
@@ -869,30 +872,30 @@ export default function ReviewHistory() {
                     style={{
                       background: '#FFFFFF',
                       border: '1px solid #E2E8F0',
-                      borderRadius: '16px',
-                      padding: '22px 24px',
-                      boxShadow: '0 1px 3px rgba(15, 23, 42, 0.03)',
+                      borderRadius: '18px',
+                      padding: '24px 26px',
+                      boxShadow: '0 1px 4px rgba(15, 23, 42, 0.03)',
                     }}
                   >
                     <div
                       style={{
-                        width: '38px',
-                        height: '38px',
-                        borderRadius: '10px',
+                        width: '42px',
+                        height: '42px',
+                        borderRadius: '12px',
                         background: '#F5F3FF',
                         border: '1px solid #DDD6FE',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        marginBottom: '14px',
+                        marginBottom: '16px',
                       }}
                     >
-                      <ShieldCheck size={18} color="#7C3AED" />
+                      <ShieldCheck size={20} color="#7C3AED" />
                     </div>
-                    <h4 style={{ fontSize: '0.9375rem', fontWeight: 750, color: '#0F172A', marginBottom: '6px' }}>
+                    <h4 style={{ fontSize: '0.975rem', fontWeight: 750, color: '#0F172A', marginBottom: '8px' }}>
                       3. Zero Silent Overwrites
                     </h4>
-                    <p style={{ fontSize: '0.8125rem', color: '#64748B', margin: 0, lineHeight: 1.55 }}>
+                    <p style={{ fontSize: '0.84rem', color: '#64748B', margin: 0, lineHeight: 1.6 }}>
                       Multi-version draft snapshots prevent retroactive tampering and maintain full visibility across corporate publication lifecycles.
                     </p>
                   </div>
@@ -904,17 +907,17 @@ export default function ReviewHistory() {
                 style={{
                   background: '#FFFFFF',
                   border: '1px solid #E2E8F0',
-                  borderRadius: '18px',
-                  padding: '50px 24px',
+                  borderRadius: '20px',
+                  padding: '56px 28px',
                   textAlign: 'center',
-                  boxShadow: '0 1px 3px rgba(15, 23, 42, 0.03)',
+                  boxShadow: '0 1px 4px rgba(15, 23, 42, 0.03)',
                 }}
               >
-                <Search size={40} color="#94A3B8" style={{ margin: '0 auto 12px auto' }} />
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 750, color: '#0F172A', marginBottom: '6px' }}>
+                <Search size={42} color="#94A3B8" style={{ margin: '0 auto 16px auto' }} />
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 750, color: '#0F172A', marginBottom: '8px' }}>
                   No Records Match Your Filters
                 </h3>
-                <p style={{ fontSize: '0.875rem', color: '#64748B', maxWidth: '440px', margin: '0 auto 20px auto' }}>
+                <p style={{ fontSize: '0.875rem', color: '#64748B', maxWidth: '440px', margin: '0 auto 24px auto', lineHeight: 1.55 }}>
                   No event entries match query "<strong>{searchQuery}</strong>" in the selected category.
                 </p>
                 <button
@@ -924,15 +927,15 @@ export default function ReviewHistory() {
                     setSelectedCategory('all');
                   }}
                   className="btn btn-secondary btn-sm"
-                  style={{ borderRadius: '10px', padding: '8px 20px' }}
+                  style={{ borderRadius: '12px', padding: '10px 22px', fontWeight: 650 }}
                 >
                   Reset Search & Filters
                 </button>
               </div>
             )
           ) : (
-            /* Timeline Cards: Spaced Freely with 16px Gap */
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            /* Timeline Cards: Spaced Freely with 18px Gap */
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
               {filteredLogs.map((log) => {
                 const actionBadgeType = getActionBadgeClass(log.action, log.entityType);
 
@@ -941,8 +944,8 @@ export default function ReviewHistory() {
                     key={log._id}
                     className="audit-timeline-item"
                     style={{
-                      padding: '20px 24px',
-                      borderRadius: '16px',
+                      padding: '22px 28px',
+                      borderRadius: '18px',
                       border: '1px solid #E2E8F0',
                       background: '#FFFFFF',
                       boxShadow: '0 1px 4px rgba(15, 23, 42, 0.02)',

@@ -18,6 +18,7 @@ import {
   Plus,
   Sparkles,
   Check,
+  X,
 } from 'lucide-react';
 import { WorkflowStatusBadge } from '../components/Badges';
 import { api } from '../services/api';

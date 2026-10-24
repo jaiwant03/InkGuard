@@ -28,7 +28,7 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { api } from '../services/api';
 
-export default function TopNavigation({ onOpenSearch, onOpenDemo }) {
+export default function TopNavigation({ onOpenSearch }) {
   const { user, workspace, role, logout, refreshUser, switchWorkspace } = useAuth();
   const [profileOpen, setProfileOpen] = useState(false);
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
@@ -479,32 +479,8 @@ export default function TopNavigation({ onOpenSearch, onOpenDemo }) {
               </div>
             </div>
 
-            {/* RIGHT: Live Demo, Search, Notifications, User Profile & Mobile Toggle */}
+            {/* RIGHT: Search, Notifications, User Profile & Mobile Toggle */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              {/* Live Interactive Demo Button */}
-              <button
-                type="button"
-                onClick={onOpenDemo}
-                className="top-nav-btn"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '6px 14px',
-                  fontSize: '0.8125rem',
-                  fontWeight: 700,
-                  color: '#2563EB',
-                  borderRadius: '12px',
-                  border: '1px solid #BFDBFE',
-                  background: 'linear-gradient(135deg, #EFF6FF 0%, #EEF2FF 100%)',
-                  boxShadow: '0 2px 6px rgba(37, 99, 235, 0.08)',
-                }}
-                title="View live input and output demonstration scenarios"
-              >
-                <Sparkles size={14} color="#2563EB" />
-                <span>Live Demo</span>
-              </button>
-
               {/* Global Search Button */}
               <button
                 type="button"

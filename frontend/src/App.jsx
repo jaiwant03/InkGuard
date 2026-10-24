@@ -10,12 +10,10 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import BrandGuidelines from './pages/BrandGuidelines';
 import ApprovedFacts from './pages/ApprovedFacts';
-import BrandAssets from './pages/BrandAssets';
 import ContentReview from './pages/ContentReview';
 import ReviewResults from './pages/ReviewResults';
 import ApprovalQueue from './pages/ApprovalQueue';
 import ReviewHistory from './pages/ReviewHistory';
-import GovernanceInsights from './pages/GovernanceInsights';
 import WorkspaceSettings from './pages/WorkspaceSettings';
 
 // Protected Route Wrapper
@@ -68,7 +66,7 @@ function AppRouter() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
-      {/* Protected Application Routes */}
+      {/* Protected Essential Application Routes */}
       <Route
         path="/"
         element={
@@ -80,13 +78,15 @@ function AppRouter() {
         <Route index element={<Dashboard />} />
         <Route path="guidelines" element={<BrandGuidelines />} />
         <Route path="facts" element={<ApprovedFacts />} />
-        <Route path="assets" element={<BrandAssets />} />
         <Route path="review" element={<ContentReview />} />
         <Route path="review/:draftId" element={<ReviewResults />} />
         <Route path="approvals" element={<ApprovalQueue />} />
         <Route path="history" element={<ReviewHistory />} />
-        <Route path="insights" element={<GovernanceInsights />} />
         <Route path="settings" element={<WorkspaceSettings />} />
+
+        {/* Legacy redirect fallbacks */}
+        <Route path="assets" element={<Navigate to="/guidelines" replace />} />
+        <Route path="insights" element={<Navigate to="/" replace />} />
       </Route>
 
       {/* Fallback route */}

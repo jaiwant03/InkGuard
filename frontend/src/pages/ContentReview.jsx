@@ -144,53 +144,81 @@ export default function ContentReview() {
   const charCount = content.length;
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 360px', gap: 'var(--space-6)', alignItems: 'start' }}>
-      {/* Left Main Pane: Editor */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
-        <div className="card" style={{ padding: '24px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-4)', flexWrap: 'wrap', gap: 'var(--space-2)' }}>
-            <div>
-              <h1 className="text-gradient-primary" style={{ fontSize: '1.5rem', fontWeight: 850, margin: 0 }}>
-                Content Review Studio
-              </h1>
-              <p style={{ fontSize: '0.875rem', color: '#64748B', marginTop: '3px', margin: '3px 0 0 0' }}>
-                Audit drafts in real-time against active brand guidelines, prohibited terminology, and approved facts.
-              </p>
-            </div>
-
-            {/* Quick Demo Pre-fillers */}
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <button
-                type="button"
-                onClick={() => {
-                  setTitle('Q4 Cloud Announcement (Violation Sample)');
-                  setContentType('Website copy');
-                  setContent(VIOLATION_SAMPLE);
-                }}
-                className="btn btn-secondary btn-sm"
-                style={{ fontSize: '0.75rem', borderRadius: '10px' }}
-                title="Loads copy with prohibited terms and expired fact for test inspection"
-              >
-                <AlertTriangle size={13} color="#EF4444" />
-                <span>Violation Sample</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setTitle('High-Scale Cloud Overview (Compliant Sample)');
-                  setContentType('Website copy');
-                  setContent(COMPLIANT_SAMPLE);
-                }}
-                className="btn btn-secondary btn-sm"
-                style={{ fontSize: '0.75rem', borderRadius: '10px' }}
-                title="Loads compliant enterprise copy"
-              >
-                <CheckCircle2 size={13} color="#10B981" />
-                <span>Compliant Sample</span>
-              </button>
-            </div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
+      {/* Modern Page Header Banner */}
+      <div className="page-header-clean">
+        <div className="page-header-info">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+            <span
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '3px 10px',
+                borderRadius: '999px',
+                background: '#FFF1F2',
+                color: '#E11D48',
+                fontSize: '0.6875rem',
+                fontWeight: 700,
+                border: '1px solid #FECDD3',
+                textTransform: 'uppercase',
+                letterSpacing: '0.04em',
+              }}
+            >
+              <FileCheck2 size={12} color="#E11D48" />
+              Pre-Flight Review Studio
+            </span>
+            <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>•</span>
+            <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
+              {activeRules.length} Active Rules Enforced
+            </span>
           </div>
 
+          <h1 className="page-header-title text-gradient-primary">
+            Content Review Studio
+          </h1>
+          <p className="page-header-subtitle">
+            Audit drafts in real-time against active brand guidelines, prohibited terminology, and approved facts.
+          </p>
+        </div>
+
+        {/* Quick Demo Pre-fillers */}
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <button
+            type="button"
+            onClick={() => {
+              setTitle('Q4 Cloud Announcement (Violation Sample)');
+              setContentType('Website copy');
+              setContent(VIOLATION_SAMPLE);
+            }}
+            className="btn btn-secondary btn-sm"
+            style={{ fontSize: '0.8125rem', padding: '8px 16px', borderRadius: '12px' }}
+            title="Loads copy with prohibited terms and expired fact for test inspection"
+          >
+            <AlertTriangle size={14} color="#EF4444" />
+            <span>Violation Sample</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setTitle('High-Scale Cloud Overview (Compliant Sample)');
+              setContentType('Website copy');
+              setContent(COMPLIANT_SAMPLE);
+            }}
+            className="btn btn-secondary btn-sm"
+            style={{ fontSize: '0.8125rem', padding: '8px 16px', borderRadius: '12px' }}
+            title="Loads compliant enterprise copy"
+          >
+            <CheckCircle2 size={14} color="#10B981" />
+            <span>Compliant Sample</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Main Split-Pane Workspace */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 360px', gap: 'var(--space-6)', alignItems: 'start' }}>
+        {/* Left Main Pane: Editor */}
+        <div className="card" style={{ padding: '28px' }}>
           {/* Form Inputs */}
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--space-4)', marginBottom: 'var(--space-4)' }}>
             <div className="form-group" style={{ marginBottom: 0 }}>
@@ -216,9 +244,9 @@ export default function ContentReview() {
 
           {/* Main Text Input Area */}
           <div className="form-group">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-              <label className="form-label">Content Text / Copy *</label>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <label className="form-label" style={{ marginBottom: 0 }}>Content Text / Copy *</label>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
                 <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>
                   {wordCount} words • {charCount} chars
                 </span>
@@ -255,7 +283,7 @@ export default function ContentReview() {
           </div>
 
           {/* Action Footer */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'var(--space-6)', borderTop: '1px solid var(--border-light)', paddingTop: 'var(--space-4)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'var(--space-6)', borderTop: '1px solid var(--border-light)', paddingTop: 'var(--space-4)', flexWrap: 'wrap', gap: '12px' }}>
             <span style={{ fontSize: '0.8125rem', color: 'var(--text-tertiary)' }}>
               Deterministic checks will evaluate across {activeRules.length} active workspace brand rules.
             </span>
@@ -266,16 +294,17 @@ export default function ContentReview() {
                 className="btn btn-secondary"
                 disabled={savingDraft || auditing}
                 onClick={handleSaveDraft}
+                style={{ padding: '10px 20px', borderRadius: '12px' }}
               >
                 <Save size={16} /> Save as Draft
               </button>
 
               <button
                 type="button"
-                className="btn btn-primary btn-lg"
+                className="btn btn-gradient-primary btn-lg"
                 disabled={auditing || savingDraft}
                 onClick={handleRunAudit}
-                style={{ minWidth: '190px' }}
+                style={{ minWidth: '190px', padding: '10px 24px', borderRadius: '12px' }}
               >
                 {auditing ? (
                   <>
@@ -290,7 +319,6 @@ export default function ContentReview() {
             </div>
           </div>
         </div>
-      </div>
 
       {/* Right Side Pane: Live Metrics & Governance Pre-Flight Reference */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>

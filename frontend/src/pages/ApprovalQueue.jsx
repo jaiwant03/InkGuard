@@ -646,7 +646,7 @@ export default function ApprovalQueue() {
                   </label>
                   <textarea
                     className="form-textarea"
-                    rows={4}
+                    rows={3}
                     required={decisionModal === 'request_changes'}
                     placeholder={
                       decisionModal === 'approve'
@@ -657,6 +657,36 @@ export default function ApprovalQueue() {
                     onChange={(e) => setCommentText(e.target.value)}
                   />
                 </div>
+
+                {/* Authorized Override Section if draft has low score or unreviewed */}
+                {decisionModal === 'approve' && (
+                  <div
+                    style={{
+                      background: '#FFFBEB',
+                      border: '1px solid #FDE68A',
+                      borderRadius: '12px',
+                      padding: '12px 14px',
+                      fontSize: '0.8125rem',
+                      color: '#92400E',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, marginBottom: '4px' }}>
+                      <AlertTriangle size={15} color="#D97706" />
+                      <span>Compliance Override Protocol</span>
+                    </div>
+                    <p style={{ margin: '0 0 8px 0', fontSize: '0.75rem', lineHeight: 1.4 }}>
+                      If this draft contains unresolved High-severity brand risk findings or score &lt; 70%, recording an explicit authorized override justification (min 8 characters) is mandatory.
+                    </p>
+                    <input
+                      type="text"
+                      className="form-input"
+                      value={overrideReason}
+                      onChange={(e) => setOverrideReason(e.target.value)}
+                      placeholder="e.g. Legal pre-approved exception for regulatory press release."
+                      style={{ fontSize: '0.8125rem', height: '36px', background: '#FFFFFF' }}
+                    />
+                  </div>
+                )}
 
                 {/* Existing comments history */}
                 {comments.length > 0 && (

@@ -2351,6 +2351,112 @@ input[type="radio"]:focus-visible {
   white-space: nowrap;
 }
 
+/* Review Results Document Canvas & Finding Cards */
+.document-canvas {
+  background: #FFFFFF;
+  border-radius: 16px;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
+  padding: 24px;
+}
+
+.document-paper {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 14px;
+  padding: 24px 26px;
+  min-height: 440px;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: #1E293B;
+  white-space: pre-wrap;
+  font-family: var(--font-sans);
+}
+
+.document-highlight-span {
+  padding: 2px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.document-highlight-span.high {
+  background: #FEE2E2;
+  color: #991B1B;
+  border-bottom: 2px solid #EF4444;
+}
+
+.document-highlight-span.medium {
+  background: #FEF3C7;
+  color: #92400E;
+  border-bottom: 2px solid #F59E0B;
+}
+
+.document-highlight-span.low {
+  background: #EFF6FF;
+  color: #1E40AF;
+  border-bottom: 2px solid #3B82F6;
+}
+
+.document-highlight-span.active {
+  box-shadow: 0 0 0 2px #2563EB;
+  background: #DBEAFE;
+}
+
+.finding-card {
+  position: relative;
+  background: #FFFFFF;
+  border-radius: 16px;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.03);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  padding: 18px 20px 18px 22px;
+  cursor: pointer;
+}
+
+.finding-card:hover {
+  transform: translateY(-1.5px);
+  border-color: #CBD5E1;
+  box-shadow: 0 8px 20px -4px rgba(15, 23, 42, 0.08);
+}
+
+.finding-card.active {
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25), 0 8px 24px rgba(37, 99, 235, 0.1);
+}
+
+.finding-accent-stripe {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 4px;
+}
+
+.finding-accent-stripe.high {
+  background: #EF4444;
+}
+
+.finding-accent-stripe.medium {
+  background: #F59E0B;
+}
+
+.finding-accent-stripe.low {
+  background: #3B82F6;
+}
+
+.finding-accent-stripe.applied,
+.finding-accent-stripe.resolved {
+  background: #10B981;
+}
+
+.finding-accent-stripe.dismissed {
+  background: #94A3B8;
+}
+
 /* Responsive Media Queries */
 @media (max-width: 1320px) {
   .dashboard-kpi-grid-5 {

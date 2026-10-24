@@ -515,68 +515,221 @@ export default function ApprovalQueue() {
 
       {/* Reviewer Decision Modal */}
       {decisionModal && selectedDraft && (
-        <div className="modal-overlay">
-          <div className="modal-content" style={{ padding: 'var(--space-6)', maxWidth: '520px' }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: 'var(--space-2)' }}>
-              {decisionModal === 'approve'
-                ? 'Approve Content Draft'
-                : decisionModal === 'request_changes'
-                ? 'Request Changes'
-                : 'Reject Content Draft'}
-            </h3>
-            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: 'var(--space-4)' }}>
-              Target Document: <strong>{selectedDraft.title}</strong>
-            </p>
-
-            <form onSubmit={handleConfirmDecision}>
-              <div className="form-group">
-                <label className="form-label">
-                  {decisionModal === 'request_changes' ? 'Required Modifications (Required) *' : 'Reviewer Note (Optional)'}
-                </label>
-                <textarea
-                  className="form-textarea"
-                  rows={4}
-                  required={decisionModal === 'request_changes'}
-                  placeholder={
-                    decisionModal === 'approve'
-                      ? 'Approved for production publishing.'
-                      : 'Provide explicit feedback on prohibited terminology or required fact updates...'
-                  }
-                  value={commentText}
-                  onChange={(e) => setCommentText(e.target.value)}
-                />
+        <div className="modal-overlay" onClick={() => setDecisionModal(null)}>
+          <div className="modal-content" style={{ maxWidth: '580px' }} onClick={(e) => e.stopPropagation()}>
+            {/* Modal Header */}
+            <div className="modal-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                <div
+                  style={{
+                    width: '42px',
+                    height: '42px',
+                    borderRadius: '12px',
+                    background:
+                      decisionModal === 'approve'
+                        ? 'linear-gradient(135deg, #ECFDF5 0%, #EFF6FF 100%)'
+                        : decisionModal === 'request_changes'
+                        ? 'linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%)'
+                        : 'linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    border: `1px solid ${
+                      decisionModal === 'approve' ? '#A7F3D0' : decisionModal === 'request_changes' ? '#FDE68A' : '#FECACA'
+                    }`,
+                    color:
+                      decisionModal === 'approve' ? '#059669' : decisionModal === 'request_changes' ? '#D97706' : '#DC2626',
+                    flexShrink: 0,
+                  }}
+                >
+                  {decisionModal === 'approve' ? (
+                    <CheckCircle2 size={22} />
+                  ) : decisionModal === 'request_changes' ? (
+                    <AlertCircle size={22} />
+                  ) : (
+                    <XCircle size={22} />
+                  )}
+                </div>
+                <div className="modal-header-content">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
+                    <span
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        padding: '1px 8px',
+                        borderRadius: '999px',
+                        background:
+                          decisionModal === 'approve' ? '#ECFDF5' : decisionModal === 'request_changes' ? '#FFFBEB' : '#FEF2F2',
+                        color:
+                          decisionModal === 'approve' ? '#059669' : decisionModal === 'request_changes' ? '#D97706' : '#DC2626',
+                        fontSize: '0.6875rem',
+                        fontWeight: 700,
+                        border: `1px solid ${
+                          decisionModal === 'approve' ? '#A7F3D0' : decisionModal === 'request_changes' ? '#FDE68A' : '#FECACA'
+                        }`,
+                      }}
+                    >
+                      Governance Protocol
+                    </span>
+                    <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>•</span>
+                    <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
+                      Reviewer Sign-Off
+                    </span>
+                  </div>
+                  <h3 className="modal-title" style={{ fontSize: '1.25rem' }}>
+                    {decisionModal === 'approve'
+                      ? 'Approve Content Draft'
+                      : decisionModal === 'request_changes'
+                      ? 'Request Content Modifications'
+                      : 'Reject Content Draft'}
+                  </h3>
+                </div>
               </div>
 
-              {/* Existing comments history */}
-              {comments.length > 0 && (
-                <div style={{ marginTop: 'var(--space-4)', maxHeight: '160px', overflowY: 'auto' }}>
-                  <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>
-                    Previous Review Comments ({comments.length})
-                  </span>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '6px' }}>
-                    {comments.map((c) => (
-                      <div key={c._id} style={{ padding: '6px 8px', borderRadius: 'var(--radius-sm)', background: 'var(--bg-surface-secondary)', fontSize: '0.75rem' }}>
-                        <strong>{c.author?.name}:</strong> {c.content}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+              <button
+                type="button"
+                className="modal-close-btn"
+                onClick={() => setDecisionModal(null)}
+                title="Close dialog"
+              >
+                <X size={16} />
+              </button>
+            </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-2)', marginTop: 'var(--space-5)' }}>
-                <button type="button" className="btn btn-secondary" onClick={() => setDecisionModal(null)}>
+            {/* Modal Form */}
+            <form onSubmit={handleConfirmDecision} style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
+              <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {/* Target Draft Banner */}
+                <div
+                  style={{
+                    background: '#F8FAFC',
+                    border: '1px solid #E2E8F0',
+                    borderRadius: '12px',
+                    padding: '12px 14px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <FileText size={18} color="#6366F1" />
+                    <div>
+                      <div style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#0F172A' }}>
+                        {selectedDraft.title}
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: '#64748B' }}>
+                        Version {selectedDraft.version || 1} • {selectedDraft.type || 'Marketing Copy'}
+                      </div>
+                    </div>
+                  </div>
+                  <WorkflowStatusBadge status={selectedDraft.status} />
+                </div>
+
+                <div className="form-group" style={{ margin: 0 }}>
+                  <label className="form-label" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span>
+                      {decisionModal === 'request_changes' ? (
+                        <>
+                          Required Modifications <span style={{ color: '#EF4444' }}>*</span>
+                        </>
+                      ) : (
+                        'Reviewer Note (Optional)'
+                      )}
+                    </span>
+                    <span style={{ fontSize: '0.75rem', color: '#94A3B8', fontWeight: 400 }}>
+                      {decisionModal === 'request_changes' ? 'Explain what creator must fix' : 'Will be logged in immutable audit trail'}
+                    </span>
+                  </label>
+                  <textarea
+                    className="form-textarea"
+                    rows={4}
+                    required={decisionModal === 'request_changes'}
+                    placeholder={
+                      decisionModal === 'approve'
+                        ? 'e.g. Verified brand voice, legal disclaimers, and claims accuracy. Approved for publishing.'
+                        : 'e.g. Please replace prohibited terminology in paragraph 2 and include the mandatory trademark disclaimer.'
+                    }
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                  />
+                </div>
+
+                {/* Existing comments history */}
+                {comments.length > 0 && (
+                  <div
+                    style={{
+                      borderTop: '1px solid #F1F5F9',
+                      paddingTop: '12px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '8px',
+                    }}
+                  >
+                    <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      Previous Review Comments ({comments.length})
+                    </span>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '140px', overflowY: 'auto' }}>
+                      {comments.map((c) => (
+                        <div
+                          key={c._id}
+                          style={{
+                            padding: '8px 12px',
+                            borderRadius: '8px',
+                            background: '#F8FAFC',
+                            border: '1px solid #F1F5F9',
+                            fontSize: '0.8125rem',
+                          }}
+                        >
+                          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
+                            <strong style={{ color: '#1E293B' }}>{c.author?.name || 'Reviewer'}:</strong>
+                            <span style={{ fontSize: '0.6875rem', color: '#94A3B8' }}>{new Date(c.createdAt).toLocaleDateString()}</span>
+                          </div>
+                          <span style={{ color: '#475569' }}>{c.content}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Modal Footer */}
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => setDecisionModal(null)}
+                  style={{ borderRadius: '10px', padding: '8px 20px', fontWeight: 600 }}
+                >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className={decisionModal === 'approve' ? 'btn btn-primary' : 'btn btn-danger'}
+                  className={
+                    decisionModal === 'approve'
+                      ? 'btn btn-success btn-sm'
+                      : decisionModal === 'request_changes'
+                      ? 'btn btn-warning btn-sm'
+                      : 'btn btn-danger btn-sm'
+                  }
                   disabled={submitting}
+                  style={{
+                    borderRadius: '10px',
+                    padding: '8px 24px',
+                    fontWeight: 700,
+                    boxShadow:
+                      decisionModal === 'approve'
+                        ? '0 4px 14px rgba(16, 185, 129, 0.3)'
+                        : '0 4px 14px rgba(245, 158, 11, 0.3)',
+                  }}
                 >
                   {submitting
                     ? 'Submitting...'
                     : decisionModal === 'approve'
                     ? 'Confirm Approval'
-                    : 'Submit Changes Request'}
+                    : decisionModal === 'request_changes'
+                    ? 'Submit Changes Request'
+                    : 'Reject Draft'}
                 </button>
               </div>
             </form>

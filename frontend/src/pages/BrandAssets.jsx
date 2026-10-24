@@ -403,100 +403,186 @@ export default function BrandAssets() {
 
       {/* Upload Modal */}
       {showUploadModal && (
-        <div className="modal-overlay">
-          <div className="modal-content" style={{ padding: 'var(--space-6)' }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: 'var(--space-2)' }}>
-              Upload Brand Asset
-            </h3>
-            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: 'var(--space-4)' }}>
-              Accepted formats: SVG, PNG, JPEG, WebP, GIF. Maximum file size: 5MB.
-            </p>
+        <div className="modal-overlay" onClick={() => setShowUploadModal(false)}>
+          <div className="modal-content" style={{ maxWidth: '640px' }} onClick={(e) => e.stopPropagation()}>
+            {/* Modal Header */}
+            <div className="modal-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                <div
+                  style={{
+                    width: '42px',
+                    height: '42px',
+                    borderRadius: '12px',
+                    background: 'linear-gradient(135deg, #EFF6FF 0%, #EDE9FE 100%)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    border: '1px solid #DBEAFE',
+                    color: '#2563EB',
+                    flexShrink: 0,
+                  }}
+                >
+                  <Upload size={20} />
+                </div>
+                <div className="modal-header-content">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
+                    <span
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        padding: '1px 8px',
+                        borderRadius: '999px',
+                        background: '#EFF6FF',
+                        color: '#2563EB',
+                        fontSize: '0.6875rem',
+                        fontWeight: 700,
+                        border: '1px solid #DBEAFE',
+                      }}
+                    >
+                      Media Asset
+                    </span>
+                    <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>•</span>
+                    <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
+                      Asset Governance Hub
+                    </span>
+                  </div>
+                  <h3 className="modal-title text-gradient-primary">
+                    Upload Brand Asset
+                  </h3>
+                </div>
+              </div>
 
-            <form onSubmit={handleUpload}>
-              {/* File Drop Area */}
-              <div
-                style={{
-                  border: '2px dashed var(--border-light)',
-                  borderRadius: 'var(--radius-lg)',
-                  padding: 'var(--space-6)',
-                  textAlign: 'center',
-                  background: 'var(--bg-surface-secondary)',
-                  cursor: 'pointer',
-                  marginBottom: 'var(--space-4)',
-                }}
-                onClick={() => document.getElementById('assetFileInput').click()}
+              <button
+                type="button"
+                className="modal-close-btn"
+                onClick={() => setShowUploadModal(false)}
+                title="Close dialog"
               >
-                <input
-                  id="assetFileInput"
-                  type="file"
-                  accept="image/png, image/jpeg, image/webp, image/svg+xml, image/gif"
-                  style={{ display: 'none' }}
-                  onChange={handleFileChange}
-                />
+                <X size={16} />
+              </button>
+            </div>
 
-                {previewUrl ? (
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <img src={previewUrl} alt="Preview" style={{ maxHeight: '100px', maxWidth: '200px', objectFit: 'contain', marginBottom: '8px' }} />
-                    <span style={{ fontSize: '0.8125rem', fontWeight: 600 }}>{file?.name}</span>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--color-primary)' }}>Click to select a different file</span>
-                  </div>
-                ) : (
-                  <div>
-                    <Upload size={32} color="var(--color-primary)" style={{ margin: '0 auto 8px auto' }} />
-                    <p style={{ fontSize: '0.875rem', fontWeight: 600 }}>Click or drag image file to upload</p>
-                    <p style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>PNG, SVG, JPG up to 5MB</p>
-                  </div>
-                )}
+            <form onSubmit={handleUpload} style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
+              <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {/* File Drop Area */}
+                <div
+                  style={{
+                    border: '2px dashed #CBD5E1',
+                    borderRadius: '14px',
+                    padding: '20px',
+                    textAlign: 'center',
+                    background: '#F8FAFC',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                  }}
+                  onClick={() => document.getElementById('assetFileInput').click()}
+                >
+                  <input
+                    id="assetFileInput"
+                    type="file"
+                    accept="image/png, image/jpeg, image/webp, image/svg+xml, image/gif"
+                    style={{ display: 'none' }}
+                    onChange={handleFileChange}
+                  />
+
+                  {previewUrl ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                      <img src={previewUrl} alt="Preview" style={{ maxHeight: '110px', maxWidth: '220px', objectFit: 'contain', marginBottom: '8px', borderRadius: '8px' }} />
+                      <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#1E293B' }}>{file?.name}</span>
+                      <span style={{ fontSize: '0.75rem', color: '#2563EB', fontWeight: 600, marginTop: '2px' }}>Click to select a different file</span>
+                    </div>
+                  ) : (
+                    <div>
+                      <div
+                        style={{
+                          width: '44px',
+                          height: '44px',
+                          borderRadius: '12px',
+                          background: '#EFF6FF',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          margin: '0 auto 10px auto',
+                          color: '#2563EB',
+                        }}
+                      >
+                        <Upload size={22} />
+                      </div>
+                      <p style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E293B', margin: '0 0 4px 0' }}>
+                        Click or drag image file to upload
+                      </p>
+                      <p style={{ fontSize: '0.75rem', color: '#64748B', margin: 0 }}>
+                        PNG, SVG, JPG, WebP up to 5MB
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="form-group" style={{ margin: 0 }}>
+                  <label className="form-label">
+                    Asset Title <span style={{ color: '#EF4444' }}>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    className="form-input"
+                    placeholder="e.g. Primary Horizontal Shield Wordmark"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </div>
+
+                <div className="form-group" style={{ margin: 0 }}>
+                  <label className="form-label">
+                    Category <span style={{ color: '#EF4444' }}>*</span>
+                  </label>
+                  <select className="form-select" value={category} onChange={(e) => setCategory(e.target.value)}>
+                    {ASSET_CATEGORIES.map((c) => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="form-group" style={{ margin: 0 }}>
+                  <label className="form-label">Description (Optional)</label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder="Brief description of when this asset is applied"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                </div>
+
+                <div className="form-group" style={{ margin: 0 }}>
+                  <label className="form-label">Usage Notes & Restrictions</label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    placeholder="e.g. Do not stretch; minimum clearance 20px"
+                    value={usageNotes}
+                    onChange={(e) => setUsageNotes(e.target.value)}
+                  />
+                </div>
               </div>
 
-              <div className="form-group">
-                <label className="form-label">Asset Title *</label>
-                <input
-                  type="text"
-                  required
-                  className="form-input"
-                  placeholder="e.g. Primary Horizontal Shield Wordmark"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Category *</label>
-                <select className="form-select" value={category} onChange={(e) => setCategory(e.target.value)}>
-                  {ASSET_CATEGORIES.map((c) => (
-                    <option key={c} value={c}>{c}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Description (Optional)</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="Brief description of when this asset is applied"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Usage Notes & Restrictions</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="e.g. Do not stretch; minimum clearance 20px"
-                  value={usageNotes}
-                  onChange={(e) => setUsageNotes(e.target.value)}
-                />
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-2)', marginTop: 'var(--space-5)' }}>
-                <button type="button" className="btn btn-secondary" onClick={() => setShowUploadModal(false)}>
+              {/* Modal Footer */}
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => setShowUploadModal(false)}
+                  style={{ borderRadius: '10px', padding: '8px 20px', fontWeight: 600 }}
+                >
                   Cancel
                 </button>
-                <button type="submit" className="btn btn-primary" disabled={uploading}>
+                <button
+                  type="submit"
+                  className="btn btn-gradient-primary btn-sm"
+                  disabled={uploading}
+                  style={{ borderRadius: '10px', padding: '8px 24px', fontWeight: 700, boxShadow: '0 4px 14px rgba(79, 70, 229, 0.3)' }}
+                >
                   {uploading ? 'Uploading...' : 'Save to Asset Library'}
                 </button>
               </div>
@@ -507,20 +593,40 @@ export default function BrandAssets() {
 
       {/* Delete Confirmation */}
       {deleteConfirm && (
-        <div className="modal-overlay">
-          <div className="modal-content" style={{ padding: 'var(--space-6)', maxWidth: '420px' }}>
-            <h3 style={{ fontSize: '1.125rem', fontWeight: 700, color: 'var(--severity-high)', marginBottom: 'var(--space-2)' }}>
-              Delete Brand Asset?
-            </h3>
-            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: 'var(--space-4)' }}>
-              Are you sure you want to delete <strong>"{deleteConfirm.name}"</strong>?
-            </p>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-2)' }}>
-              <button className="btn btn-secondary" onClick={() => setDeleteConfirm(null)}>
+        <div className="modal-overlay" onClick={() => setDeleteConfirm(null)}>
+          <div className="modal-content" style={{ maxWidth: '440px' }} onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#DC2626' }}>
+                <ShieldAlert size={22} />
+                <h3 className="modal-title" style={{ fontSize: '1.125rem' }}>Delete Brand Asset?</h3>
+              </div>
+              <button
+                type="button"
+                className="modal-close-btn"
+                onClick={() => setDeleteConfirm(null)}
+              >
+                <X size={16} />
+              </button>
+            </div>
+            <div className="modal-body">
+              <p style={{ fontSize: '0.875rem', color: '#64748B', margin: 0, lineHeight: 1.5 }}>
+                Are you sure you want to delete <strong>"{deleteConfirm.name}"</strong>? It will no longer be available in the brand library.
+              </p>
+            </div>
+            <div className="modal-footer">
+              <button
+                className="btn btn-secondary btn-sm"
+                onClick={() => setDeleteConfirm(null)}
+                style={{ borderRadius: '10px', padding: '8px 18px', fontWeight: 600 }}
+              >
                 Cancel
               </button>
-              <button className="btn btn-danger" onClick={handleDelete}>
-                Delete
+              <button
+                className="btn btn-danger btn-sm"
+                onClick={handleDelete}
+                style={{ borderRadius: '10px', padding: '8px 20px', fontWeight: 700 }}
+              >
+                Delete Asset
               </button>
             </div>
           </div>

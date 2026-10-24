@@ -367,88 +367,208 @@ export default function BrandGuidelines() {
               )}
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(480px, 1fr))',
+                gap: '20px',
+              }}
+            >
               {rules.map((rule) => {
                 const sevKey = (rule.severity || 'medium').toLowerCase();
                 return (
                   <div
                     key={rule._id}
                     className="rule-card"
-                    style={{ opacity: rule.isActive ? 1 : 0.65 }}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                      opacity: rule.isActive ? 1 : 0.65,
+                      minHeight: '220px',
+                      padding: '20px 22px 18px 24px',
+                    }}
                   >
                     <div className={`rule-accent-stripe ${sevKey}`} />
 
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 'var(--space-4)' }}>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', flexWrap: 'wrap', marginBottom: '8px' }}>
-                          <h4 style={{ fontSize: '1.025rem', fontWeight: 750, color: 'var(--text-primary)', margin: 0 }}>
-                            {rule.title}
-                          </h4>
+                    <div>
+                      {/* Card Header Row: Badges on left, action controls on right */}
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          gap: '12px',
+                          marginBottom: '10px',
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                          <span
+                            style={{
+                              fontSize: '0.6875rem',
+                              fontWeight: 700,
+                              padding: '2.5px 8px',
+                              borderRadius: '6px',
+                              background: '#F1F5F9',
+                              color: '#334155',
+                              border: '1px solid #E2E8F0',
+                              letterSpacing: '0.02em',
+                            }}
+                          >
+                            {rule.category}
+                          </span>
                           <SeverityBadge severity={rule.severity} />
-                          <span className="badge badge-neutral">{rule.category}</span>
                           {!rule.isActive && (
-                            <span style={{ fontSize: '0.6875rem', fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', background: '#F1F5F9', padding: '2px 8px', borderRadius: '6px' }}>
+                            <span
+                              style={{
+                                fontSize: '0.6875rem',
+                                fontWeight: 700,
+                                color: '#64748B',
+                                background: '#F8FAFC',
+                                border: '1px solid #E2E8F0',
+                                padding: '2px 8px',
+                                borderRadius: '6px',
+                              }}
+                            >
                               Inactive
                             </span>
                           )}
                         </div>
 
-                        <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '12px', lineHeight: 1.55 }}>
-                          {rule.description}
-                        </p>
-
-                        {/* Rule Phrasing Details */}
-                        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px', fontSize: '0.8125rem' }}>
-                          {rule.preferredWording && (
-                            <div className="pill-badge-preferred">
-                              <Check size={13} strokeWidth={2.5} />
-                              <strong>Preferred:</strong>
-                              <span>{rule.preferredWording}</span>
-                            </div>
-                          )}
-                          {rule.prohibitedPhrases && rule.prohibitedPhrases.length > 0 && (
-                            <div className="pill-badge-prohibited">
-                              <X size={13} strokeWidth={2.5} />
-                              <strong>Prohibited:</strong>
-                              <span>{rule.prohibitedPhrases.join(', ')}</span>
-                            </div>
-                          )}
-                          {rule.sourceReference && (
-                            <div style={{ color: 'var(--text-tertiary)', display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '0.75rem', marginLeft: '4px' }}>
-                              <Info size={13} /> Source: {rule.sourceReference}
-                            </div>
-                          )}
-                        </div>
+                        {/* Action Toolbar */}
+                        {isReviewer && (
+                          <div
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '2px',
+                              background: '#F8FAFC',
+                              border: '1px solid #E2E8F0',
+                              borderRadius: '10px',
+                              padding: '2px',
+                            }}
+                          >
+                            <button
+                              onClick={() => handleToggleRule(rule._id)}
+                              className={`action-icon-btn ${rule.isActive ? 'active-toggle' : ''}`}
+                              title={rule.isActive ? 'Deactivate rule' : 'Activate rule'}
+                              style={{ width: '28px', height: '28px', borderRadius: '7px' }}
+                            >
+                              {rule.isActive ? <ToggleRight size={17} color="#10B981" /> : <ToggleLeft size={17} color="#94A3B8" />}
+                            </button>
+                            <button
+                              onClick={() => handleOpenEditRule(rule)}
+                              className="action-icon-btn"
+                              title="Edit rule"
+                              style={{ width: '28px', height: '28px', borderRadius: '7px' }}
+                            >
+                              <Edit2 size={13} color="#475569" />
+                            </button>
+                            {isAdmin && (
+                              <button
+                                onClick={() => setDeleteRuleConfirm(rule)}
+                                className="action-icon-btn danger"
+                                title="Delete rule"
+                                style={{ width: '28px', height: '28px', borderRadius: '7px' }}
+                              >
+                                <Trash2 size={13} color="#EF4444" />
+                              </button>
+                            )}
+                          </div>
+                        )}
                       </div>
 
-                      {/* Unified Action Button Group */}
-                      {isReviewer && (
-                        <div className="action-btn-group">
-                          <button
-                            onClick={() => handleToggleRule(rule._id)}
-                            className={`action-icon-btn ${rule.isActive ? 'active-toggle' : ''}`}
-                            title={rule.isActive ? 'Deactivate rule' : 'Activate rule'}
+                      {/* Rule Title */}
+                      <h4
+                        style={{
+                          fontSize: '1.0625rem',
+                          fontWeight: 750,
+                          color: '#0F172A',
+                          margin: '0 0 6px 0',
+                          lineHeight: 1.35,
+                        }}
+                      >
+                        {rule.title}
+                      </h4>
+
+                      {/* Rule Description */}
+                      <p
+                        style={{
+                          fontSize: '0.84375rem',
+                          color: '#475569',
+                          margin: '0 0 14px 0',
+                          lineHeight: 1.5,
+                        }}
+                      >
+                        {rule.description}
+                      </p>
+
+                      {/* Phrasing Showcase */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '14px' }}>
+                        {rule.preferredWording && (
+                          <div className="pill-badge-preferred" style={{ width: '100%', justifyContent: 'flex-start' }}>
+                            <Check size={13} strokeWidth={2.5} style={{ flexShrink: 0 }} />
+                            <strong>Preferred:</strong>
+                            <span style={{ overflowWrap: 'anywhere' }}>{rule.preferredWording}</span>
+                          </div>
+                        )}
+                        {rule.prohibitedPhrases && rule.prohibitedPhrases.length > 0 && (
+                          <div className="pill-badge-prohibited" style={{ width: '100%', justifyContent: 'flex-start' }}>
+                            <X size={13} strokeWidth={2.5} style={{ flexShrink: 0 }} />
+                            <strong>Prohibited:</strong>
+                            <span style={{ overflowWrap: 'anywhere' }}>{rule.prohibitedPhrases.join(', ')}</span>
+                          </div>
+                        )}
+                        {rule.requiredPhrases && rule.requiredPhrases.length > 0 && (
+                          <div
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '6px',
+                              padding: '4px 10px',
+                              borderRadius: '8px',
+                              background: '#EFF6FF',
+                              border: '1px solid #BFDBFE',
+                              fontSize: '0.8125rem',
+                              lineHeight: 1.4,
+                              width: '100%',
+                            }}
                           >
-                            {rule.isActive ? <ToggleRight size={18} /> : <ToggleLeft size={18} />}
-                          </button>
-                          <button
-                            onClick={() => handleOpenEditRule(rule)}
-                            className="action-icon-btn"
-                            title="Edit rule"
-                          >
-                            <Edit2 size={14} />
-                          </button>
-                          {isAdmin && (
-                            <button
-                              onClick={() => setDeleteRuleConfirm(rule)}
-                              className="action-icon-btn danger"
-                              title="Delete rule"
-                            >
-                              <Trash2 size={14} />
-                            </button>
-                          )}
+                            <CheckCircle2 size={13} color="#2563EB" strokeWidth={2.5} style={{ flexShrink: 0 }} />
+                            <strong style={{ color: '#1E40AF' }}>Required:</strong>
+                            <span style={{ color: '#1D4ED8', overflowWrap: 'anywhere' }}>{rule.requiredPhrases.join(', ')}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Card Footer */}
+                    <div
+                      style={{
+                        borderTop: '1px solid #F1F5F9',
+                        paddingTop: '10px',
+                        marginTop: 'auto',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        fontSize: '0.75rem',
+                        color: '#64748B',
+                      }}
+                    >
+                      {rule.sourceReference ? (
+                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          <Info size={13} color="#94A3B8" style={{ flexShrink: 0 }} />
+                          <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            Source: <strong>{rule.sourceReference}</strong>
+                          </span>
                         </div>
+                      ) : (
+                        <span style={{ color: '#94A3B8' }}>Standard Corporate Policy</span>
                       )}
+
+                      <span style={{ fontSize: '0.6875rem', fontWeight: 600, color: rule.isActive ? '#059669' : '#94A3B8', flexShrink: 0, marginLeft: '8px' }}>
+                        {rule.isActive ? 'Active Check' : 'Inactive'}
+                      </span>
                     </div>
                   </div>
                 );

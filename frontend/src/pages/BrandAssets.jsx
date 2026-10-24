@@ -464,13 +464,13 @@ export default function BrandAssets() {
             </div>
 
             <form onSubmit={handleUpload} style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
-              <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '13px', padding: '18px 26px' }}>
                 {/* File Drop Area */}
                 <div
                   style={{
                     border: '2px dashed #CBD5E1',
-                    borderRadius: '14px',
-                    padding: '20px',
+                    borderRadius: '12px',
+                    padding: '14px 16px',
                     textAlign: 'center',
                     background: '#F8FAFC',
                     cursor: 'pointer',
@@ -488,33 +488,35 @@ export default function BrandAssets() {
 
                   {previewUrl ? (
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                      <img src={previewUrl} alt="Preview" style={{ maxHeight: '110px', maxWidth: '220px', objectFit: 'contain', marginBottom: '8px', borderRadius: '8px' }} />
+                      <img src={previewUrl} alt="Preview" style={{ maxHeight: '90px', maxWidth: '200px', objectFit: 'contain', marginBottom: '6px', borderRadius: '6px' }} />
                       <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#1E293B' }}>{file?.name}</span>
                       <span style={{ fontSize: '0.75rem', color: '#2563EB', fontWeight: 600, marginTop: '2px' }}>Click to select a different file</span>
                     </div>
                   ) : (
-                    <div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '14px' }}>
                       <div
                         style={{
-                          width: '44px',
-                          height: '44px',
-                          borderRadius: '12px',
+                          width: '38px',
+                          height: '38px',
+                          borderRadius: '10px',
                           background: '#EFF6FF',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          margin: '0 auto 10px auto',
                           color: '#2563EB',
+                          flexShrink: 0,
                         }}
                       >
-                        <Upload size={22} />
+                        <Upload size={18} />
                       </div>
-                      <p style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1E293B', margin: '0 0 4px 0' }}>
-                        Click or drag image file to upload
-                      </p>
-                      <p style={{ fontSize: '0.75rem', color: '#64748B', margin: 0 }}>
-                        PNG, SVG, JPG, WebP up to 5MB
-                      </p>
+                      <div style={{ textAlign: 'left' }}>
+                        <p style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#1E293B', margin: '0 0 2px 0' }}>
+                          Click or drag image file to upload
+                        </p>
+                        <p style={{ fontSize: '0.72rem', color: '#64748B', margin: 0 }}>
+                          PNG, SVG, JPG, WebP up to 5MB
+                        </p>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -533,26 +535,28 @@ export default function BrandAssets() {
                   />
                 </div>
 
-                <div className="form-group" style={{ margin: 0 }}>
-                  <label className="form-label">
-                    Category <span style={{ color: '#EF4444' }}>*</span>
-                  </label>
-                  <select className="form-select" value={category} onChange={(e) => setCategory(e.target.value)}>
-                    {ASSET_CATEGORIES.map((c) => (
-                      <option key={c} value={c}>{c}</option>
-                    ))}
-                  </select>
-                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <div className="form-group" style={{ margin: 0 }}>
+                    <label className="form-label">
+                      Category <span style={{ color: '#EF4444' }}>*</span>
+                    </label>
+                    <select className="form-select" value={category} onChange={(e) => setCategory(e.target.value)}>
+                      {ASSET_CATEGORIES.map((c) => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                    </select>
+                  </div>
 
-                <div className="form-group" style={{ margin: 0 }}>
-                  <label className="form-label">Description (Optional)</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    placeholder="Brief description of when this asset is applied"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                  />
+                  <div className="form-group" style={{ margin: 0 }}>
+                    <label className="form-label">Description (Optional)</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="e.g. Main corporate lockup"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                    />
+                  </div>
                 </div>
 
                 <div className="form-group" style={{ margin: 0 }}>

@@ -232,33 +232,19 @@ export default function BrandAssets() {
         </div>
       </div>
 
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
-        <div>
-          <h2 className="text-gradient-blue" style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0 }}>
-            All Brand Assets ({assets.length})
-          </h2>
-          <p style={{ fontSize: '0.875rem', color: '#64748B', marginTop: '2px', margin: '2px 0 0 0' }}>
-            High-resolution visual assets available to content creators across your organization.
-          </p>
+      {/* Unified Search & Filters Toolbar */}
+      <div className="facts-toolbar">
+        <div className="facts-toolbar-search">
+          <Search size={16} color="var(--text-tertiary)" />
+          <input
+            type="text"
+            placeholder="Search assets by name, tag, or description..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
-      </div>
 
-      {/* Filters Bar */}
-      <div className="card" style={{ padding: 'var(--space-4)' }}>
-        <div style={{ display: 'flex', gap: 'var(--space-3)', flexWrap: 'wrap' }}>
-          <div style={{ flex: 1, minWidth: '240px', position: 'relative' }}>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="Search assets by name or description..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              style={{ paddingLeft: '36px' }}
-            />
-            <Search size={16} color="var(--text-tertiary)" style={{ position: 'absolute', left: '12px', top: '12px' }} />
-          </div>
-
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
           <select
             className="form-select"
             value={selectedCategory}

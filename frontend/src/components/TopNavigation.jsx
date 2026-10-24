@@ -193,17 +193,14 @@ export default function TopNavigation({ onOpenSearch }) {
     return name.slice(0, 2).toUpperCase();
   };
 
-  // The 9 Primary Navigation Links
+  // The 6 Essential Core Brand Governance Pillars
   const navTabs = [
     { label: 'Dashboard', path: '/', icon: LayoutDashboard, color: '#2563EB', lightBg: '#EFF6FF', end: true },
     { label: 'Brand Guidelines', path: '/guidelines', icon: BookOpen, color: '#7C3AED', lightBg: '#F5F3FF' },
     { label: 'Approved Facts', path: '/facts', icon: CheckCircle2, color: '#10B981', lightBg: '#ECFDF5' },
-    { label: 'Brand Assets', path: '/assets', icon: Palette, color: '#06B6D4', lightBg: '#ECFEFF' },
     { label: 'Content Review', path: '/review', icon: FileText, color: '#F43F5E', lightBg: '#FFF1F2' },
     { label: 'Approval Queue', path: '/approvals', icon: ClipboardList, color: '#F59E0B', lightBg: '#FFFBEB' },
     { label: 'Review History', path: '/history', icon: History, color: '#3B82F6', lightBg: '#EFF6FF' },
-    { label: 'Governance Insights', path: '/insights', icon: TrendingUp, color: '#8B5CF6', lightBg: '#F5F3FF' },
-    { label: 'Workspace Settings', path: '/settings', icon: Settings, color: '#64748B', lightBg: '#F1F5F9' },
   ];
 
   return (
@@ -894,6 +891,18 @@ export default function TopNavigation({ onOpenSearch }) {
                   </NavLink>
                 );
               })}
+              <div style={{ height: '1px', background: '#E2E8F0', margin: '6px 0' }} />
+              <NavLink
+                to="/settings"
+                className={({ isActive }) => `top-nav-tab ${isActive ? 'active' : ''}`}
+                style={{ width: '100%', justifyContent: 'flex-start', padding: '10px 14px' }}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <span className="top-nav-tab-icon">
+                  <Settings size={16} strokeWidth={2.2} />
+                </span>
+                <span>Workspace Settings</span>
+              </NavLink>
             </div>
           </div>
         )}

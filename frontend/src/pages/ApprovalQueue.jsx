@@ -10,13 +10,16 @@ import {
   ArrowRight,
   Send,
   UserCheck,
+  User,
+  FileText,
+  ShieldCheck,
+  Eye,
+  AlertTriangle,
 } from 'lucide-react';
 import { WorkflowStatusBadge } from '../components/Badges';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import { ASSET_IMAGES } from '../assets/images';
-import { Check } from 'lucide-react';
 
 export default function ApprovalQueue() {
   const [drafts, setDrafts] = useState([]);
@@ -121,18 +124,45 @@ export default function ApprovalQueue() {
 
   const tabs = ['In Review', 'Changes Requested', 'Approved', 'Rejected', 'All'];
 
+  const getStripeClass = (status) => {
+    if (status === 'In Review') return 'in-review';
+    if (status === 'Approved') return 'approved';
+    if (status === 'Changes Requested') return 'changes-requested';
+    if (status === 'Rejected') return 'rejected';
+    return 'in-review';
+  };
+
+  const inReviewCount = drafts.filter((d) => d.status === 'In Review').length;
+  const approvedCount = drafts.filter((d) => d.status === 'Approved').length;
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
       {/* Clean Modern Page Header Banner */}
       <div className="page-header-clean">
         <div className="page-header-info">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <span className="badge badge-warning">
-              <ClipboardList size={12} style={{ display: 'inline', marginRight: '4px' }} />
-              Sign-off Gatekeeper
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+            <span
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '3px 10px',
+                borderRadius: '999px',
+                background: '#FEF3C7',
+                color: '#B45309',
+                fontSize: '0.6875rem',
+                fontWeight: 700,
+                border: '1px solid #FDE68A',
+                textTransform: 'uppercase',
+                letterSpacing: '0.04em',
+              }}
+            >
+              <ClipboardList size={12} color="#B45309" />
+              Sign-Off Gatekeeper
             </span>
-            <span style={{ fontSize: '0.8125rem', color: 'var(--text-tertiary)' }}>
-              {drafts.filter((d) => d.status === 'In Review').length} Awaiting Approval
+            <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>•</span>
+            <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
+              {inReviewCount} Awaiting Approval
             </span>
           </div>
 
@@ -145,31 +175,52 @@ export default function ApprovalQueue() {
         </div>
 
         {/* Quick Metrics Bar */}
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center' }}>
-          <div style={{ background: '#FFFFFF', padding: '8px 14px', borderRadius: '12px', border: '1px solid #E2E8F0', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
-            <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block' }}>Awaiting Review</span>
-            <span style={{ fontSize: '1.125rem', fontWeight: 800, color: '#D97706' }}>
-              {drafts.filter((d) => d.status === 'In Review').length}
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <div
+            style={{
+              background: '#FFFFFF',
+              padding: '8px 18px',
+              borderRadius: '12px',
+              border: '1px solid #E2E8F0',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
+              minWidth: '110px',
+            }}
+          >
+            <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block' }}>
+              Awaiting Review
+            </span>
+            <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#D97706' }}>
+              {inReviewCount}
             </span>
           </div>
-          <div style={{ background: '#FFFFFF', padding: '8px 14px', borderRadius: '12px', border: '1px solid #E2E8F0', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
-            <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block' }}>Approved</span>
-            <span style={{ fontSize: '1.125rem', fontWeight: 800, color: '#059669' }}>
-              {drafts.filter((d) => d.status === 'Approved').length}
+
+          <div
+            style={{
+              background: '#FFFFFF',
+              padding: '8px 18px',
+              borderRadius: '12px',
+              border: '1px solid #E2E8F0',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
+              minWidth: '100px',
+            }}
+          >
+            <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block' }}>
+              Approved
+            </span>
+            <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#059669' }}>
+              {approvedCount}
             </span>
           </div>
         </div>
       </div>
 
-      {/* Tabs */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
-        <div>
-          <h2 className="text-gradient-blue" style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0 }}>
-            Review Queue Submissions
-          </h2>
-          <p style={{ fontSize: '0.875rem', color: '#64748B', marginTop: '2px', margin: '2px 0 0 0' }}>
-            Collaborative sign-off workflow for brand managers, legal reviewers, and content authors.
-          </p>
+      {/* Unified Toolbar with Segmented Filter Controls */}
+      <div className="facts-toolbar">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <ClipboardList size={16} color="var(--color-primary)" />
+          <span style={{ fontSize: '0.875rem', fontWeight: 700, color: '#0F172A' }}>
+            Queue Submissions ({drafts.length})
+          </span>
         </div>
 
         <div className="segmented-control">
@@ -197,73 +248,139 @@ export default function ApprovalQueue() {
           </p>
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
-          {drafts.map((draft) => (
-            <div
-              key={draft._id}
-              className="card"
-              style={{
-                padding: 'var(--space-5)',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                flexWrap: 'wrap',
-                gap: 'var(--space-4)',
-              }}
-            >
-              <div style={{ minWidth: 0, flex: 1 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                  <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-                    {draft.title}
-                  </h4>
-                  <WorkflowStatusBadge status={draft.status} />
-                  <span className="badge badge-neutral">v{draft.currentVersion}</span>
-                </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {drafts.map((draft) => {
+            const score = draft.latestComplianceScore;
+            const scoreColor =
+              score === null ? '#64748B' : score >= 80 ? '#059669' : score >= 60 ? '#D97706' : '#DC2626';
 
-                <div style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', marginBottom: '8px', lineHeight: 1.4 }}>
-                  {draft.currentContent.slice(0, 140)}...
-                </div>
+            return (
+              <div key={draft._id} className="queue-card">
+                {/* Flush Left Colored Accent Stripe */}
+                <div className={`queue-accent-stripe ${getStripeClass(draft.status)}`} />
 
-                <div style={{ display: 'flex', gap: 'var(--space-4)', fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>
-                  <span>Author: <strong>{draft.author?.name}</strong></span>
-                  <span>Type: <strong>{draft.contentType}</strong></span>
-                  <span>
-                    Compliance Score:{' '}
-                    <strong>{draft.latestComplianceScore !== null ? `${draft.latestComplianceScore}%` : 'Not run'}</strong>
-                  </span>
-                  <span>Updated: {new Date(draft.updatedAt).toLocaleDateString()}</span>
-                </div>
-              </div>
-
-              {/* Action Controls */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-                <button
-                  onClick={() => navigate(`/review/${draft._id}`)}
-                  className="btn btn-secondary btn-sm"
+                {/* Top Row: Title, Badges, and Action Button Cluster */}
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    flexWrap: 'wrap',
+                    gap: '12px',
+                    marginBottom: '6px',
+                  }}
                 >
-                  Inspect Audit <ArrowRight size={13} />
-                </button>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                    <h4 style={{ fontSize: '1rem', fontWeight: 750, color: '#0F172A', margin: 0 }}>
+                      {draft.title}
+                    </h4>
+                    <WorkflowStatusBadge status={draft.status} />
+                    <span
+                      style={{
+                        padding: '2px 8px',
+                        borderRadius: '6px',
+                        background: '#F1F5F9',
+                        color: '#475569',
+                        fontSize: '0.75rem',
+                        fontWeight: 700,
+                        fontFamily: 'var(--font-mono)',
+                      }}
+                    >
+                      v{draft.currentVersion}
+                    </span>
+                  </div>
 
-                {isReviewer && draft.status === 'In Review' && (
-                  <>
+                  {/* Cohesive Action Controls */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <button
-                      onClick={() => handleOpenDecision(draft, 'request_changes')}
+                      onClick={() => navigate(`/review/${draft._id}`)}
                       className="btn btn-secondary btn-sm"
-                      style={{ color: '#B45309' }}
+                      style={{
+                        padding: '6px 14px',
+                        fontSize: '0.8125rem',
+                        borderRadius: '10px',
+                      }}
                     >
-                      <AlertCircle size={14} /> Request Changes
+                      <span>Inspect Audit</span>
+                      <ArrowRight size={13} />
                     </button>
-                    <button
-                      onClick={() => handleOpenDecision(draft, 'approve')}
-                      className="btn btn-primary btn-sm"
-                    >
-                      <CheckCircle2 size={14} /> Approve
-                    </button>
-                  </>
-                )}
+
+                    {isReviewer && draft.status === 'In Review' && (
+                      <>
+                        <button
+                          onClick={() => handleOpenDecision(draft, 'request_changes')}
+                          className="btn btn-sm"
+                          style={{
+                            padding: '6px 14px',
+                            fontSize: '0.8125rem',
+                            borderRadius: '10px',
+                            background: '#FFFBEB',
+                            color: '#B45309',
+                            border: '1px solid #FDE68A',
+                            fontWeight: 600,
+                          }}
+                        >
+                          <AlertTriangle size={14} />
+                          <span>Request Changes</span>
+                        </button>
+
+                        <button
+                          onClick={() => handleOpenDecision(draft, 'approve')}
+                          className="btn btn-sm"
+                          style={{
+                            padding: '6px 14px',
+                            fontSize: '0.8125rem',
+                            borderRadius: '10px',
+                            background: '#059669',
+                            color: '#FFFFFF',
+                            border: '1px solid #047857',
+                            fontWeight: 600,
+                            boxShadow: '0 2px 6px rgba(5, 150, 105, 0.25)',
+                          }}
+                        >
+                          <CheckCircle2 size={14} />
+                          <span>Approve</span>
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                {/* Content Excerpt Box */}
+                <div className="queue-content-box">
+                  "{draft.currentContent.slice(0, 160)}..."
+                </div>
+
+                {/* Bottom Metadata Pills Row */}
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center' }}>
+                  <div className="queue-meta-pill">
+                    <User size={13} color="#94A3B8" />
+                    <span>Author: <strong style={{ color: '#0F172A' }}>{draft.author?.name || 'Creator'}</strong></span>
+                  </div>
+
+                  <div className="queue-meta-pill">
+                    <FileText size={13} color="#94A3B8" />
+                    <span>Type: <strong style={{ color: '#0F172A' }}>{draft.contentType}</strong></span>
+                  </div>
+
+                  <div className="queue-meta-pill">
+                    <ShieldCheck size={13} color={scoreColor} />
+                    <span>
+                      Compliance Score:{' '}
+                      <strong style={{ color: scoreColor }}>
+                        {score !== null ? `${score}%` : 'Not run'}
+                      </strong>
+                    </span>
+                  </div>
+
+                  <div className="queue-meta-pill">
+                    <Clock size={13} color="#94A3B8" />
+                    <span>Updated: {new Date(draft.updatedAt).toLocaleDateString()}</span>
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 

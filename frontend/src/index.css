@@ -1814,8 +1814,8 @@ input[type="radio"]:focus-visible {
   position: relative;
   background: #FFFFFF;
   border: 1px solid #E2E8F0;
-  border-radius: 18px;
-  padding: 18px;
+  border-radius: 20px;
+  padding: 22px 26px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

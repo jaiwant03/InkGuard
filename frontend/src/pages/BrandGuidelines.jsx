@@ -308,21 +308,19 @@ export default function BrandGuidelines() {
       {/* TAB 1: BRAND RULES LIBRARY */}
       {activeTab === 'rules' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
-          {/* Filters Bar */}
-          <div className="card" style={{ padding: 'var(--space-4)' }}>
-            <div style={{ display: 'flex', gap: 'var(--space-3)', flexWrap: 'wrap' }}>
-              <div style={{ flex: 1, minWidth: '220px', position: 'relative' }}>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="Search rules by title, prohibited terms, or preferred phrasing..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  style={{ paddingLeft: '36px' }}
-                />
-                <Search size={16} color="var(--text-tertiary)" style={{ position: 'absolute', left: '12px', top: '12px' }} />
-              </div>
+          {/* Unified Search & Filters Toolbar */}
+          <div className="facts-toolbar">
+            <div className="facts-toolbar-search">
+              <Search size={16} color="var(--text-tertiary)" />
+              <input
+                type="text"
+                placeholder="Search rules by title, prohibited terms, or preferred phrasing..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
 
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
               <select
                 className="form-select"
                 value={selectedCategory}
@@ -339,10 +337,10 @@ export default function BrandGuidelines() {
                 className="form-select"
                 value={selectedSeverity}
                 onChange={(e) => setSelectedSeverity(e.target.value)}
-                style={{ width: '140px' }}
+                style={{ width: '150px' }}
               >
                 <option value="">All Severities</option>
-                <option value="High">High</option>
+                <option value="High">High Risk</option>
                 <option value="Medium">Medium</option>
                 <option value="Low">Low</option>
               </select>

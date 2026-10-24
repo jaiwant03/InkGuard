@@ -78,6 +78,39 @@ const contentDraftSchema = new mongoose.Schema(
       ref: 'ReviewRun',
       default: null,
     },
+    attachedAsset: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'BrandAsset',
+      default: null,
+    },
+    imageUrl: {
+      type: String,
+      default: '',
+    },
+    imageAltText: {
+      type: String,
+      default: '',
+    },
+    detectedColors: {
+      type: [String],
+      default: [],
+    },
+    originalFileName: {
+      type: String,
+      default: '',
+    },
+    originalFileFormat: {
+      type: String,
+      default: '',
+    },
+    isOverrideApproved: {
+      type: Boolean,
+      default: false,
+    },
+    overrideReason: {
+      type: String,
+      default: '',
+    },
   },
   {
     timestamps: true,

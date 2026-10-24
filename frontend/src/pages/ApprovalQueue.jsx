@@ -15,6 +15,9 @@ import {
   ShieldCheck,
   Eye,
   AlertTriangle,
+  Plus,
+  Sparkles,
+  Check,
 } from 'lucide-react';
 import { WorkflowStatusBadge } from '../components/Badges';
 import { api } from '../services/api';
@@ -22,7 +25,7 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 
 export default function ApprovalQueue() {
-  const [drafts, setDrafts] = useState([]);
+  const [allDrafts, setAllDrafts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('In Review'); // 'All' | 'In Review' | 'Changes Requested' | 'Approved' | 'Rejected'
   const [selectedDraft, setSelectedDraft] = useState(null);
@@ -41,11 +44,9 @@ export default function ApprovalQueue() {
   const loadQueue = async () => {
     try {
       setLoading(true);
-      const res = await api.drafts.list({
-        status: activeTab === 'All' ? undefined : activeTab,
-      });
+      const res = await api.drafts.list();
       if (res.success) {
-        setDrafts(res.data);
+        setAllDrafts(res.data);
       }
     } catch (err) {
       toast.error('Failed to load queue: ' + err.message);
@@ -56,7 +57,7 @@ export default function ApprovalQueue() {
 
   useEffect(() => {
     loadQueue();
-  }, [workspace, activeTab]);
+  }, [workspace]);
 
   const handleOpenDecision = async (draft, decision) => {
     setSelectedDraft(draft);
@@ -103,26 +104,18 @@ export default function ApprovalQueue() {
     }
   };
 
-  const handleAddComment = async (e) => {
-    e.preventDefault();
-    if (!newComment.trim() || !selectedDraft) return;
+  const inReviewCount = allDrafts.filter((d) => d.status === 'In Review').length;
+  const changesRequestedCount = allDrafts.filter((d) => d.status === 'Changes Requested').length;
+  const approvedCount = allDrafts.filter((d) => d.status === 'Approved').length;
+  const rejectedCount = allDrafts.filter((d) => d.status === 'Rejected').length;
 
-    try {
-      const res = await api.drafts.addComment(selectedDraft._id, {
-        content: newComment.trim(),
-        type: 'general',
-      });
-      if (res.success) {
-        setComments([...comments, res.data]);
-        setNewComment('');
-        toast.success('Comment posted.');
-      }
-    } catch (err) {
-      toast.error('Failed to post comment: ' + err.message);
-    }
-  };
-
-  const tabs = ['In Review', 'Changes Requested', 'Approved', 'Rejected', 'All'];
+  const tabs = [
+    { label: 'In Review', count: inReviewCount },
+    { label: 'Changes Requested', count: changesRequestedCount },
+    { label: 'Approved', count: approvedCount },
+    { label: 'Rejected', count: rejectedCount },
+    { label: 'All', count: allDrafts.length },
+  ];
 
   const getStripeClass = (status) => {
     if (status === 'In Review') return 'in-review';
@@ -132,8 +125,8 @@ export default function ApprovalQueue() {
     return 'in-review';
   };
 
-  const inReviewCount = drafts.filter((d) => d.status === 'In Review').length;
-  const approvedCount = drafts.filter((d) => d.status === 'Approved').length;
+  const filteredDrafts =
+    activeTab === 'All' ? allDrafts : allDrafts.filter((d) => d.status === activeTab);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
@@ -162,7 +155,7 @@ export default function ApprovalQueue() {
             </span>
             <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>•</span>
             <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
-              {inReviewCount} Awaiting Approval
+              {inReviewCount} Awaiting Review
             </span>
           </div>
 
@@ -174,19 +167,19 @@ export default function ApprovalQueue() {
           </p>
         </div>
 
-        {/* Quick Metrics Bar */}
+        {/* Quick Metrics Bar & CTA Button */}
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
           <div
             style={{
               background: '#FFFFFF',
-              padding: '8px 18px',
+              padding: '8px 16px',
               borderRadius: '12px',
               border: '1px solid #E2E8F0',
               boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
-              minWidth: '110px',
+              minWidth: '105px',
             }}
           >
-            <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block' }}>
+            <span style={{ fontSize: '0.6875rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block' }}>
               Awaiting Review
             </span>
             <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#D97706' }}>
@@ -197,20 +190,25 @@ export default function ApprovalQueue() {
           <div
             style={{
               background: '#FFFFFF',
-              padding: '8px 18px',
+              padding: '8px 16px',
               borderRadius: '12px',
               border: '1px solid #E2E8F0',
               boxShadow: '0 1px 3px rgba(0,0,0,0.02)',
-              minWidth: '100px',
+              minWidth: '95px',
             }}
           >
-            <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block' }}>
+            <span style={{ fontSize: '0.6875rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block' }}>
               Approved
             </span>
             <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#059669' }}>
               {approvedCount}
             </span>
           </div>
+
+          <button onClick={() => navigate('/review')} className="btn btn-gradient-primary btn-sm">
+            <Plus size={16} strokeWidth={2.5} />
+            <span>New Submission</span>
+          </button>
         </div>
       </div>
 
@@ -218,38 +216,168 @@ export default function ApprovalQueue() {
       <div className="facts-toolbar">
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <ClipboardList size={16} color="var(--color-primary)" />
-          <span style={{ fontSize: '0.875rem', fontWeight: 700, color: '#0F172A' }}>
-            Queue Submissions ({drafts.length})
+          <span style={{ fontSize: '0.875rem', fontWeight: 750, color: '#0F172A' }}>
+            Queue Submissions ({filteredDrafts.length})
           </span>
         </div>
 
         <div className="segmented-control">
           {tabs.map((tab) => (
             <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`segmented-btn ${activeTab === tab ? 'active' : ''}`}
+              key={tab.label}
+              onClick={() => setActiveTab(tab.label)}
+              className={`segmented-btn ${activeTab === tab.label ? 'active' : ''}`}
             >
-              {tab}
+              <span>{tab.label}</span>
+              <span
+                style={{
+                  fontSize: '0.6875rem',
+                  fontWeight: 700,
+                  opacity: 0.8,
+                  padding: '1px 6px',
+                  borderRadius: '999px',
+                  background: activeTab === tab.label ? 'rgba(37, 99, 235, 0.1)' : '#F1F5F9',
+                  color: activeTab === tab.label ? 'var(--color-primary)' : '#64748B',
+                }}
+              >
+                {tab.count}
+              </span>
             </button>
           ))}
         </div>
       </div>
 
       {/* Drafts Queue List */}
-      {drafts.length === 0 ? (
-        <div className="card" style={{ textAlign: 'center', padding: 'var(--space-12)' }}>
-          <ClipboardList size={44} color="var(--text-tertiary)" style={{ margin: '0 auto var(--space-3) auto' }} />
-          <h3 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: 'var(--space-1)' }}>
-            No Drafts in "{activeTab}" Queue
-          </h3>
-          <p style={{ color: 'var(--text-secondary)' }}>
-            All content submissions for this filter are up to date.
-          </p>
+      {filteredDrafts.length === 0 ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
+          {/* Polished Empty State Card */}
+          <div
+            className="card"
+            style={{
+              textAlign: 'center',
+              padding: '44px 24px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <div
+              style={{
+                width: '64px',
+                height: '64px',
+                borderRadius: '50%',
+                background: '#ECFDF5',
+                border: '1px solid #A7F3D0',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: '16px',
+                boxShadow: '0 4px 14px rgba(5, 150, 105, 0.12)',
+              }}
+            >
+              <CheckCircle2 size={32} color="#059669" />
+            </div>
+
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', marginBottom: '6px' }}>
+              Queue is Clear in "{activeTab}"
+            </h3>
+            <p style={{ color: '#64748B', fontSize: '0.875rem', maxWidth: '480px', lineHeight: 1.5, marginBottom: '22px' }}>
+              There are currently no content drafts awaiting action under the "{activeTab}" filter. The governance pipeline is up to date.
+            </p>
+
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
+              <button onClick={() => navigate('/review')} className="btn btn-primary btn-sm">
+                <Plus size={15} />
+                <span>Submit Content for Review</span>
+              </button>
+
+              {activeTab !== 'All' && allDrafts.length > 0 && (
+                <button onClick={() => setActiveTab('All')} className="btn btn-secondary btn-sm">
+                  <span>Browse All Submissions ({allDrafts.length})</span>
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Enterprise Sign-Off Protocol Pillars Grid (No Wasted Space) */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '18px' }}>
+            <div className="card" style={{ padding: '20px' }}>
+              <div
+                style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '10px',
+                  background: '#EFF6FF',
+                  border: '1px solid #DBEAFE',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '12px',
+                }}
+              >
+                <Sparkles size={18} color="#2563EB" />
+              </div>
+              <h4 style={{ fontSize: '0.9375rem', fontWeight: 750, color: '#0F172A', marginBottom: '4px' }}>
+                1. Automated Pre-Audit
+              </h4>
+              <p style={{ fontSize: '0.8125rem', color: '#64748B', margin: 0, lineHeight: 1.5 }}>
+                Deterministic rule engine scans all copy for prohibited phrasing, unverified claims, and naming conventions.
+              </p>
+            </div>
+
+            <div className="card" style={{ padding: '20px' }}>
+              <div
+                style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '10px',
+                  background: '#ECFDF5',
+                  border: '1px solid #A7F3D0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '12px',
+                }}
+              >
+                <ShieldCheck size={18} color="#059669" />
+              </div>
+              <h4 style={{ fontSize: '0.9375rem', fontWeight: 750, color: '#0F172A', marginBottom: '4px' }}>
+                2. Evidence Cross-Checking
+              </h4>
+              <p style={{ fontSize: '0.8125rem', color: '#64748B', margin: 0, lineHeight: 1.5 }}>
+                Numeric metrics, SLAs, and performance claims are validated against the cryptographically verified Approved Facts library.
+              </p>
+            </div>
+
+            <div className="card" style={{ padding: '20px' }}>
+              <div
+                style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '10px',
+                  background: '#FFFBEB',
+                  border: '1px solid #FDE68A',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '12px',
+                }}
+              >
+                <UserCheck size={18} color="#D97706" />
+              </div>
+              <h4 style={{ fontSize: '0.9375rem', fontWeight: 750, color: '#0F172A', marginBottom: '4px' }}>
+                3. Immutable Sign-Off
+              </h4>
+              <p style={{ fontSize: '0.8125rem', color: '#64748B', margin: 0, lineHeight: 1.5 }}>
+                Reviewers issue final sign-offs or request modifications with every decision permanently logged in the audit trail.
+              </p>
+            </div>
+          </div>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          {drafts.map((draft) => {
+          {filteredDrafts.map((draft) => {
             const score = draft.latestComplianceScore;
             const scoreColor =
               score === null ? '#64748B' : score >= 80 ? '#059669' : score >= 60 ? '#D97706' : '#DC2626';

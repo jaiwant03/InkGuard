@@ -531,6 +531,43 @@ export default function ReviewResults() {
               </div>
             </div>
 
+            {/* Attached Visual Asset Banner if present */}
+            {draft.imageUrl && (
+              <div
+                style={{
+                  marginBottom: '16px',
+                  padding: '14px',
+                  background: '#F8FAFC',
+                  border: '1px solid #E2E8F0',
+                  borderRadius: '12px',
+                }}
+              >
+                <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.04em' }}>
+                  Attached Visual Asset
+                </div>
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
+                  <img
+                    src={draft.imageUrl}
+                    alt={draft.imageAltText || 'Attached brand asset'}
+                    style={{ maxHeight: '120px', maxWidth: '200px', objectFit: 'contain', borderRadius: '8px', border: '1px solid #CBD5E1', background: '#FFFFFF' }}
+                  />
+                  <div style={{ fontSize: '0.8125rem', color: '#475569' }}>
+                    <div><strong>Alt Text:</strong> {draft.imageAltText ? `"${draft.imageAltText}"` : <span style={{ color: '#EF4444' }}>None (Missing alt text)</span>}</div>
+                    {draft.originalFileName && (
+                      <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '2px' }}>
+                        Source File: {draft.originalFileName} ({draft.originalFileFormat || 'Image'})
+                      </div>
+                    )}
+                    {draft.isOverrideApproved && (
+                      <div style={{ marginTop: '6px', color: '#B45309', background: '#FEF3C7', padding: '4px 8px', borderRadius: '6px', border: '1px solid #FDE68A' }}>
+                        <strong>Authorized Override:</strong> {draft.overrideReason}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
             {isEditingContent ? (
               <textarea
                 className="form-textarea"

@@ -194,7 +194,7 @@ export default function ReviewHistory() {
         <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: 'var(--space-6)', alignItems: 'start' }}>
           {/* Draft selector */}
           <div className="card">
-            <h3 className="card-title" style={{ fontSize: '0.9375rem', marginBottom: 'var(--space-3)' }}>
+            <h3 className="card-title text-gradient-violet" style={{ fontSize: '0.9375rem', marginBottom: 'var(--space-3)' }}>
               Select Document
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -203,15 +203,17 @@ export default function ReviewHistory() {
                   key={d._id}
                   onClick={() => setSelectedDraftId(d._id)}
                   style={{
-                    padding: '8px 10px',
-                    borderRadius: 'var(--radius-sm)',
+                    padding: '10px 12px',
+                    borderRadius: 'var(--radius-md)',
                     cursor: 'pointer',
                     fontSize: '0.8125rem',
                     fontWeight: d._id === selectedDraftId ? 700 : 500,
                     color: d._id === selectedDraftId ? 'var(--color-primary)' : 'var(--text-primary)',
-                    background: d._id === selectedDraftId ? 'var(--color-primary-light)' : 'transparent',
+                    background: d._id === selectedDraftId ? 'var(--color-primary-light)' : 'var(--bg-surface-secondary)',
                     border: '1px solid',
-                    borderColor: d._id === selectedDraftId ? 'var(--color-primary-subtle)' : 'transparent',
+                    borderColor: d._id === selectedDraftId ? 'var(--color-primary-subtle)' : 'var(--border-light)',
+                    boxShadow: d._id === selectedDraftId ? '0 0 0 2px rgba(37, 99, 235, 0.12)' : 'none',
+                    transition: 'var(--transition-fast)',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap',
@@ -226,7 +228,7 @@ export default function ReviewHistory() {
           {/* Versions list */}
           <div className="card">
             <div className="card-header">
-              <h3 className="card-title">Version Snapshots ({versions.length})</h3>
+              <h3 className="card-title text-gradient-emerald">Version Snapshots ({versions.length})</h3>
             </div>
 
             {versions.length === 0 ? (

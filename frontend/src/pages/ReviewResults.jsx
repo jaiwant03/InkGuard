@@ -238,7 +238,7 @@ export default function ReviewResults() {
 
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-              <h1 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+              <h1 className="text-gradient-primary" style={{ fontSize: '1.35rem', fontWeight: 800 }}>
                 {draft.title}
               </h1>
               <WorkflowStatusBadge status={draft.status} />
@@ -256,7 +256,7 @@ export default function ReviewResults() {
           <button
             onClick={handleReRunAudit}
             disabled={reAuditing}
-            className="btn btn-secondary btn-sm"
+            className="btn btn-secondary btn-sm btn-pill"
           >
             <RotateCcw size={14} className={reAuditing ? 'spinner' : ''} />
             {reAuditing ? 'Auditing...' : 'Re-run Brand Audit'}
@@ -266,7 +266,7 @@ export default function ReviewResults() {
             <button
               onClick={handleSubmitForApproval}
               disabled={submittingApproval}
-              className="btn btn-primary btn-sm"
+              className="btn btn-primary btn-sm btn-pill"
             >
               <Send size={14} /> Submit for Sign-Off
             </button>
@@ -284,7 +284,7 @@ export default function ReviewResults() {
 
             <div style={{ flex: 1 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                <h3 style={{ fontSize: '1.125rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+                <h3 className="text-gradient-blue" style={{ fontSize: '1.125rem', fontWeight: 800 }}>
                   Brand Alignment Score
                 </h3>
                 <span className="badge badge-neutral" style={{ fontSize: '0.6875rem' }}>
@@ -324,7 +324,7 @@ export default function ReviewResults() {
           {/* Document Preview Area (Reference UI Style with 3D Mockup) */}
           <div className="card" style={{ padding: 'var(--space-6)' }}>
             <div className="card-header">
-              <h3 className="card-title">
+              <h3 className="card-title text-gradient-violet">
                 <FileText size={18} /> Document Text Preview
               </h3>
               <div style={{ display: 'flex', gap: 'var(--space-2)' }}>

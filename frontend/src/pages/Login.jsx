@@ -124,10 +124,10 @@ export default function Login() {
           </div>
 
           <h1
+            className="text-gradient-primary"
             style={{
               fontSize: '1.75rem',
               fontWeight: 850,
-              color: '#0F172A',
               letterSpacing: '-0.025em',
               marginBottom: '4px',
             }}
@@ -162,11 +162,11 @@ export default function Login() {
         {/* Demo Fast Login Options */}
         <div
           style={{
-            background: '#F8FAFC',
-            borderRadius: '14px',
-            padding: '12px 14px',
+            background: 'var(--bg-surface-secondary)',
+            borderRadius: '16px',
+            padding: '14px 16px',
             marginBottom: '24px',
-            border: '1px solid #E2E8F0',
+            border: '1px solid var(--border-light)',
           }}
         >
           <span
@@ -174,38 +174,38 @@ export default function Login() {
               display: 'block',
               fontSize: '0.6875rem',
               fontWeight: 700,
-              color: '#64748B',
+              color: 'var(--text-tertiary)',
               textTransform: 'uppercase',
-              letterSpacing: '0.05em',
-              marginBottom: '8px',
+              letterSpacing: '0.06em',
+              marginBottom: '10px',
             }}
           >
-            ⚡ Fast Demo Roles Fill:
+            ⚡ Select Demo Persona:
           </span>
           <div style={{ display: 'flex', gap: '8px' }}>
             <button
               type="button"
               onClick={() => handleFastLogin('admin')}
-              className="btn btn-secondary btn-sm"
-              style={{ flex: 1, padding: '6px 8px', fontSize: '0.75rem' }}
+              className="option-pill"
+              style={{ flex: 1, padding: '8px 10px', fontSize: '0.75rem', fontWeight: 700, color: '#1E3A8A' }}
             >
-              Admin
+              👑 Admin
             </button>
             <button
               type="button"
               onClick={() => handleFastLogin('reviewer')}
-              className="btn btn-secondary btn-sm"
-              style={{ flex: 1, padding: '6px 8px', fontSize: '0.75rem' }}
+              className="option-pill"
+              style={{ flex: 1, padding: '8px 10px', fontSize: '0.75rem', fontWeight: 700, color: '#047857' }}
             >
-              Reviewer
+              🛡️ Reviewer
             </button>
             <button
               type="button"
               onClick={() => handleFastLogin('creator')}
-              className="btn btn-secondary btn-sm"
-              style={{ flex: 1, padding: '6px 8px', fontSize: '0.75rem' }}
+              className="option-pill"
+              style={{ flex: 1, padding: '8px 10px', fontSize: '0.75rem', fontWeight: 700, color: '#6D28D9' }}
             >
-              Creator
+              ✍️ Creator
             </button>
           </div>
         </div>

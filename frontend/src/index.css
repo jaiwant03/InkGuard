@@ -1321,32 +1321,6 @@ input[type="radio"]:focus-visible {
   background: linear-gradient(90deg, #2563EB, #7C3AED, #06B6D4);
 }
 
-.segmented-option {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border-radius: 10px;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: #64748B;
-  cursor: pointer;
-  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
-  border: none;
-  background: transparent;
-}
-
-.segmented-option:hover {
-  color: #0F172A;
-  background: rgba(255, 255, 255, 0.6);
-}
-
-.segmented-option.active {
-  background: #FFFFFF;
-  color: var(--color-primary);
-  font-weight: 700;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
 
 /* Skeleton Loading */
 .skeleton {

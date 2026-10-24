@@ -56,19 +56,13 @@ export default function ReviewResults() {
   const loadDraftData = async () => {
     try {
       setLoading(true);
-      const [draftRes, findingsRes] = await Promise.all([
-        api.drafts.get(draftId),
-        api.findings.list({ draftId }),
-      ]);
+      const res = await api.drafts.get(draftId);
 
-      if (draftRes.success) {
-        const d = draftRes.data.draft || draftRes.data;
+      if (res.success) {
+        const d = res.data?.draft || res.data;
+        const fList = res.data?.findings || [];
         setDraft(d);
         setEditableContent(d?.currentContent || '');
-        const fList =
-          findingsRes?.success && findingsRes.data?.length > 0
-            ? findingsRes.data
-            : draftRes.data?.findings || [];
         setFindings(fList);
 
         if (fList.length > 0) {
@@ -111,7 +105,7 @@ export default function ReviewResults() {
     if (!finding.suggestedCorrection) return;
     try {
       setApplyingFindingId(finding._id);
-      const res = await api.findings.apply(finding._id);
+      const res = await api.drafts.applyFinding(draftId, finding._id);
       if (res.success) {
         toast.success('Approved correction applied to draft!');
         loadDraftData();
@@ -126,7 +120,7 @@ export default function ReviewResults() {
   // Handle resolving a finding manually
   const handleResolveFinding = async (findingId) => {
     try {
-      const res = await api.findings.resolve(findingId);
+      const res = await api.drafts.updateFindingStatus(draftId, findingId, { status: 'resolved' });
       if (res.success) {
         toast.success('Finding marked as resolved.');
         loadDraftData();
@@ -141,8 +135,9 @@ export default function ReviewResults() {
     e.preventDefault();
     if (!dismissModalFinding) return;
     try {
-      const res = await api.findings.dismiss(dismissModalFinding._id, {
-        reason: dismissReason.trim() || 'Reviewed and approved by brand manager',
+      const res = await api.drafts.updateFindingStatus(draftId, dismissModalFinding._id, {
+        status: 'dismissed',
+        dismissReason: dismissReason.trim() || 'Reviewed and approved by brand manager',
       });
       if (res.success) {
         toast.success('Finding dismissed with audit trail record.');

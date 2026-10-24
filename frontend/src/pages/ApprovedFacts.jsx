@@ -335,118 +335,188 @@ export default function ApprovedFacts() {
 
       {/* Add / Edit Modal */}
       {showModal && (
-        <div className="modal-overlay">
-          <div className="modal-content" style={{ padding: 'var(--space-6)' }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: 'var(--space-2)' }}>
-              {editingFact ? 'Edit Approved Fact' : 'Add New Approved Fact'}
-            </h3>
-            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: 'var(--space-4)' }}>
-              Register verified statements and factual data points for brand compliance verification.
-            </p>
-
-            <form onSubmit={handleSave}>
-              <div className="form-group">
-                <label className="form-label">Fact Statement / Metric *</label>
-                <textarea
-                  className="form-textarea"
-                  rows={3}
-                  required
-                  placeholder="e.g. Apex Cloud processes over 4.8 billion transactions daily with sub-millisecond p99 latency."
-                  value={formData.factText}
-                  onChange={(e) => setFormData({ ...formData, factText: e.target.value })}
-                />
+        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+          <div className="modal-content" style={{ maxWidth: '720px' }} onClick={(e) => e.stopPropagation()}>
+            {/* Modal Header */}
+            <div className="modal-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                <div
+                  style={{
+                    width: '42px',
+                    height: '42px',
+                    borderRadius: '12px',
+                    background: 'linear-gradient(135deg, #ECFDF5 0%, #EFF6FF 100%)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    border: '1px solid #A7F3D0',
+                    color: '#059669',
+                    flexShrink: 0,
+                  }}
+                >
+                  <ShieldCheck size={22} />
+                </div>
+                <div className="modal-header-content">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
+                    <span
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        padding: '1px 8px',
+                        borderRadius: '999px',
+                        background: '#ECFDF5',
+                        color: '#059669',
+                        fontSize: '0.6875rem',
+                        fontWeight: 700,
+                        border: '1px solid #A7F3D0',
+                      }}
+                    >
+                      Truth Repository
+                    </span>
+                    <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>•</span>
+                    <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
+                      Verified Ground Truth
+                    </span>
+                  </div>
+                  <h3 className="modal-title text-gradient-primary">
+                    {editingFact ? 'Edit Approved Fact' : 'Register Approved Fact'}
+                  </h3>
+                </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)' }}>
-                <div className="form-group">
-                  <label className="form-label">Category</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    placeholder="e.g. Performance Benchmarks"
-                    value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  />
-                </div>
+              <button
+                type="button"
+                className="modal-close-btn"
+                onClick={() => setShowModal(false)}
+                title="Close dialog"
+              >
+                <X size={16} />
+              </button>
+            </div>
 
-                <div className="form-group">
-                  <label className="form-label">Responsible Owner Role</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    placeholder="e.g. Chief Technology Officer"
-                    value={formData.ownerRole}
-                    onChange={(e) => setFormData({ ...formData, ownerRole: e.target.value })}
-                  />
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)' }}>
-                <div className="form-group">
-                  <label className="form-label">Source Document Name *</label>
-                  <input
-                    type="text"
+            {/* Modal Form */}
+            <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
+              <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div className="form-group" style={{ margin: 0 }}>
+                  <label className="form-label" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span>Fact Statement / Metric <span style={{ color: '#EF4444' }}>*</span></span>
+                    <span style={{ fontSize: '0.75rem', color: '#94A3B8', fontWeight: 400 }}>Verified corporate claim or statistic</span>
+                  </label>
+                  <textarea
+                    className="form-textarea"
+                    rows={3}
                     required
-                    className="form-input"
-                    placeholder="e.g. Q3 2026 Audit Report"
-                    value={formData.sourceName}
-                    onChange={(e) => setFormData({ ...formData, sourceName: e.target.value })}
+                    placeholder="e.g. Apex Cloud processes over 4.8 billion transactions daily with sub-millisecond p99 latency across 24 global regions."
+                    value={formData.factText}
+                    onChange={(e) => setFormData({ ...formData, factText: e.target.value })}
                   />
                 </div>
 
-                <div className="form-group">
-                  <label className="form-label">Source URL (Optional)</label>
-                  <input
-                    type="url"
-                    className="form-input"
-                    placeholder="https://audit.example.com/report"
-                    value={formData.sourceUrl}
-                    onChange={(e) => setFormData({ ...formData, sourceUrl: e.target.value })}
-                  />
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                  <div className="form-group" style={{ margin: 0 }}>
+                    <label className="form-label">Category</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="e.g. Performance Benchmarks"
+                      value={formData.category}
+                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="form-group" style={{ margin: 0 }}>
+                    <label className="form-label">Responsible Owner Role</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="e.g. Chief Technology Officer"
+                      value={formData.ownerRole}
+                      onChange={(e) => setFormData({ ...formData, ownerRole: e.target.value })}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                  <div className="form-group" style={{ margin: 0 }}>
+                    <label className="form-label">
+                      Source Document Name <span style={{ color: '#EF4444' }}>*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      className="form-input"
+                      placeholder="e.g. Q3 2026 Audit Report §2.4"
+                      value={formData.sourceName}
+                      onChange={(e) => setFormData({ ...formData, sourceName: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="form-group" style={{ margin: 0 }}>
+                    <label className="form-label">Source URL (Optional)</label>
+                    <input
+                      type="url"
+                      className="form-input"
+                      placeholder="https://audit.example.com/report"
+                      value={formData.sourceUrl}
+                      onChange={(e) => setFormData({ ...formData, sourceUrl: e.target.value })}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '14px' }}>
+                  <div className="form-group" style={{ margin: 0 }}>
+                    <label className="form-label">Verification Date</label>
+                    <input
+                      type="date"
+                      className="form-input"
+                      value={formData.verificationDate}
+                      onChange={(e) => setFormData({ ...formData, verificationDate: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="form-group" style={{ margin: 0 }}>
+                    <label className="form-label">Expiry Date</label>
+                    <input
+                      type="date"
+                      className="form-input"
+                      value={formData.expiryDate}
+                      onChange={(e) => setFormData({ ...formData, expiryDate: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="form-group" style={{ margin: 0 }}>
+                    <label className="form-label">Governance Status</label>
+                    <select
+                      className="form-select"
+                      value={formData.status}
+                      onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                    >
+                      <option value="active">🟢 Active</option>
+                      <option value="expired">🟡 Expired</option>
+                      <option value="archived">⚪ Archived</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 'var(--space-4)' }}>
-                <div className="form-group">
-                  <label className="form-label">Verification Date</label>
-                  <input
-                    type="date"
-                    className="form-input"
-                    value={formData.verificationDate}
-                    onChange={(e) => setFormData({ ...formData, verificationDate: e.target.value })}
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Expiry Date</label>
-                  <input
-                    type="date"
-                    className="form-input"
-                    value={formData.expiryDate}
-                    onChange={(e) => setFormData({ ...formData, expiryDate: e.target.value })}
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Status</label>
-                  <select
-                    className="form-select"
-                    value={formData.status}
-                    onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                  >
-                    <option value="active">Active</option>
-                    <option value="expired">Expired</option>
-                    <option value="archived">Archived</option>
-                  </select>
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-2)', marginTop: 'var(--space-5)' }}>
-                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
+              {/* Modal Footer */}
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => setShowModal(false)}
+                  style={{ borderRadius: '10px', padding: '8px 20px', fontWeight: 600 }}
+                >
                   Cancel
                 </button>
-                <button type="submit" className="btn btn-primary" disabled={saving}>
-                  {saving ? 'Saving...' : editingFact ? 'Update Fact' : 'Add Fact'}
+                <button
+                  type="submit"
+                  className="btn btn-gradient-primary btn-sm"
+                  disabled={saving}
+                  style={{ borderRadius: '10px', padding: '8px 24px', fontWeight: 700, boxShadow: '0 4px 14px rgba(79, 70, 229, 0.3)' }}
+                >
+                  {saving ? 'Saving...' : editingFact ? 'Update Fact' : 'Register Fact'}
                 </button>
               </div>
             </form>
@@ -456,20 +526,39 @@ export default function ApprovedFacts() {
 
       {/* Delete Fact Modal */}
       {deleteConfirm && (
-        <div className="modal-overlay">
-          <div className="modal-content" style={{ padding: 'var(--space-6)', maxWidth: '440px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', color: 'var(--severity-high)', marginBottom: 'var(--space-3)' }}>
-              <AlertTriangle size={28} />
-              <h3 style={{ fontSize: '1.125rem', fontWeight: 700 }}>Delete Approved Fact?</h3>
+        <div className="modal-overlay" onClick={() => setDeleteConfirm(null)}>
+          <div className="modal-content" style={{ maxWidth: '440px' }} onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#DC2626' }}>
+                <ShieldAlert size={22} />
+                <h3 className="modal-title" style={{ fontSize: '1.125rem' }}>Delete Approved Fact?</h3>
+              </div>
+              <button
+                type="button"
+                className="modal-close-btn"
+                onClick={() => setDeleteConfirm(null)}
+              >
+                <X size={16} />
+              </button>
             </div>
-            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: 'var(--space-5)' }}>
-              Are you sure you want to remove this fact from the governance repository?
-            </p>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-2)' }}>
-              <button className="btn btn-secondary" onClick={() => setDeleteConfirm(null)}>
+            <div className="modal-body">
+              <p style={{ fontSize: '0.875rem', color: '#64748B', margin: 0, lineHeight: 1.5 }}>
+                Are you sure you want to remove this fact from the governance repository? Future AI audits will no longer substantiate statements with this source.
+              </p>
+            </div>
+            <div className="modal-footer">
+              <button
+                className="btn btn-secondary btn-sm"
+                onClick={() => setDeleteConfirm(null)}
+                style={{ borderRadius: '10px', padding: '8px 18px', fontWeight: 600 }}
+              >
                 Cancel
               </button>
-              <button className="btn btn-danger" onClick={handleDelete}>
+              <button
+                className="btn btn-danger btn-sm"
+                onClick={handleDelete}
+                style={{ borderRadius: '10px', padding: '8px 20px', fontWeight: 700 }}
+              >
                 Delete Fact
               </button>
             </div>

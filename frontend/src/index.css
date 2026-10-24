@@ -1663,26 +1663,27 @@ input[type="radio"]:focus-visible {
 .dashboard-grid-top {
   display: grid;
   grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
-  gap: 20px;
+  gap: 24px;
   align-items: stretch;
 }
 
-.dashboard-kpi-grid-5 {
+.dashboard-kpi-grid-5,
+.dashboard-kpi-grid-4 {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
 }
 
 .dashboard-grid-metrics {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
+  gap: 24px;
 }
 
 .dashboard-grid-bottom {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 20px;
+  gap: 24px;
   align-items: stretch;
 }
 

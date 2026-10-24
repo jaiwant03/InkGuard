@@ -15,6 +15,7 @@ import {
   ToggleRight,
   ShieldAlert,
   Info,
+  X,
 } from 'lucide-react';
 import { SeverityBadge } from '../components/Badges';
 import { api } from '../services/api';
@@ -366,93 +367,91 @@ export default function BrandGuidelines() {
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
-              {rules.map((rule) => (
-                <div
-                  key={rule._id}
-                  className="card"
-                  style={{
-                    padding: 'var(--space-5)',
-                    opacity: rule.isActive ? 1 : 0.65,
-                    borderLeft: `4px solid ${
-                      rule.severity === 'High' ? 'var(--severity-high)' : rule.severity === 'Medium' ? 'var(--severity-medium)' : 'var(--color-primary)'
-                    }`,
-                  }}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 'var(--space-4)' }}>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', flexWrap: 'wrap', marginBottom: '6px' }}>
-                        <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-                          {rule.title}
-                        </h4>
-                        <SeverityBadge severity={rule.severity} />
-                        <span className="badge badge-neutral">{rule.category}</span>
-                        {!rule.isActive && (
-                          <span style={{ fontSize: '0.6875rem', fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase' }}>
-                            [Inactive]
-                          </span>
-                        )}
+              {rules.map((rule) => {
+                const sevKey = (rule.severity || 'medium').toLowerCase();
+                return (
+                  <div
+                    key={rule._id}
+                    className="rule-card"
+                    style={{ opacity: rule.isActive ? 1 : 0.65 }}
+                  >
+                    <div className={`rule-accent-stripe ${sevKey}`} />
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 'var(--space-4)' }}>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', flexWrap: 'wrap', marginBottom: '8px' }}>
+                          <h4 style={{ fontSize: '1.025rem', fontWeight: 750, color: 'var(--text-primary)', margin: 0 }}>
+                            {rule.title}
+                          </h4>
+                          <SeverityBadge severity={rule.severity} />
+                          <span className="badge badge-neutral">{rule.category}</span>
+                          {!rule.isActive && (
+                            <span style={{ fontSize: '0.6875rem', fontWeight: 700, color: 'var(--text-tertiary)', textTransform: 'uppercase', background: '#F1F5F9', padding: '2px 8px', borderRadius: '6px' }}>
+                              Inactive
+                            </span>
+                          )}
+                        </div>
+
+                        <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '12px', lineHeight: 1.55 }}>
+                          {rule.description}
+                        </p>
+
+                        {/* Rule Phrasing Details */}
+                        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px', fontSize: '0.8125rem' }}>
+                          {rule.preferredWording && (
+                            <div className="pill-badge-preferred">
+                              <Check size={13} strokeWidth={2.5} />
+                              <strong>Preferred:</strong>
+                              <span>{rule.preferredWording}</span>
+                            </div>
+                          )}
+                          {rule.prohibitedPhrases && rule.prohibitedPhrases.length > 0 && (
+                            <div className="pill-badge-prohibited">
+                              <X size={13} strokeWidth={2.5} />
+                              <strong>Prohibited:</strong>
+                              <span>{rule.prohibitedPhrases.join(', ')}</span>
+                            </div>
+                          )}
+                          {rule.sourceReference && (
+                            <div style={{ color: 'var(--text-tertiary)', display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '0.75rem', marginLeft: '4px' }}>
+                              <Info size={13} /> Source: {rule.sourceReference}
+                            </div>
+                          )}
+                        </div>
                       </div>
 
-                      <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: 'var(--space-3)', lineHeight: 1.5 }}>
-                        {rule.description}
-                      </p>
-
-                      {/* Rule Phrasing Details */}
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-4)', fontSize: '0.8125rem' }}>
-                        {rule.preferredWording && (
-                          <div style={{ background: '#ECFDF5', padding: '4px 10px', borderRadius: 'var(--radius-sm)', border: '1px solid #A7F3D0' }}>
-                            <strong style={{ color: '#065F46' }}>Preferred:</strong> <span style={{ color: '#047857' }}>{rule.preferredWording}</span>
-                          </div>
-                        )}
-                        {rule.prohibitedPhrases && rule.prohibitedPhrases.length > 0 && (
-                          <div style={{ background: '#FEF2F2', padding: '4px 10px', borderRadius: 'var(--radius-sm)', border: '1px solid #FCA5A5' }}>
-                            <strong style={{ color: '#991B1B' }}>Prohibited:</strong>{' '}
-                            <span style={{ color: '#B91C1C' }}>{rule.prohibitedPhrases.join(', ')}</span>
-                          </div>
-                        )}
-                        {rule.sourceReference && (
-                          <div style={{ color: 'var(--text-tertiary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                            <Info size={13} /> Source: {rule.sourceReference}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Rule Actions */}
-                    {isReviewer && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-                        <button
-                          onClick={() => handleToggleRule(rule._id)}
-                          style={{
-                            color: rule.isActive ? 'var(--status-success)' : 'var(--text-muted)',
-                            padding: '4px',
-                            display: 'flex',
-                          }}
-                          title={rule.isActive ? 'Deactivate rule' : 'Activate rule'}
-                        >
-                          {rule.isActive ? <ToggleRight size={24} /> : <ToggleLeft size={24} />}
-                        </button>
-                        <button
-                          onClick={() => handleOpenEditRule(rule)}
-                          style={{ color: 'var(--text-secondary)', padding: '6px' }}
-                          title="Edit rule"
-                        >
-                          <Edit2 size={16} />
-                        </button>
-                        {isAdmin && (
+                      {/* Unified Action Button Group */}
+                      {isReviewer && (
+                        <div className="action-btn-group">
                           <button
-                            onClick={() => setDeleteRuleConfirm(rule)}
-                            style={{ color: 'var(--severity-high)', padding: '6px' }}
-                            title="Delete rule"
+                            onClick={() => handleToggleRule(rule._id)}
+                            className={`action-icon-btn ${rule.isActive ? 'active-toggle' : ''}`}
+                            title={rule.isActive ? 'Deactivate rule' : 'Activate rule'}
                           >
-                            <Trash2 size={16} />
+                            {rule.isActive ? <ToggleRight size={18} /> : <ToggleLeft size={18} />}
                           </button>
-                        )}
-                      </div>
-                    )}
+                          <button
+                            onClick={() => handleOpenEditRule(rule)}
+                            className="action-icon-btn"
+                            title="Edit rule"
+                          >
+                            <Edit2 size={14} />
+                          </button>
+                          {isAdmin && (
+                            <button
+                              onClick={() => setDeleteRuleConfirm(rule)}
+                              className="action-icon-btn danger"
+                              title="Delete rule"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

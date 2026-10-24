@@ -147,92 +147,42 @@ export default function ApprovedFacts() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
-      {/* Clean Modern Page Header Banner */}
+      {/* Modern Page Header */}
       <div className="page-header-clean">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
-          <div
-            className="ui-integrated-graphic motion-mascot"
-            style={{ width: '56px', height: '56px', flexShrink: 0 }}
-          >
-            <img
-              src={ASSET_IMAGES.governanceShield}
-              alt="Governance Shield"
-              className="ui-seamless-image"
-              style={{ width: '100%', height: '100%' }}
-            />
+        <div className="page-header-info">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+            <span className="badge badge-success">
+              <CheckCircle2 size={12} style={{ display: 'inline', marginRight: '4px' }} />
+              Truth Repository
+            </span>
+            <span style={{ fontSize: '0.8125rem', color: 'var(--text-tertiary)' }}>
+              Deterministic Fact Verification
+            </span>
           </div>
 
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-              <span
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '3px 10px',
-                  borderRadius: '999px',
-                  background: '#ECFDF5',
-                  color: '#059669',
-                  fontSize: '0.6875rem',
-                  fontWeight: 700,
-                  border: '1px solid #A7F3D0',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.04em',
-                }}
-              >
-                <CheckCircle2 size={12} color="#10B981" />
-                Truth Repository
-              </span>
-              <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>•</span>
-              <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
-                {activeCount} Verified Claims Active
-              </span>
-            </div>
-
-            <h1 className="text-gradient-primary" style={{ fontSize: '1.75rem', fontWeight: 850, margin: 0 }}>
-              Approved Facts & Evidence Repository
-            </h1>
-            <p style={{ fontSize: '0.875rem', color: '#64748B', marginTop: '4px', margin: '4px 0 0 0' }}>
-              Authoritative corporate claims, benchmarks, and legal verification sources preventing promotional drift.
-            </p>
-          </div>
+          <h1 className="page-header-title text-gradient-primary">
+            Approved Facts & Evidence Repository
+          </h1>
+          <p className="page-header-subtitle">
+            Authoritative corporate claims, benchmarks, and legal verification sources preventing promotional drift.
+          </p>
         </div>
 
         {/* Action Button & Quick Metrics */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', gap: '8px' }}>
-            <span
-              style={{
-                fontSize: '0.75rem',
-                fontWeight: 700,
-                padding: '6px 12px',
-                borderRadius: '10px',
-                background: '#ECFDF5',
-                color: '#059669',
-                border: '1px solid #A7F3D0',
-              }}
-            >
+          <div className="segmented-control">
+            <span className="segmented-btn active">
               {activeCount} Active
             </span>
             {expiredCount > 0 && (
-              <span
-                style={{
-                  fontSize: '0.75rem',
-                  fontWeight: 700,
-                  padding: '6px 12px',
-                  borderRadius: '10px',
-                  background: '#FFFBEB',
-                  color: '#D97706',
-                  border: '1px solid #FDE68A',
-                }}
-              >
+              <span className="segmented-btn" style={{ color: '#D97706' }}>
                 {expiredCount} Refresh Needed
               </span>
             )}
           </div>
 
           {isReviewer && (
-            <button onClick={handleOpenAdd} className="btn btn-gradient-primary btn-sm">
+            <button onClick={handleOpenAdd} className="btn btn-primary btn-sm btn-pill">
               <Plus size={16} strokeWidth={2.5} />
               <span>Add Approved Fact</span>
             </button>
@@ -240,38 +190,24 @@ export default function ApprovedFacts() {
         </div>
       </div>
 
-      {/* Header bar */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
-        <div>
-          <h2 className="text-gradient-blue" style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0 }}>
-            All Verified Fact Entries
-          </h2>
-          <p style={{ fontSize: '0.875rem', color: '#64748B', marginTop: '2px', margin: '2px 0 0 0' }}>
-            Searchable corporate facts used by the deterministic rule engine to auto-validate content drafts.
-          </p>
+      {/* Unified Search & Status Filter Toolbar */}
+      <div className="facts-toolbar">
+        <div className="facts-toolbar-search">
+          <Search size={16} color="var(--text-tertiary)" />
+          <input
+            type="text"
+            placeholder="Search facts by keyword, metric, or source..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
-      </div>
 
-      {/* Search & Filter Bar */}
-      <div className="card" style={{ padding: 'var(--space-4)' }}>
-        <div style={{ display: 'flex', gap: 'var(--space-3)', flexWrap: 'wrap' }}>
-          <div style={{ flex: 1, minWidth: '240px', position: 'relative' }}>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="Search facts by keyword, metric, or source..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              style={{ paddingLeft: '36px' }}
-            />
-            <Search size={16} color="var(--text-tertiary)" style={{ position: 'absolute', left: '12px', top: '12px' }} />
-          </div>
-
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <select
             className="form-select"
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            style={{ width: '160px' }}
+            style={{ width: '180px' }}
           >
             <option value="">All Statuses</option>
             <option value="active">Active Verified</option>
@@ -290,30 +226,24 @@ export default function ApprovedFacts() {
             {search || selectedStatus ? 'No facts match your search filters.' : 'Add verified data points and performance metrics.'}
           </p>
           {isReviewer && (
-            <button onClick={handleOpenAdd} className="btn btn-primary">
+            <button onClick={handleOpenAdd} className="btn btn-primary btn-pill">
               <Plus size={16} /> Add Approved Fact
             </button>
           )}
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: 'var(--space-5)' }}>
+        <div className="facts-grid">
           {facts.map((fact) => {
             const isExpired = fact.status === 'expired' || fact.isAutoExpired;
 
             return (
               <div
                 key={fact._id}
-                className="card"
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  borderTop: `4px solid ${isExpired ? 'var(--severity-medium)' : 'var(--status-success)'}`,
-                }}
+                className={`fact-card ${isExpired ? 'expired' : 'verified'}`}
               >
                 <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-3)' }}>
-                    <span className="badge badge-neutral" style={{ fontSize: '0.6875rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <span className="badge badge-neutral" style={{ fontSize: '0.6875rem', fontWeight: 700 }}>
                       {fact.category}
                     </span>
                     <span
@@ -321,7 +251,7 @@ export default function ApprovedFacts() {
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '4px',
-                        padding: '2px 8px',
+                        padding: '3px 10px',
                         borderRadius: 'var(--radius-full)',
                         fontSize: '0.75rem',
                         fontWeight: 700,
@@ -331,73 +261,67 @@ export default function ApprovedFacts() {
                       }}
                     >
                       {isExpired ? <AlertTriangle size={12} /> : <CheckCircle2 size={12} />}
-                      {isExpired ? 'Expired / Needs Refresh' : 'Verified Active'}
+                      {isExpired ? 'Expired / Refresh Needed' : 'Verified Active'}
                     </span>
                   </div>
 
-                  <p style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--text-primary)', lineHeight: 1.5, marginBottom: 'var(--space-4)' }}>
+                  <div className="fact-quote-box">
                     "{fact.factText}"
-                  </p>
+                  </div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <ShieldCheck size={14} color="var(--color-primary)" />
+                  <div className="fact-meta-list">
+                    <div className="fact-meta-item">
+                      <ShieldCheck size={14} color="var(--color-primary)" style={{ flexShrink: 0 }} />
                       <span>
                         Source: <strong>{fact.sourceName}</strong>
                       </span>
                       {fact.sourceUrl && (
-                        <a href={fact.sourceUrl} target="_blank" rel="noreferrer" style={{ display: 'flex', color: 'var(--color-primary)' }}>
+                        <a href={fact.sourceUrl} target="_blank" rel="noreferrer" style={{ display: 'inline-flex', color: 'var(--color-primary)' }}>
                           <ExternalLink size={12} />
                         </a>
                       )}
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <Calendar size={14} color="var(--text-tertiary)" />
+                    <div className="fact-meta-item">
+                      <Calendar size={14} color="var(--text-tertiary)" style={{ flexShrink: 0 }} />
                       <span>Verified: {new Date(fact.verificationDate).toLocaleDateString()}</span>
                       {fact.expiryDate && (
-                        <span style={{ color: isExpired ? 'var(--severity-medium)' : 'var(--text-tertiary)' }}>
+                        <span style={{ color: isExpired ? '#B45309' : 'var(--text-tertiary)', fontWeight: isExpired ? 700 : 500 }}>
                           (Expires: {new Date(fact.expiryDate).toLocaleDateString()})
                         </span>
                       )}
                     </div>
 
                     {fact.ownerRole && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <UserCheck size={14} color="var(--text-tertiary)" />
-                        <span>Owner: {fact.ownerRole}</span>
+                      <div className="fact-meta-item">
+                        <UserCheck size={14} color="var(--text-tertiary)" style={{ flexShrink: 0 }} />
+                        <span>Owner: <strong>{fact.ownerRole}</strong></span>
                       </div>
                     )}
                   </div>
                 </div>
 
                 {isReviewer && (
-                  <div
-                    style={{
-                      borderTop: '1px solid var(--border-subtle)',
-                      marginTop: 'var(--space-4)',
-                      paddingTop: 'var(--space-3)',
-                      display: 'flex',
-                      justifyContent: 'flex-end',
-                      gap: 'var(--space-2)',
-                    }}
-                  >
-                    <button
-                      onClick={() => handleOpenEdit(fact)}
-                      className="btn btn-secondary btn-sm"
-                      style={{ padding: '4px 8px', fontSize: '0.75rem' }}
-                    >
-                      <Edit2 size={13} /> Edit
-                    </button>
-                    {isAdmin && (
+                  <div className="fact-footer">
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>
+                      ID: {fact._id.slice(-6).toUpperCase()}
+                    </span>
+                    <div style={{ display: 'flex', gap: '8px' }}>
                       <button
-                        onClick={() => setDeleteConfirm(fact)}
-                        className="btn btn-danger btn-sm"
-                        style={{ padding: '4px 8px', fontSize: '0.75rem' }}
+                        onClick={() => handleOpenEdit(fact)}
+                        className="btn btn-secondary btn-xs"
                       >
-                        <Trash2 size={13} /> Delete
+                        <Edit2 size={12} /> Edit
                       </button>
-                    )}
+                      {isAdmin && (
+                        <button
+                          onClick={() => setDeleteConfirm(fact)}
+                          className="btn btn-danger btn-xs"
+                        >
+                          <Trash2 size={12} /> Delete
+                        </button>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>

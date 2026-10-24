@@ -345,42 +345,36 @@ export default function Dashboard() {
         </div>
 
         {/* Modern Action Buttons */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
           <Link
             to="/guidelines"
-            className="btn btn-secondary btn-sm"
+            className="btn btn-secondary"
             style={{
-              padding: '8px 16px',
-              fontSize: '0.8125rem',
-              borderRadius: '11px',
+              padding: '10px 20px',
+              fontSize: '0.875rem',
+              fontWeight: 650,
+              borderRadius: '12px',
               border: '1px solid #E2E8F0',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
             }}
           >
-            <BookOpen size={15} color="#7C3AED" />
-            <span>Guidelines</span>
-          </Link>
-
-          <Link
-            to="/assets"
-            className="btn btn-secondary btn-sm"
-            style={{
-              padding: '8px 16px',
-              fontSize: '0.8125rem',
-              borderRadius: '11px',
-              border: '1px solid #E2E8F0',
-            }}
-          >
-            <Palette size={15} color="#06B6D4" />
-            <span>Assets</span>
+            <BookOpen size={16} color="#7C3AED" />
+            <span>Explore Guidelines</span>
           </Link>
 
           <button
             onClick={() => navigate('/review')}
-            className="btn btn-gradient-primary btn-sm"
+            className="btn btn-gradient-primary"
             style={{
-              padding: '8px 20px',
-              fontSize: '0.8125rem',
-              borderRadius: '11px',
+              padding: '10px 24px',
+              fontSize: '0.875rem',
+              fontWeight: 700,
+              borderRadius: '12px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
             }}
             title="Run instant brand compliance audit on new content"
           >
@@ -391,9 +385,9 @@ export default function Dashboard() {
       </section>
 
       {/* ===================================================================
-          2. COLOURFUL KPI CARDS (Rich Multi-Colour Palette of 5 Cards)
+          2. COLOURFUL KPI CARDS (The 4 Essential Brand Governance Pillars)
           =================================================================== */}
-      <section className="dashboard-kpi-grid-5">
+      <section className="dashboard-kpi-grid-4">
         {/* KPI 1: Overall Compliance (Electric Blue / Cyan) */}
         <div
           className="kpi-card-vibrant kpi-card-blue"
@@ -407,21 +401,21 @@ export default function Dashboard() {
             <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
               Compliance Score
             </span>
-            <div className="icon-tile icon-tile-blue" style={{ width: '36px', height: '36px' }}>
-              <ShieldCheck size={18} strokeWidth={2.4} />
+            <div className="icon-tile icon-tile-blue" style={{ width: '40px', height: '40px' }}>
+              <ShieldCheck size={20} strokeWidth={2.4} />
             </div>
           </div>
-          <div style={{ marginTop: '12px' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 850, color: '#0F172A', lineHeight: 1 }}>
+          <div style={{ marginTop: '14px' }}>
+            <div style={{ fontSize: '2.25rem', fontWeight: 850, color: '#0F172A', lineHeight: 1 }}>
               {averageScore}%
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px' }}>
               {comparisonDiff !== null && comparisonDiff !== undefined && (
                 <span
                   style={{
-                    fontSize: '0.6875rem',
+                    fontSize: '0.75rem',
                     fontWeight: 700,
-                    padding: '2px 6px',
+                    padding: '2px 8px',
                     borderRadius: '6px',
                     background: comparisonDiff >= 0 ? '#ECFDF5' : '#FFF1F2',
                     color: comparisonDiff >= 0 ? '#059669' : '#E11D48',
@@ -430,7 +424,7 @@ export default function Dashboard() {
                   {comparisonDiff >= 0 ? `+${comparisonDiff}%` : `${comparisonDiff}%`}
                 </span>
               )}
-              <span style={{ fontSize: '0.75rem', color: '#64748B' }}>vs previous audit</span>
+              <span style={{ fontSize: '0.78rem', color: '#64748B' }}>vs previous audit</span>
             </div>
           </div>
         </div>
@@ -449,20 +443,20 @@ export default function Dashboard() {
             <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
               High-Risk Issues
             </span>
-            <div className="icon-tile icon-tile-coral" style={{ width: '36px', height: '36px' }}>
-              <AlertTriangle size={18} strokeWidth={2.4} />
+            <div className="icon-tile icon-tile-coral" style={{ width: '40px', height: '40px' }}>
+              <AlertTriangle size={20} strokeWidth={2.4} />
             </div>
           </div>
-          <div style={{ marginTop: '12px' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 850, color: '#0F172A', lineHeight: 1 }}>
+          <div style={{ marginTop: '14px' }}>
+            <div style={{ fontSize: '2.25rem', fontWeight: 850, color: '#0F172A', lineHeight: 1 }}>
               {openHighRiskCount}
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px' }}>
               <span
                 style={{
-                  fontSize: '0.6875rem',
+                  fontSize: '0.75rem',
                   fontWeight: 700,
-                  padding: '2px 6px',
+                  padding: '2px 8px',
                   borderRadius: '6px',
                   background: openHighRiskCount > 0 ? '#FFF1F2' : '#ECFDF5',
                   color: openHighRiskCount > 0 ? '#E11D48' : '#059669',
@@ -470,7 +464,7 @@ export default function Dashboard() {
               >
                 {openHighRiskCount > 0 ? 'Action Required' : 'All Clear'}
               </span>
-              <span style={{ fontSize: '0.75rem', color: '#64748B' }}>in open drafts</span>
+              <span style={{ fontSize: '0.78rem', color: '#64748B' }}>in open drafts</span>
             </div>
           </div>
         </div>
@@ -485,20 +479,20 @@ export default function Dashboard() {
             <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
               Pending Queue
             </span>
-            <div className="icon-tile icon-tile-amber" style={{ width: '36px', height: '36px' }}>
-              <Clock size={18} strokeWidth={2.4} />
+            <div className="icon-tile icon-tile-amber" style={{ width: '40px', height: '40px' }}>
+              <Clock size={20} strokeWidth={2.4} />
             </div>
           </div>
-          <div style={{ marginTop: '12px' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 850, color: '#0F172A', lineHeight: 1 }}>
+          <div style={{ marginTop: '14px' }}>
+            <div style={{ fontSize: '2.25rem', fontWeight: 850, color: '#0F172A', lineHeight: 1 }}>
               {pendingApprovalsCount}
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px' }}>
               <span
                 style={{
-                  fontSize: '0.6875rem',
+                  fontSize: '0.75rem',
                   fontWeight: 700,
-                  padding: '2px 6px',
+                  padding: '2px 8px',
                   borderRadius: '6px',
                   background: '#FFFBEB',
                   color: '#D97706',
@@ -506,48 +500,12 @@ export default function Dashboard() {
               >
                 Awaiting Sign-off
               </span>
-              <span style={{ fontSize: '0.75rem', color: '#64748B' }}>by reviewer</span>
+              <span style={{ fontSize: '0.78rem', color: '#64748B' }}>by reviewer</span>
             </div>
           </div>
         </div>
 
-        {/* KPI 4: Audits Completed (Mint Green) */}
-        <div
-          className="kpi-card-vibrant kpi-card-mint"
-          onClick={() => navigate('/history')}
-          title="Click to open Review History"
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-              Audited This Month
-            </span>
-            <div className="icon-tile icon-tile-mint" style={{ width: '36px', height: '36px' }}>
-              <TrendingUp size={18} strokeWidth={2.4} />
-            </div>
-          </div>
-          <div style={{ marginTop: '12px' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 850, color: '#0F172A', lineHeight: 1 }}>
-              {reviewedThisMonthCount}
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '8px' }}>
-              <span
-                style={{
-                  fontSize: '0.6875rem',
-                  fontWeight: 700,
-                  padding: '2px 6px',
-                  borderRadius: '6px',
-                  background: '#ECFDF5',
-                  color: '#059669',
-                }}
-              >
-                Scans Active
-              </span>
-              <span style={{ fontSize: '0.75rem', color: '#64748B' }}>deterministic</span>
-            </div>
-          </div>
-        </div>
-
-        {/* KPI 5: Active Rules (Violet) */}
+        {/* KPI 4: Active Rules (Violet) */}
         <div
           className="kpi-card-vibrant kpi-card-violet"
           onClick={() => navigate('/guidelines')}
@@ -557,20 +515,20 @@ export default function Dashboard() {
             <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
               Enforced Rules
             </span>
-            <div className="icon-tile icon-tile-violet" style={{ width: '36px', height: '36px' }}>
-              <BookOpen size={18} strokeWidth={2.4} />
+            <div className="icon-tile icon-tile-violet" style={{ width: '40px', height: '40px' }}>
+              <BookOpen size={20} strokeWidth={2.4} />
             </div>
           </div>
-          <div style={{ marginTop: '12px' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 850, color: '#0F172A', lineHeight: 1 }}>
+          <div style={{ marginTop: '14px' }}>
+            <div style={{ fontSize: '2.25rem', fontWeight: 850, color: '#0F172A', lineHeight: 1 }}>
               {totalActiveRules}
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '10px' }}>
               <span
                 style={{
-                  fontSize: '0.6875rem',
+                  fontSize: '0.75rem',
                   fontWeight: 700,
-                  padding: '2px 6px',
+                  padding: '2px 8px',
                   borderRadius: '6px',
                   background: '#F5F3FF',
                   color: '#7C3AED',
@@ -578,7 +536,7 @@ export default function Dashboard() {
               >
                 Brand Guardrails
               </span>
-              <span style={{ fontSize: '0.75rem', color: '#64748B' }}>across 6 pillars</span>
+              <span style={{ fontSize: '0.78rem', color: '#64748B' }}>across 6 pillars</span>
             </div>
           </div>
         </div>

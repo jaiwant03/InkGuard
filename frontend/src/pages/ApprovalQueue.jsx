@@ -123,119 +123,82 @@ export default function ApprovalQueue() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
-      {/* Reference UI Hero Showcase Card with 3D Motion */}
-      <div
-        style={{
-          background: '#FFFFFF',
-          borderRadius: 'var(--radius-2xl)',
-          padding: 'var(--space-6)',
-          border: '1px solid #E2E8F0',
-          boxShadow: '0 20px 50px -10px rgba(15, 23, 42, 0.08)',
-          display: 'grid',
-          gridTemplateColumns: '260px minmax(0, 1fr) 280px',
-          gap: 'var(--space-6)',
-          alignItems: 'center',
-        }}
-      >
-        {/* Left: 3D Governance Mascot Shield with Motion */}
-        <div style={{ textAlign: 'center' }}>
-          <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '8px' }}>
-            Governance Gatekeeper
-          </span>
+      {/* Clean Modern Page Header Banner */}
+      <div className="page-header-clean">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
           <div
             className="ui-integrated-graphic motion-mascot"
-            style={{
-              width: '120px',
-              height: '120px',
-              margin: '0 auto',
-            }}
+            style={{ width: '56px', height: '56px', flexShrink: 0 }}
           >
             <img
               src={ASSET_IMAGES.governanceShield}
-              alt="Governance Mascot 3D"
+              alt="Governance Mascot"
               className="ui-seamless-image"
               style={{ width: '100%', height: '100%' }}
             />
           </div>
-          <div style={{ marginTop: '8px', display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', color: '#10B981', fontWeight: 600, background: '#ECFDF5', padding: '3px 10px', borderRadius: '999px' }}>
-            <span className="motion-pulse-check" style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#10B981', display: 'inline-block' }} />
-            Tier-2 Approval Active
+
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '3px 10px',
+                  borderRadius: '999px',
+                  background: '#FFFBEB',
+                  color: '#D97706',
+                  fontSize: '0.6875rem',
+                  fontWeight: 700,
+                  border: '1px solid #FDE68A',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                }}
+              >
+                <ClipboardList size={12} color="#D97706" />
+                Sign-off Gatekeeper
+              </span>
+              <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>•</span>
+              <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
+                {drafts.filter((d) => d.status === 'In Review').length} Awaiting Approval
+              </span>
+            </div>
+
+            <h1 className="text-gradient-amber" style={{ fontSize: '1.75rem', fontWeight: 850, margin: 0 }}>
+              Human Review & Approval Queue
+            </h1>
+            <p style={{ fontSize: '0.875rem', color: '#64748B', marginTop: '4px', margin: '4px 0 0 0' }}>
+              Multi-stakeholder sign-off workflow ensuring content meets brand tone, legal policies, and approved claims.
+            </p>
           </div>
         </div>
 
-        {/* Center: Queue Overview & Metrics */}
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-            <span className="badge" style={{ background: '#EFF6FF', color: '#2563EB', border: '1px solid #BFDBFE' }}>
-              Workflow Governance
-            </span>
-            <span style={{ fontSize: '0.8125rem', color: '#64748B' }}>
-              {drafts.length} Documents in Current View
+        {/* Quick Metrics Bar */}
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+          <div style={{ background: '#FFFFFF', padding: '8px 14px', borderRadius: '12px', border: '1px solid #E2E8F0', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
+            <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block' }}>Awaiting Review</span>
+            <span style={{ fontSize: '1.125rem', fontWeight: 800, color: '#D97706' }}>
+              {drafts.filter((d) => d.status === 'In Review').length}
             </span>
           </div>
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0F172A', letterSpacing: '-0.02em', marginBottom: '6px' }}>
-            Human Review & Approval Queue
-          </h1>
-          <p style={{ fontSize: '0.875rem', color: '#475569', lineHeight: 1.5, marginBottom: 'var(--space-4)' }}>
-            Collaborative sign-off workflow ensuring all public content meets brand consistency, regulatory compliance, and accuracy standards.
-          </p>
-
-          {/* Quick Metrics Bar */}
-          <div style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
-            <div style={{ background: '#F8FAFC', padding: '8px 14px', borderRadius: 'var(--radius-lg)', border: '1px solid #E2E8F0' }}>
-              <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block' }}>Awaiting Review</span>
-              <span style={{ fontSize: '1.125rem', fontWeight: 800, color: '#F59E0B' }}>
-                {drafts.filter(d => d.status === 'In Review').length}
-              </span>
-            </div>
-            <div style={{ background: '#F8FAFC', padding: '8px 14px', borderRadius: 'var(--radius-lg)', border: '1px solid #E2E8F0' }}>
-              <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block' }}>Approved This Cycle</span>
-              <span style={{ fontSize: '1.125rem', fontWeight: 800, color: '#10B981' }}>
-                {drafts.filter(d => d.status === 'Approved').length}
-              </span>
-            </div>
-            <div style={{ background: '#F8FAFC', padding: '8px 14px', borderRadius: 'var(--radius-lg)', border: '1px solid #E2E8F0' }}>
-              <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block' }}>SLA Compliance</span>
-              <span style={{ fontSize: '1.125rem', fontWeight: 800, color: '#2563EB' }}>100% On-Time</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Right: Extracted Guidelines & Compliance Badges */}
-        <div style={{ background: '#F8FAFC', padding: 'var(--space-4)', borderRadius: 'var(--radius-xl)', border: '1px solid #E2E8F0' }}>
-          <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', marginBottom: '8px' }}>
-            Extracted Guidelines
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#FFFFFF', padding: '6px 10px', borderRadius: 'var(--radius-md)', marginBottom: '8px', border: '1px solid #E2E8F0' }}>
-            <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#0F172A' }}>Logo Usage</span>
-            <span style={{ fontSize: '0.75rem', color: '#2563EB', fontWeight: 700 }}>Dolorow</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#FFFFFF', padding: '6px 10px', borderRadius: 'var(--radius-md)', marginBottom: '8px', border: '1px solid #E2E8F0' }}>
-            <span style={{ fontSize: '0.8125rem', color: '#475569' }}>Messaging Tone</span>
-            <span style={{ fontSize: '0.6875rem', background: '#EFF6FF', color: '#2563EB', padding: '2px 8px', borderRadius: '999px', fontWeight: 600 }}>Setew</span>
-          </div>
-
-          <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', margin: '10px 0 6px 0' }}>
-            Typography Checker
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#FFFFFF', padding: '6px 10px', borderRadius: 'var(--radius-md)', border: '1px solid #E2E8F0' }}>
-            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#0F172A' }}>Lato Bold</span>
-            <div className="motion-pulse-check" style={{ width: '18px', height: '18px', borderRadius: '50%', background: '#10B981', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Check size={11} strokeWidth={3} />
-            </div>
+          <div style={{ background: '#FFFFFF', padding: '8px 14px', borderRadius: '12px', border: '1px solid #E2E8F0', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
+            <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block' }}>Approved</span>
+            <span style={{ fontSize: '1.125rem', fontWeight: 800, color: '#059669' }}>
+              {drafts.filter((d) => d.status === 'Approved').length}
+            </span>
           </div>
         </div>
       </div>
 
-      {/* Header */}
+      {/* Header & Tabs */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
         <div>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+          <h2 className="text-gradient-blue" style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0 }}>
             Review Queue Submissions
           </h2>
-          <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+          <p style={{ fontSize: '0.875rem', color: '#64748B', marginTop: '2px', margin: '2px 0 0 0' }}>
             Collaborative sign-off workflow for brand managers, legal reviewers, and content authors.
-          </p>
         </div>
 
         <div style={{ display: 'flex', gap: 'var(--space-2)', background: 'var(--bg-surface-secondary)', padding: '4px', borderRadius: 'var(--radius-lg)' }}>

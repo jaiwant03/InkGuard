@@ -327,11 +327,11 @@ export default function Dashboard() {
             </div>
 
             <h1
+              className="text-gradient-primary"
               style={{
-                fontSize: '1.75rem',
+                fontSize: '1.85rem',
                 fontWeight: 850,
-                color: '#0F172A',
-                letterSpacing: '-0.025em',
+                letterSpacing: '-0.03em',
                 lineHeight: 1.2,
                 margin: 0,
               }}
@@ -344,15 +344,16 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Action Buttons */}
+        {/* Modern Action Buttons */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
           <Link
             to="/guidelines"
             className="btn btn-secondary btn-sm"
             style={{
-              padding: '9px 16px',
+              padding: '8px 16px',
               fontSize: '0.8125rem',
-              borderRadius: '12px',
+              borderRadius: '11px',
+              border: '1px solid #E2E8F0',
             }}
           >
             <BookOpen size={15} color="#7C3AED" />
@@ -363,9 +364,10 @@ export default function Dashboard() {
             to="/assets"
             className="btn btn-secondary btn-sm"
             style={{
-              padding: '9px 16px',
+              padding: '8px 16px',
               fontSize: '0.8125rem',
-              borderRadius: '12px',
+              borderRadius: '11px',
+              border: '1px solid #E2E8F0',
             }}
           >
             <Palette size={15} color="#06B6D4" />
@@ -376,9 +378,9 @@ export default function Dashboard() {
             onClick={() => navigate('/review')}
             className="btn btn-gradient-primary btn-sm"
             style={{
-              padding: '9px 20px',
+              padding: '8px 20px',
               fontSize: '0.8125rem',
-              borderRadius: '12px',
+              borderRadius: '11px',
             }}
             title="Run instant brand compliance audit on new content"
           >
@@ -603,7 +605,7 @@ export default function Dashboard() {
                   <Shield size={22} strokeWidth={2.3} />
                 </div>
                 <div>
-                  <h2 style={{ fontSize: '1.125rem', fontWeight: 800, color: '#0F172A', lineHeight: 1.2, margin: 0 }}>
+                  <h2 className="text-gradient-blue" style={{ fontSize: '1.2rem', fontWeight: 800, lineHeight: 1.2, margin: 0 }}>
                     Brand Compliance & Health
                   </h2>
                   <p style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '3px', margin: '3px 0 0 0' }}>
@@ -845,7 +847,7 @@ export default function Dashboard() {
                   <FileText size={22} strokeWidth={2.3} />
                 </div>
                 <div>
-                  <h2 style={{ fontSize: '1.125rem', fontWeight: 800, color: '#0F172A', lineHeight: 1.2, margin: 0 }}>
+                  <h2 className="text-gradient-emerald" style={{ fontSize: '1.2rem', fontWeight: 800, lineHeight: 1.2, margin: 0 }}>
                     Review Queue
                   </h2>
                   <p style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '3px', margin: '3px 0 0 0' }}>
@@ -1038,7 +1040,7 @@ export default function Dashboard() {
               <AlertTriangle size={20} strokeWidth={2.4} />
             </div>
             <div>
-              <h2 style={{ fontSize: '1.125rem', fontWeight: 800, color: '#0F172A', lineHeight: 1.2, margin: 0 }}>
+              <h2 className="text-gradient-coral" style={{ fontSize: '1.2rem', fontWeight: 800, lineHeight: 1.2, margin: 0 }}>
                 Recent Governance Findings
               </h2>
               <p style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '3px', margin: '3px 0 0 0' }}>
@@ -1270,11 +1272,10 @@ export default function Dashboard() {
 
                     {/* Actions */}
                     <td style={{ textAlign: 'right' }}>
-                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
                         <Link
                           to={`/review/${f.draft?._id || f.draft}`}
-                          className="btn btn-secondary btn-sm"
-                          style={{ padding: '4px 8px', fontSize: '0.75rem', borderRadius: '8px' }}
+                          className="btn-table-review"
                           title="Open Finding in Review Studio"
                         >
                           Review
@@ -1284,19 +1285,11 @@ export default function Dashboard() {
                             type="button"
                             onClick={() => handleResolveFinding(f)}
                             disabled={resolvingId === f._id}
-                            className="btn btn-sm"
-                            style={{
-                              padding: '4px 8px',
-                              fontSize: '0.75rem',
-                              background: '#ECFDF5',
-                              color: '#059669',
-                              border: '1px solid #A7F3D0',
-                              fontWeight: 700,
-                              borderRadius: '8px',
-                            }}
+                            className="btn-table-resolve"
                             title="Resolve finding directly"
                           >
-                            {resolvingId === f._id ? 'Saving...' : 'Resolve'}
+                            <Check size={12} strokeWidth={2.8} />
+                            <span>{resolvingId === f._id ? 'Saving...' : 'Resolve'}</span>
                           </button>
                         )}
                       </div>
@@ -1344,7 +1337,7 @@ export default function Dashboard() {
                   <Palette size={22} strokeWidth={2.3} />
                 </div>
                 <div>
-                  <h2 style={{ fontSize: '1.125rem', fontWeight: 800, color: '#0F172A', lineHeight: 1.2, margin: 0 }}>
+                  <h2 className="text-gradient-violet" style={{ fontSize: '1.2rem', fontWeight: 800, lineHeight: 1.2, margin: 0 }}>
                     Brand Identity Panel
                   </h2>
                   <p style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '3px', margin: '3px 0 0 0' }}>
@@ -1521,7 +1514,7 @@ export default function Dashboard() {
                   <ShieldCheck size={22} strokeWidth={2.3} />
                 </div>
                 <div>
-                  <h2 style={{ fontSize: '1.125rem', fontWeight: 800, color: '#0F172A', lineHeight: 1.2, margin: 0 }}>
+                  <h2 className="text-gradient-cyan" style={{ fontSize: '1.2rem', fontWeight: 800, lineHeight: 1.2, margin: 0 }}>
                     Guideline Coverage Widgets
                   </h2>
                   <p style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '3px', margin: '3px 0 0 0' }}>

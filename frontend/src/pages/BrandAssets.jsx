@@ -156,130 +156,92 @@ export default function BrandAssets() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
-      {/* Reference UI Hero Showcase Card with 3D Motion */}
-      <div
-        style={{
-          background: '#FFFFFF',
-          borderRadius: 'var(--radius-2xl)',
-          padding: 'var(--space-6)',
-          border: '1px solid #E2E8F0',
-          boxShadow: '0 20px 50px -10px rgba(15, 23, 42, 0.08)',
-          display: 'grid',
-          gridTemplateColumns: '280px minmax(0, 1fr) 280px',
-          gap: 'var(--space-6)',
-          alignItems: 'center',
-        }}
-      >
-        {/* Left: 3D Corporate Brochure Preview with Moving Motion Effect */}
-        <div style={{ textAlign: 'center' }}>
-          <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '8px' }}>
-            Brand Asset Showcase
-          </span>
+      {/* Clean Modern Page Header Banner */}
+      <div className="page-header-clean">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
           <div
-            className="ui-seamless-mockup-frame motion-float"
-            style={{
-              width: '180px',
-              height: '140px',
-              margin: '0 auto',
-            }}
+            className="ui-integrated-graphic motion-mascot"
+            style={{ width: '56px', height: '56px', flexShrink: 0 }}
           >
             <img
               src={ASSET_IMAGES.brochureMockup}
-              alt="Corporate Brochure 3D"
+              alt="Brand Assets"
+              className="ui-seamless-image"
               style={{ width: '100%', height: '100%' }}
             />
           </div>
-          <div style={{ marginTop: '8px', display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', color: '#10B981', fontWeight: 600, background: '#ECFDF5', padding: '3px 10px', borderRadius: '999px' }}>
-            <span className="motion-pulse-check" style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#10B981', display: 'inline-block' }} />
-            Corporate Assets v3.2
+
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '3px 10px',
+                  borderRadius: '999px',
+                  background: '#ECFEFF',
+                  color: '#0891B2',
+                  fontSize: '0.6875rem',
+                  fontWeight: 700,
+                  border: '1px solid #A5F3FC',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                }}
+              >
+                <Palette size={12} color="#0891B2" />
+                Media Governance
+              </span>
+              <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>•</span>
+              <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
+                {approvedCount} Approved Elements Active
+              </span>
+            </div>
+
+            <h1 className="text-gradient-cyan" style={{ fontSize: '1.75rem', fontWeight: 850, margin: 0 }}>
+              Corporate Brand Asset Library
+            </h1>
+            <p style={{ fontSize: '0.875rem', color: '#64748B', marginTop: '4px', margin: '4px 0 0 0' }}>
+              Curated, legally cleared media files, vector logos, and campaign photography for all marketing copy.
+            </p>
           </div>
         </div>
 
-        {/* Center: Assets Overview & Reference Asset Previews Strip */}
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-            <span className="badge" style={{ background: '#EFF6FF', color: '#2563EB', border: '1px solid #BFDBFE' }}>
-              Media Governance
-            </span>
-            <span style={{ fontSize: '0.8125rem', color: '#64748B' }}>
-              {approvedCount} Verified Brand Elements
-            </span>
-          </div>
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0F172A', letterSpacing: '-0.02em', marginBottom: '6px' }}>
-            Corporate Brand Asset Library
-          </h1>
-          <p style={{ fontSize: '0.875rem', color: '#475569', lineHeight: 1.5, marginBottom: 'var(--space-4)' }}>
-            Curated, legally cleared media files, vector logos, and campaign photography. Unapproved assets trigger automated review flags.
-          </p>
+        {/* Action Button & Quick Stats */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+          <span
+            style={{
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              padding: '6px 14px',
+              borderRadius: '10px',
+              background: '#F0F9FF',
+              color: '#0284C7',
+              border: '1px solid #BAE6FD',
+            }}
+          >
+            {assets.length} Total Assets
+          </span>
 
-          {/* Reference Asset Previews Strip (from Reference Image) */}
-          <div style={{ background: '#F8FAFC', padding: '12px 16px', borderRadius: 'var(--radius-xl)', border: '1px solid #E2E8F0' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#0F172A' }}>Asset Previews</span>
-              <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>Usage 1 Jota</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: '#2563EB', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', boxShadow: '0 4px 10px rgba(37, 99, 235, 0.3)' }}>
-                <Shield size={20} />
-              </div>
-              <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: '#0F172A', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF' }}>
-                <ImageIcon size={18} />
-              </div>
-              <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: '#FFFFFF', border: '1px solid #E2E8F0', padding: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <img src={ASSET_IMAGES.brandDocPreview} alt="Doc preview" style={{ width: '100%', height: '100%', objectFit: 'contain', mixBlendMode: 'multiply' }} />
-              </div>
-              <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: '#FFFFFF', border: '1px solid #E2E8F0', padding: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <img src={ASSET_IMAGES.governanceShield} alt="Shield mascot" style={{ width: '100%', height: '100%', objectFit: 'contain', mixBlendMode: 'multiply' }} />
-              </div>
-              <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: '#EFF6FF', border: '1px solid #BFDBFE', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2563EB' }}>
-                <FileCheck size={18} />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Right: Extracted Guidelines & Compliance Badges */}
-        <div style={{ background: '#F8FAFC', padding: 'var(--space-4)', borderRadius: 'var(--radius-xl)', border: '1px solid #E2E8F0' }}>
-          <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', marginBottom: '8px' }}>
-            Extracted Guidelines
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#FFFFFF', padding: '6px 10px', borderRadius: 'var(--radius-md)', marginBottom: '8px', border: '1px solid #E2E8F0' }}>
-            <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#0F172A' }}>Logo Usage</span>
-            <span style={{ fontSize: '0.75rem', color: '#2563EB', fontWeight: 700 }}>Dolorow</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#FFFFFF', padding: '6px 10px', borderRadius: 'var(--radius-md)', marginBottom: '8px', border: '1px solid #E2E8F0' }}>
-            <span style={{ fontSize: '0.8125rem', color: '#475569' }}>Messaging Tone</span>
-            <span style={{ fontSize: '0.6875rem', background: '#EFF6FF', color: '#2563EB', padding: '2px 8px', borderRadius: '999px', fontWeight: 600 }}>Setew</span>
-          </div>
-
-          <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', margin: '10px 0 6px 0' }}>
-            Asset Spec Checker
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#FFFFFF', padding: '6px 10px', borderRadius: 'var(--radius-md)', border: '1px solid #E2E8F0' }}>
-            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#0F172A' }}>300 DPI Vector</span>
-            <div className="motion-pulse-check" style={{ width: '18px', height: '18px', borderRadius: '50%', background: '#10B981', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Check size={11} strokeWidth={3} />
-            </div>
-          </div>
+          {isReviewer && (
+            <button onClick={() => setShowUploadModal(true)} className="btn btn-gradient-primary btn-sm">
+              <Upload size={16} strokeWidth={2.5} />
+              <span>Upload Brand Asset</span>
+            </button>
+          )}
         </div>
       </div>
 
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
         <div>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+          <h2 className="text-gradient-blue" style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0 }}>
             All Brand Assets ({assets.length})
           </h2>
-          <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+          <p style={{ fontSize: '0.875rem', color: '#64748B', marginTop: '2px', margin: '2px 0 0 0' }}>
             High-resolution visual assets available to content creators across your organization.
           </p>
         </div>
-
-        {isReviewer && (
-          <button onClick={() => setShowUploadModal(true)} className="btn btn-primary btn-sm">
-            <Upload size={16} /> Upload Brand Asset
-          </button>
-        )}
       </div>
 
       {/* Filters Bar */}

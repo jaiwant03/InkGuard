@@ -147,19 +147,19 @@ export default function ContentReview() {
     <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 360px', gap: 'var(--space-6)', alignItems: 'start' }}>
       {/* Left Main Pane: Editor */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
-        <div className="card">
+        <div className="card" style={{ padding: '24px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-4)', flexWrap: 'wrap', gap: 'var(--space-2)' }}>
             <div>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+              <h1 className="text-gradient-primary" style={{ fontSize: '1.5rem', fontWeight: 850, margin: 0 }}>
                 Content Review Studio
-              </h2>
-              <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+              </h1>
+              <p style={{ fontSize: '0.875rem', color: '#64748B', marginTop: '3px', margin: '3px 0 0 0' }}>
                 Audit drafts in real-time against active brand guidelines, prohibited terminology, and approved facts.
               </p>
             </div>
 
             {/* Quick Demo Pre-fillers */}
-            <div style={{ display: 'flex', gap: '6px' }}>
+            <div style={{ display: 'flex', gap: '8px' }}>
               <button
                 type="button"
                 onClick={() => {
@@ -168,10 +168,11 @@ export default function ContentReview() {
                   setContent(VIOLATION_SAMPLE);
                 }}
                 className="btn btn-secondary btn-sm"
-                style={{ fontSize: '0.75rem' }}
+                style={{ fontSize: '0.75rem', borderRadius: '10px' }}
                 title="Loads copy with prohibited terms and expired fact for test inspection"
               >
-                <AlertTriangle size={12} color="var(--severity-high)" /> Load Violation Demo
+                <AlertTriangle size={13} color="#EF4444" />
+                <span>Violation Sample</span>
               </button>
               <button
                 type="button"
@@ -181,10 +182,11 @@ export default function ContentReview() {
                   setContent(COMPLIANT_SAMPLE);
                 }}
                 className="btn btn-secondary btn-sm"
-                style={{ fontSize: '0.75rem' }}
+                style={{ fontSize: '0.75rem', borderRadius: '10px' }}
                 title="Loads compliant enterprise copy"
               >
-                <CheckCircle2 size={12} color="var(--status-success)" /> Load Compliant Demo
+                <CheckCircle2 size={13} color="#10B981" />
+                <span>Compliant Sample</span>
               </button>
             </div>
           </div>
@@ -290,93 +292,81 @@ export default function ContentReview() {
         </div>
       </div>
 
-      {/* Right Side Pane: 3D Animation Motion Card & Guidelines */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
-        {/* 3D Motion Reference Card */}
-        <div className="card" style={{ padding: 'var(--space-4)', overflow: 'hidden' }}>
-          <div style={{ fontSize: '0.875rem', fontWeight: 800, color: '#0F172A', marginBottom: '8px' }}>
-            Brand Document Mockup
-          </div>
-          <div
-            className="ui-seamless-mockup-frame"
-            style={{
-              minHeight: '150px',
-              padding: '12px',
-            }}
-          >
-            <img
-              src={ASSET_IMAGES.brochureMockup}
-              alt="3D Brochure presentation"
-              className="motion-float"
-              style={{ width: '100%', maxHeight: '140px', objectFit: 'contain' }}
-            />
-          </div>
-
-          <div style={{ marginTop: '12px' }}>
-            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#0F172A', marginBottom: '6px' }}>
-              Typography Standard
+      {/* Right Side Pane: Live Metrics & Governance Pre-Flight Reference */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
+        {/* Live Content Statistics */}
+        <div className="card" style={{ padding: '20px' }}>
+          <h3 className="text-gradient-blue" style={{ fontSize: '0.9375rem', fontWeight: 800, marginBottom: '14px' }}>
+            Live Content Metrics
+          </h3>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+            <div style={{ background: '#F8FAFC', padding: '10px 12px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+              <span style={{ fontSize: '0.6875rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase' }}>Words</span>
+              <div style={{ fontSize: '1.25rem', fontWeight: 850, color: '#0F172A', marginTop: '2px' }}>{wordCount}</div>
             </div>
-            <div className="typography-checker-card">
-              <div>
-                <div style={{ fontSize: '0.8125rem', fontWeight: 700 }}>Inter / Lato Bold</div>
-                <div style={{ fontSize: '0.6875rem', color: '#64748B' }}>Primary Heading Hierarchy</div>
-              </div>
-              <div
-                style={{
-                  width: '18px',
-                  height: '18px',
-                  borderRadius: '50%',
-                  background: '#10B981',
-                  color: '#FFFFFF',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Check size={11} strokeWidth={3.5} />
+            <div style={{ background: '#F8FAFC', padding: '10px 12px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+              <span style={{ fontSize: '0.6875rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase' }}>Characters</span>
+              <div style={{ fontSize: '1.25rem', fontWeight: 850, color: '#0F172A', marginTop: '2px' }}>{charCount}</div>
+            </div>
+            <div style={{ background: '#F8FAFC', padding: '10px 12px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+              <span style={{ fontSize: '0.6875rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase' }}>Reading Time</span>
+              <div style={{ fontSize: '1.125rem', fontWeight: 850, color: '#2563EB', marginTop: '2px' }}>
+                {Math.ceil(wordCount / 200) || 1} min
               </div>
             </div>
-
-            <div className="typography-checker-card" style={{ marginBottom: 0 }}>
-              <div>
-                <div style={{ fontSize: '0.8125rem', fontWeight: 700 }}>Open Sans Regular</div>
-                <div style={{ fontSize: '0.6875rem', color: '#64748B' }}>Body Standard</div>
-              </div>
-              <div
-                style={{
-                  width: '18px',
-                  height: '18px',
-                  borderRadius: '50%',
-                  background: '#10B981',
-                  color: '#FFFFFF',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Check size={11} strokeWidth={3.5} />
+            <div style={{ background: '#F8FAFC', padding: '10px 12px', borderRadius: '12px', border: '1px solid #E2E8F0' }}>
+              <span style={{ fontSize: '0.6875rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase' }}>Target Format</span>
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#0F172A', marginTop: '4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {contentType}
               </div>
             </div>
           </div>
         </div>
 
-        {/* Mascot Info Card */}
-        <div className="card" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', padding: 'var(--space-4)' }}>
-          <div className="ui-integrated-graphic" style={{ width: '46px', height: '46px' }}>
-            <img
-              src={ASSET_IMAGES.governanceShield}
-              alt="Mascot shield"
-              className="ui-seamless-image motion-mascot"
-              style={{ width: '100%', height: '100%' }}
-            />
+        {/* Active Governance Rules Enforced */}
+        <div className="card" style={{ padding: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+            <div className="icon-tile icon-tile-blue" style={{ width: '32px', height: '32px' }}>
+              <Shield size={16} strokeWidth={2.4} />
+            </div>
+            <div>
+              <h3 className="text-gradient-primary" style={{ fontSize: '0.9375rem', fontWeight: 800, margin: 0 }}>
+                Deterministic Engine Active
+              </h3>
+              <span style={{ fontSize: '0.6875rem', color: '#64748B' }}>
+                {activeRules.length} rules loaded for audit
+              </span>
+            </div>
           </div>
-          <div>
-            <div style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-              Deterministic Rule Engine
-            </div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-              {activeRules.length} rules loaded for immediate verification.
-            </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {[
+              { label: 'Prohibited Phrasing', desc: 'Auto-flags non-compliant wording' },
+              { label: 'Tone of Voice Check', desc: 'Detects informal or unapproved tone' },
+              { label: 'Approved Fact Verifier', desc: 'Validates marketing statistics & claims' },
+              { label: 'Required Disclaimers', desc: 'Checks for mandatory legal copy' },
+            ].map((item, idx) => (
+              <div
+                key={idx}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  padding: '8px 10px',
+                  borderRadius: '10px',
+                  background: '#F8FAFC',
+                  border: '1px solid #F1F5F9',
+                }}
+              >
+                <div style={{ width: '16px', height: '16px', borderRadius: '50%', background: '#ECFDF5', color: '#059669', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Check size={10} strokeWidth={3} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#1E293B' }}>{item.label}</div>
+                  <div style={{ fontSize: '0.6875rem', color: '#64748B' }}>{item.desc}</div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

@@ -147,122 +147,109 @@ export default function ApprovedFacts() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
-      {/* Reference UI Hero Showcase Card with 3D Motion */}
-      <div
-        style={{
-          background: '#FFFFFF',
-          borderRadius: 'var(--radius-2xl)',
-          padding: 'var(--space-6)',
-          border: '1px solid #E2E8F0',
-          boxShadow: '0 20px 50px -10px rgba(15, 23, 42, 0.08)',
-          display: 'grid',
-          gridTemplateColumns: '260px minmax(0, 1fr) 280px',
-          gap: 'var(--space-6)',
-          alignItems: 'center',
-        }}
-      >
-        {/* Left: 3D Governance Mascot Shield with Motion */}
-        <div style={{ textAlign: 'center' }}>
-          <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '8px' }}>
-            Brand Governance Guard
-          </span>
+      {/* Clean Modern Page Header Banner */}
+      <div className="page-header-clean">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
           <div
             className="ui-integrated-graphic motion-mascot"
-            style={{
-              width: '120px',
-              height: '120px',
-              margin: '0 auto',
-            }}
+            style={{ width: '56px', height: '56px', flexShrink: 0 }}
           >
             <img
               src={ASSET_IMAGES.governanceShield}
-              alt="Governance Mascot 3D"
+              alt="Governance Shield"
               className="ui-seamless-image"
               style={{ width: '100%', height: '100%' }}
             />
           </div>
-          <div style={{ marginTop: '8px', display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', color: '#10B981', fontWeight: 600, background: '#ECFDF5', padding: '3px 10px', borderRadius: '999px' }}>
-            <span className="motion-pulse-check" style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#10B981', display: 'inline-block' }} />
-            Active Truth Engine
+
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '3px 10px',
+                  borderRadius: '999px',
+                  background: '#ECFDF5',
+                  color: '#059669',
+                  fontSize: '0.6875rem',
+                  fontWeight: 700,
+                  border: '1px solid #A7F3D0',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                }}
+              >
+                <CheckCircle2 size={12} color="#10B981" />
+                Truth Repository
+              </span>
+              <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>•</span>
+              <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
+                {activeCount} Verified Claims Active
+              </span>
+            </div>
+
+            <h1 className="text-gradient-primary" style={{ fontSize: '1.75rem', fontWeight: 850, margin: 0 }}>
+              Approved Facts & Evidence Repository
+            </h1>
+            <p style={{ fontSize: '0.875rem', color: '#64748B', marginTop: '4px', margin: '4px 0 0 0' }}>
+              Authoritative corporate claims, benchmarks, and legal verification sources preventing promotional drift.
+            </p>
           </div>
         </div>
 
-        {/* Center: Facts Overview & Metrics */}
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-            <span className="badge" style={{ background: '#ECFDF5', color: '#059669', border: '1px solid #A7F3D0' }}>
-              Legal & Marketing Facts
+        {/* Action Button & Quick Metrics */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <span
+              style={{
+                fontSize: '0.75rem',
+                fontWeight: 700,
+                padding: '6px 12px',
+                borderRadius: '10px',
+                background: '#ECFDF5',
+                color: '#059669',
+                border: '1px solid #A7F3D0',
+              }}
+            >
+              {activeCount} Active
             </span>
-            <span style={{ fontSize: '0.8125rem', color: '#64748B' }}>
-              {activeCount} Verified Active Claims
-            </span>
-          </div>
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0F172A', letterSpacing: '-0.02em', marginBottom: '6px' }}>
-            Approved Facts & Evidence Repository
-          </h1>
-          <p style={{ fontSize: '0.875rem', color: '#475569', lineHeight: 1.5, marginBottom: 'var(--space-4)' }}>
-            Authoritative corporate claims, validated benchmarks, and legal verification sources preventing unsubstantiated promotional drift.
-          </p>
-
-          {/* Quick Metrics Bar */}
-          <div style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
-            <div style={{ background: '#F8FAFC', padding: '8px 14px', borderRadius: 'var(--radius-lg)', border: '1px solid #E2E8F0' }}>
-              <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block' }}>Verified Benchmarks</span>
-              <span style={{ fontSize: '1.125rem', fontWeight: 800, color: '#10B981' }}>{activeCount}</span>
-            </div>
-            <div style={{ background: '#F8FAFC', padding: '8px 14px', borderRadius: 'var(--radius-lg)', border: '1px solid #E2E8F0' }}>
-              <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block' }}>Needs Refresh</span>
-              <span style={{ fontSize: '1.125rem', fontWeight: 800, color: expiredCount > 0 ? '#F59E0B' : '#64748B' }}>{expiredCount}</span>
-            </div>
-            <div style={{ background: '#F8FAFC', padding: '8px 14px', borderRadius: 'var(--radius-lg)', border: '1px solid #E2E8F0' }}>
-              <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block' }}>Legal Audit Standard</span>
-              <span style={{ fontSize: '1.125rem', fontWeight: 800, color: '#2563EB' }}>100% Strict</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Right: Extracted Guidelines & Compliance Badges */}
-        <div style={{ background: '#F8FAFC', padding: 'var(--space-4)', borderRadius: 'var(--radius-xl)', border: '1px solid #E2E8F0' }}>
-          <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', marginBottom: '8px' }}>
-            Validation Authority
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#FFFFFF', padding: '6px 10px', borderRadius: 'var(--radius-md)', marginBottom: '8px', border: '1px solid #E2E8F0' }}>
-            <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#0F172A' }}>Claim Evidence</span>
-            <span style={{ fontSize: '0.75rem', color: '#10B981', fontWeight: 700 }}>Mandatory</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#FFFFFF', padding: '6px 10px', borderRadius: 'var(--radius-md)', marginBottom: '8px', border: '1px solid #E2E8F0' }}>
-            <span style={{ fontSize: '0.8125rem', color: '#475569' }}>Annual Re-audit</span>
-            <span style={{ fontSize: '0.6875rem', background: '#ECFDF5', color: '#059669', padding: '2px 8px', borderRadius: '999px', fontWeight: 600 }}>Enforced</span>
+            {expiredCount > 0 && (
+              <span
+                style={{
+                  fontSize: '0.75rem',
+                  fontWeight: 700,
+                  padding: '6px 12px',
+                  borderRadius: '10px',
+                  background: '#FFFBEB',
+                  color: '#D97706',
+                  border: '1px solid #FDE68A',
+                }}
+              >
+                {expiredCount} Refresh Needed
+              </span>
+            )}
           </div>
 
-          <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', margin: '10px 0 6px 0' }}>
-            Governance Check
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#FFFFFF', padding: '6px 10px', borderRadius: 'var(--radius-md)', border: '1px solid #E2E8F0' }}>
-            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#0F172A' }}>Source Verified</span>
-            <div className="motion-pulse-check" style={{ width: '18px', height: '18px', borderRadius: '50%', background: '#10B981', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Check size={11} strokeWidth={3} />
-            </div>
-          </div>
+          {isReviewer && (
+            <button onClick={handleOpenAdd} className="btn btn-gradient-primary btn-sm">
+              <Plus size={16} strokeWidth={2.5} />
+              <span>Add Approved Fact</span>
+            </button>
+          )}
         </div>
       </div>
 
       {/* Header bar */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
         <div>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+          <h2 className="text-gradient-blue" style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0 }}>
             All Verified Fact Entries
           </h2>
-          <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+          <p style={{ fontSize: '0.875rem', color: '#64748B', marginTop: '2px', margin: '2px 0 0 0' }}>
             Searchable corporate facts used by the deterministic rule engine to auto-validate content drafts.
           </p>
         </div>
-
-        {isReviewer && (
-          <button onClick={handleOpenAdd} className="btn btn-primary btn-sm">
-            <Plus size={16} /> Add Approved Fact
-          </button>
-        )}
       </div>
 
       {/* Search & Filter Bar */}

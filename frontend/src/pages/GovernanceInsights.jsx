@@ -8,17 +8,22 @@ import {
   HelpCircle,
   ShieldAlert,
   ArrowRight,
+  Zap,
+  XCircle,
+  ShieldCheck,
+  Check,
+  Layers,
+  Sparkles,
 } from 'lucide-react';
 import { SeverityBadge } from '../components/Badges';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import { ASSET_IMAGES } from '../assets/images';
-import { Check } from 'lucide-react';
 
 export default function GovernanceInsights() {
   const [insights, setInsights] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [timeFilter, setTimeFilter] = useState('30d'); // '30d' | 'qtd' | 'all'
   const { workspace } = useAuth();
   const toast = useToast();
 
@@ -58,7 +63,7 @@ export default function GovernanceInsights() {
   } = insights || {};
 
   const formatTurnaround = (sec) => {
-    if (!sec || sec <= 0) return 'Immediate (automated)';
+    if (!sec || sec <= 0) return 'Immediate (Instant)';
     if (sec < 60) return `${sec}s`;
     if (sec < 3600) return `${Math.round(sec / 60)} mins`;
     return `${(sec / 3600).toFixed(1)} hrs`;
@@ -69,15 +74,32 @@ export default function GovernanceInsights() {
       {/* Modern Page Header */}
       <div className="page-header-clean">
         <div className="page-header-info">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <span className="badge badge-primary">
-              <TrendingUp size={12} style={{ display: 'inline', marginRight: '4px' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+            <span
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '3px 10px',
+                borderRadius: '999px',
+                background: '#ECFDF5',
+                color: '#059669',
+                fontSize: '0.6875rem',
+                fontWeight: 700,
+                border: '1px solid #A7F3D0',
+                textTransform: 'uppercase',
+                letterSpacing: '0.04em',
+              }}
+            >
+              <TrendingUp size={12} color="#059669" />
               Governance Intelligence
             </span>
-            <span style={{ fontSize: '0.8125rem', color: 'var(--text-tertiary)' }}>
-              Real-time Drift Detection
+            <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>•</span>
+            <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
+              Real-time Drift Detection & Analytics
             </span>
           </div>
+
           <h1 className="page-header-title text-gradient-primary">
             Governance Insights & Analytics
           </h1>
@@ -86,102 +108,211 @@ export default function GovernanceInsights() {
           </p>
         </div>
 
+        {/* Time Filter Segmented Control */}
         <div style={{ display: 'flex', gap: 'var(--space-3)', alignItems: 'center', flexWrap: 'wrap' }}>
           <div className="segmented-control">
-            <span className="segmented-btn active">
+            <button
+              onClick={() => setTimeFilter('30d')}
+              className={`segmented-btn ${timeFilter === '30d' ? 'active' : ''}`}
+            >
               Last 30 Days
-            </span>
-            <span className="segmented-btn">
+            </button>
+            <button
+              onClick={() => setTimeFilter('qtd')}
+              className={`segmented-btn ${timeFilter === 'qtd' ? 'active' : ''}`}
+            >
               Quarter to Date
-            </span>
-            <span className="segmented-btn">
+            </button>
+            <button
+              onClick={() => setTimeFilter('all')}
+              className={`segmented-btn ${timeFilter === 'all' ? 'active' : ''}`}
+            >
               All Time
-            </span>
+            </button>
           </div>
         </div>
       </div>
 
       {/* Analytics Summary Stat Ribbon */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 'var(--space-5)' }}>
-        <div className="card">
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase' }}>
-            Avg Turnaround Time
-          </span>
-          <div style={{ fontSize: '1.625rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '4px' }}>
-            {formatTurnaround(avgTurnaroundSeconds)}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '18px' }}>
+        {/* Turnaround Time Card */}
+        <div
+          className="card"
+          style={{
+            padding: '20px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+            <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              Avg Turnaround Time
+            </span>
+            <div
+              style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '8px',
+                background: '#EFF6FF',
+                color: '#2563EB',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Clock size={16} />
+            </div>
           </div>
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>
-            From draft creation to reviewer audit
+
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', margin: '4px 0 6px 0' }}>
+            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0F172A' }}>
+              {formatTurnaround(avgTurnaroundSeconds)}
+            </div>
+          </div>
+
+          <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
+            From draft submission to automated audit completion
           </span>
         </div>
 
-        <div className="card">
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase' }}>
-            Unresolved High-Risk Issues
-          </span>
-          <div style={{ fontSize: '1.625rem', fontWeight: 800, color: unresolvedHighRisk.length > 0 ? 'var(--severity-high)' : 'var(--text-primary)', marginTop: '4px' }}>
-            {unresolvedHighRisk.length}
+        {/* High Risk Issues Card */}
+        <div
+          className="card"
+          style={{
+            padding: '20px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+            <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              Unresolved High-Risk Issues
+            </span>
+            <div
+              style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '8px',
+                background: unresolvedHighRisk.length > 0 ? '#FEF2F2' : '#ECFDF5',
+                color: unresolvedHighRisk.length > 0 ? '#DC2626' : '#059669',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <ShieldAlert size={16} />
+            </div>
           </div>
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>
-            Requires immediate editor revision
+
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', margin: '4px 0 6px 0' }}>
+            <div
+              style={{
+                fontSize: '1.75rem',
+                fontWeight: 850,
+                color: unresolvedHighRisk.length > 0 ? '#DC2626' : '#059669',
+              }}
+            >
+              {unresolvedHighRisk.length}
+            </div>
+          </div>
+
+          <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
+            {unresolvedHighRisk.length > 0
+              ? 'Requires immediate editorial modification before approval'
+              : 'Zero blocking governance violations detected'}
           </span>
         </div>
 
-        <div className="card">
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', fontWeight: 700, textTransform: 'uppercase' }}>
-            Recurring Terminology Pitfalls
-          </span>
-          <div style={{ fontSize: '1.625rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '4px' }}>
-            {repeatedMistakes.length}
+        {/* Recurring Pitfalls Card */}
+        <div
+          className="card"
+          style={{
+            padding: '20px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+            <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              Recurring Terminology Pitfalls
+            </span>
+            <div
+              style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '8px',
+                background: '#FFFBEB',
+                color: '#D97706',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <AlertTriangle size={16} />
+            </div>
           </div>
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>
-            Repeated prohibited phrases detected
+
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', margin: '4px 0 6px 0' }}>
+            <div style={{ fontSize: '1.75rem', fontWeight: 850, color: '#0F172A' }}>
+              {repeatedMistakes.length}
+            </div>
+          </div>
+
+          <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
+            Repeated prohibited phrases detected across copy drafts
           </span>
         </div>
       </div>
 
       {/* Main Insights Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: 'var(--space-6)' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: '22px' }}>
         {/* Repeated Terminology Mistakes */}
-        <div className="card">
-          <div className="card-header">
-            <div>
-              <h3 className="card-title">Repeated Terminology Mistakes</h3>
-              <p className="card-subtitle">Common forbidden phrases and standard corrections</p>
-            </div>
+        <div className="card" style={{ padding: '22px' }}>
+          <div style={{ marginBottom: '16px' }}>
+            <h3 className="card-title text-gradient-coral" style={{ fontSize: '1.0625rem', marginBottom: '4px' }}>
+              Repeated Terminology Mistakes
+            </h3>
+            <p className="card-subtitle" style={{ fontSize: '0.8125rem', color: '#64748B', margin: 0 }}>
+              Common forbidden phrases and standard deterministic corrections
+            </p>
           </div>
 
           {repeatedMistakes.length === 0 ? (
-            <div style={{ padding: 'var(--space-6)', textAlign: 'center', color: 'var(--text-tertiary)' }}>
-              No repeated mistakes recorded. Creators adhere to approved glossary.
+            <div style={{ padding: 'var(--space-8)', textAlign: 'center', color: 'var(--text-tertiary)' }}>
+              <CheckCircle2 size={36} color="#10B981" style={{ margin: '0 auto 8px auto' }} />
+              <p style={{ fontWeight: 600, color: '#334155' }}>No Repeated Mistakes Recorded</p>
+              <p style={{ fontSize: '0.8125rem', color: '#64748B' }}>
+                Content creators are adhering strictly to the approved terminology glossary.
+              </p>
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {repeatedMistakes.map((m, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    padding: '10px 12px',
-                    borderRadius: 'var(--radius-md)',
-                    background: 'var(--bg-surface-secondary)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  <div>
-                    <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#B91C1C' }}>
-                      "{m.phrase}"
-                    </span>
+                <div key={idx} className="mistake-card">
+                  <div className="mistake-content">
+                    {/* Prohibited Phrase Pill */}
+                    <div className="mistake-prohibited">
+                      <XCircle size={13} />
+                      <span>"{m.phrase}"</span>
+                    </div>
+
+                    {/* Replacement Recommendation Pill */}
                     {m.suggestion && (
-                      <div style={{ fontSize: '0.75rem', color: '#047857', marginTop: '2px' }}>
-                        → Replace with: "{m.suggestion}"
+                      <div className="mistake-replacement">
+                        <CheckCircle2 size={13} />
+                        <span>Replace with: "{m.suggestion}"</span>
                       </div>
                     )}
                   </div>
-                  <span className="badge badge-neutral" style={{ fontWeight: 700 }}>
-                    {m.count} occurrences
-                  </span>
+
+                  {/* Occurrence Badge */}
+                  <div className="mistake-counter">
+                    <AlertTriangle size={13} color="#D97706" />
+                    <span>{m.count} {m.count === 1 ? 'Occurrence' : 'Occurrences'}</span>
+                  </div>
                 </div>
               ))}
             </div>
@@ -189,39 +320,55 @@ export default function GovernanceInsights() {
         </div>
 
         {/* Rules Frequently Dismissed (Ambiguity Detector) */}
-        <div className="card">
-          <div className="card-header">
-            <div>
-              <h3 className="card-title">Potential Ambiguous Rules</h3>
-              <p className="card-subtitle">Rules frequently dismissed by reviewers as acceptable</p>
-            </div>
+        <div className="card" style={{ padding: '22px' }}>
+          <div style={{ marginBottom: '16px' }}>
+            <h3 className="card-title text-gradient-amber" style={{ fontSize: '1.0625rem', marginBottom: '4px' }}>
+              Potential Ambiguous Rules
+            </h3>
+            <p className="card-subtitle" style={{ fontSize: '0.8125rem', color: '#64748B', margin: 0 }}>
+              Rules frequently dismissed by reviewers as acceptable exceptions
+            </p>
           </div>
 
           {frequentlyDismissedRules.length === 0 ? (
-            <div style={{ padding: 'var(--space-6)', textAlign: 'center', color: 'var(--text-tertiary)' }}>
-              No rules frequently dismissed. Guideline clarity is strong.
+            <div
+              style={{
+                padding: '24px',
+                borderRadius: '14px',
+                background: '#F8FAFC',
+                border: '1px solid #E2E8F0',
+                textAlign: 'center',
+              }}
+            >
+              <ShieldCheck size={36} color="#059669" style={{ margin: '0 auto 10px auto' }} />
+              <h4 style={{ fontSize: '0.9375rem', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>
+                Guideline Clarity is Strong
+              </h4>
+              <p style={{ fontSize: '0.8125rem', color: '#64748B', margin: 0, lineHeight: 1.5 }}>
+                Zero rules frequently dismissed by reviewers. Brand governance rules have high consensus and clear definitions.
+              </p>
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {frequentlyDismissedRules.map((rule, idx) => (
                 <div
                   key={idx}
                   style={{
-                    padding: '10px 12px',
-                    borderRadius: 'var(--radius-md)',
+                    padding: '14px 16px',
+                    borderRadius: '12px',
                     background: '#FFFBEB',
                     border: '1px solid #FDE68A',
                   }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#92400E' }}>
+                    <span style={{ fontSize: '0.875rem', fontWeight: 750, color: '#92400E' }}>
                       {rule.title}
                     </span>
-                    <span style={{ fontSize: '0.6875rem', fontWeight: 700, color: '#B45309' }}>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#B45309' }}>
                       {rule.dismissedCount} dismissed
                     </span>
                   </div>
-                  <div style={{ fontSize: '0.75rem', color: '#78350F', marginTop: '4px' }}>
+                  <div style={{ fontSize: '0.8125rem', color: '#78350F', marginTop: '6px', lineHeight: 1.45 }}>
                     Recommendation: Reviewers frequently override this rule. Consider refining the scope or relaxing phrasing in Brand Guidelines.
                   </div>
                 </div>
@@ -232,12 +379,14 @@ export default function GovernanceInsights() {
       </div>
 
       {/* Category Breakdown Progress */}
-      <div className="card">
-        <div className="card-header">
-          <div>
-            <h3 className="card-title">Category Adherence Distribution</h3>
-            <p className="card-subtitle">Breakdown of total flagged issues and resolutions</p>
-          </div>
+      <div className="card" style={{ padding: '22px' }}>
+        <div style={{ marginBottom: '16px' }}>
+          <h3 className="card-title text-gradient-blue" style={{ fontSize: '1.0625rem', marginBottom: '4px' }}>
+            Category Adherence Distribution
+          </h3>
+          <p className="card-subtitle" style={{ fontSize: '0.8125rem', color: '#64748B', margin: 0 }}>
+            Breakdown of total flagged issues and compliance adherence by category
+          </p>
         </div>
 
         {categoryBreakdown.length === 0 ? (
@@ -245,27 +394,37 @@ export default function GovernanceInsights() {
             No issue categories recorded yet.
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'var(--space-4)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px' }}>
             {categoryBreakdown.map((cat, idx) => (
               <div
                 key={idx}
                 style={{
-                  padding: 'var(--space-4)',
-                  borderRadius: 'var(--radius-md)',
-                  background: 'var(--bg-surface-secondary)',
-                  border: '1px solid var(--border-light)',
+                  padding: '16px',
+                  borderRadius: '12px',
+                  background: '#F8FAFC',
+                  border: '1px solid #E2E8F0',
+                  transition: 'all 0.2s ease',
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                  <span style={{ fontWeight: 700, fontSize: '0.875rem', color: 'var(--text-primary)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                  <span style={{ fontWeight: 750, fontSize: '0.875rem', color: '#0F172A' }}>
                     {cat.category}
                   </span>
-                  <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-primary)' }}>
+                  <span
+                    style={{
+                      fontSize: '0.75rem',
+                      fontWeight: 700,
+                      color: '#2563EB',
+                      background: '#EFF6FF',
+                      padding: '2px 8px',
+                      borderRadius: '6px',
+                    }}
+                  >
                     {cat.count} total
                   </span>
                 </div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>
-                  Dismissed exceptions: {cat.dismissed}
+                <div style={{ fontSize: '0.75rem', color: '#64748B' }}>
+                  Dismissed exceptions: <strong>{cat.dismissed}</strong>
                 </div>
               </div>
             ))}

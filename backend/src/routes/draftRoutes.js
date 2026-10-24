@@ -1,10 +1,15 @@
 import express from 'express';
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
 import { ContentDraft } from '../models/ContentDraft.js';
 import { ContentVersion } from '../models/ContentVersion.js';
 import { ReviewRun } from '../models/ReviewRun.js';
 import { Finding } from '../models/Finding.js';
 import { BrandRule } from '../models/BrandRule.js';
 import { ApprovedFact } from '../models/ApprovedFact.js';
+import { BrandProfile } from '../models/BrandProfile.js';
+import { BrandAsset } from '../models/BrandAsset.js';
 import { Comment } from '../models/Comment.js';
 import { authenticate } from '../middleware/auth.js';
 import { resolveWorkspace, requireRole } from '../middleware/workspace.js';
@@ -13,8 +18,43 @@ import { runDeterministicChecks } from '../services/deterministicEngine.js';
 import { runAiAssistedChecks } from '../services/aiEngine.js';
 import { calculateComplianceScore } from '../services/complianceScorer.js';
 import { logAuditEvent } from '../services/auditService.js';
+import { extractTextFromFile } from '../services/documentExtractor.js';
+import { checkVisualConsistency } from '../services/visualEngine.js';
 
 const router = express.Router();
+
+// Ensure upload directory exists
+const uploadDir = path.resolve('uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// Multer storage for document extraction & asset upload
+const docStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    const cleanName = path.basename(file.originalname, ext).replace(/[^a-zA-Z0-9_-]/g, '_');
+    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+    cb(null, `doc-${cleanName}-${uniqueSuffix}${ext}`);
+  },
+});
+
+const docUpload = multer({
+  storage: docStorage,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB max
+  fileFilter: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    const allowedExts = ['.txt', '.md', '.pdf', '.docx', '.jpg', '.jpeg', '.png', '.webp', '.svg'];
+    if (allowedExts.includes(ext) || file.mimetype.startsWith('image/') || file.mimetype === 'application/pdf') {
+      cb(null, true);
+    } else {
+      cb(new Error(`Unsupported file type (${ext}). Supported formats: TXT, Markdown, PDF, Word (.docx), and Images.`));
+    }
+  },
+});
 
 router.use(authenticate, resolveWorkspace);
 
@@ -70,6 +110,12 @@ router.post('/', async (req, res, next) => {
       currentVersion: 1,
       status: 'Draft',
       author: req.user._id,
+      attachedAsset: validated.attachedAsset || null,
+      imageUrl: validated.imageUrl || '',
+      imageAltText: validated.imageAltText || '',
+      detectedColors: validated.detectedColors || [],
+      originalFileName: validated.originalFileName || '',
+      originalFileFormat: validated.originalFileFormat || '',
     });
 
     // Create Version 1 snapshot
@@ -152,11 +198,15 @@ router.put('/:id', async (req, res, next) => {
       return res.status(403).json({ success: false, message: 'You are only allowed to edit your own drafts.' });
     }
 
-    const { title, contentType, content, changeSummary } = req.body;
+    const { title, contentType, content, changeSummary, imageUrl, imageAltText, attachedAsset, detectedColors } = req.body;
     let contentChanged = false;
 
     if (title && title.trim()) draft.title = title.trim();
     if (contentType) draft.contentType = contentType;
+    if (imageUrl !== undefined) draft.imageUrl = imageUrl;
+    if (imageAltText !== undefined) draft.imageAltText = imageAltText;
+    if (attachedAsset !== undefined) draft.attachedAsset = attachedAsset || null;
+    if (detectedColors !== undefined) draft.detectedColors = detectedColors;
 
     if (content !== undefined && content !== draft.currentContent) {
       contentChanged = true;
@@ -205,9 +255,11 @@ router.post('/:id/review', async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Draft not found.' });
     }
 
-    // 1. Fetch active rules and facts
+    // 1. Fetch active rules, facts, profile, and assets
     const activeRules = await BrandRule.find({ workspace: req.workspace._id, isActive: true });
     const approvedFacts = await ApprovedFact.find({ workspace: req.workspace._id });
+    const brandProfile = await BrandProfile.findOne({ workspace: req.workspace._id });
+    const brandAssets = await BrandAsset.find({ workspace: req.workspace._id });
 
     // 2. Deterministic checks
     const deterministicFindings = await runDeterministicChecks({
@@ -215,6 +267,20 @@ router.post('/:id/review', async (req, res, next) => {
       rules: activeRules,
       facts: approvedFacts,
     });
+
+    // 2.5 Visual Brand Consistency Check if draft has an image or attached asset
+    let visualFindings = [];
+    if (draft.imageUrl || draft.attachedAsset || (draft.detectedColors && draft.detectedColors.length > 0)) {
+      const visualRes = checkVisualConsistency({
+        imageUrl: draft.imageUrl,
+        altText: draft.imageAltText,
+        detectedColors: draft.detectedColors,
+        brandProfile,
+        brandAssets,
+        assetId: draft.attachedAsset,
+      });
+      visualFindings = visualRes.findings || [];
+    }
 
     // 3. AI-assisted checks (optional)
     const aiResult = await runAiAssistedChecks({
@@ -224,7 +290,7 @@ router.post('/:id/review', async (req, res, next) => {
     });
 
     // Merge findings without duplicates
-    const allFindings = [...deterministicFindings];
+    const allFindings = [...deterministicFindings, ...visualFindings];
     if (aiResult.isAiActive && Array.isArray(aiResult.aiFindings)) {
       aiResult.aiFindings.forEach((aiF) => {
         // Only add if not duplicate textSpan
@@ -484,6 +550,33 @@ router.post('/:id/decision', requireRole(['reviewer', 'admin']), async (req, res
     let commentType = 'general';
 
     if (validated.decision === 'approve') {
+      // Publication approval gatekeeper (Part 8 requirement)
+      const openHighRiskCount = await Finding.countDocuments({
+        draft: draft._id,
+        severity: 'High',
+        status: 'open',
+      });
+      const hasNeverBeenReviewed = !draft.latestReviewRun;
+      const lowScore = draft.latestComplianceScore !== null && draft.latestComplianceScore < 70;
+
+      if (openHighRiskCount > 0 || hasNeverBeenReviewed || lowScore) {
+        if (!validated.overrideReason || validated.overrideReason.trim().length < 8) {
+          return res.status(400).json({
+            success: false,
+            message: `Approval restricted: This draft has ${
+              hasNeverBeenReviewed
+                ? 'never undergone a brand governance review'
+                : openHighRiskCount > 0
+                ? `${openHighRiskCount} unresolved High-risk violations`
+                : 'a compliance score below threshold (< 70%)'
+            }. An explicit authorized override reason (minimum 8 characters) is required to approve.`,
+            requiresOverride: true,
+          });
+        }
+        draft.isOverrideApproved = true;
+        draft.overrideReason = validated.overrideReason.trim();
+      }
+
       newStatus = 'Approved';
       commentType = 'approval_note';
     } else if (validated.decision === 'request_changes') {
@@ -620,6 +713,79 @@ router.delete('/:id', async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: 'Draft deleted.',
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// POST /api/drafts/extract-text - Upload document or image and extract text
+router.post('/extract-text', docUpload.single('file'), async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'Please select a document or image to upload.' });
+    }
+
+    const ext = path.extname(req.file.originalname).toLowerCase();
+    const isImage = req.file.mimetype.startsWith('image/') || ['.png', '.jpg', '.jpeg', '.webp', '.svg'].includes(ext);
+
+    if (isImage) {
+      return res.status(200).json({
+        success: true,
+        isImage: true,
+        message: 'Image asset uploaded successfully for visual brand inspection.',
+        data: {
+          fileUrl: `/uploads/${req.file.filename}`,
+          fileName: req.file.originalname,
+          fileSize: req.file.size,
+          mimeType: req.file.mimetype,
+        },
+      });
+    }
+
+    // Document extraction (TXT, MD, PDF, DOCX)
+    const result = await extractTextFromFile(req.file);
+
+    return res.status(200).json({
+      success: true,
+      isImage: false,
+      message: `Extracted ${result.wordCount} words from ${result.fileName}.`,
+      data: {
+        text: result.text,
+        wordCount: result.wordCount,
+        format: result.format,
+        fileName: result.fileName,
+        fileSize: result.fileSize,
+        fileUrl: `/uploads/${req.file.filename}`,
+      },
+    });
+  } catch (error) {
+    return res.status(422).json({
+      success: false,
+      message: error.message || 'Failed to extract text from document.',
+    });
+  }
+});
+
+// POST /api/drafts/visual-check - Standalone visual consistency analysis
+router.post('/visual-check', async (req, res, next) => {
+  try {
+    const { imageUrl, altText, detectedColors, assetId } = req.body;
+    const brandProfile = await BrandProfile.findOne({ workspace: req.workspace._id });
+    const brandAssets = await BrandAsset.find({ workspace: req.workspace._id });
+
+    const visualResult = checkVisualConsistency({
+      imageUrl,
+      altText,
+      detectedColors,
+      brandProfile,
+      brandAssets,
+      assetId,
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: visualResult,
     });
   } catch (error) {
     next(error);

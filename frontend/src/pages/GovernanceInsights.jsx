@@ -65,107 +65,38 @@ export default function GovernanceInsights() {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-8)' }}>
-      {/* Reference UI Hero Showcase Card with 3D Motion */}
-      <div
-        style={{
-          background: '#FFFFFF',
-          borderRadius: 'var(--radius-2xl)',
-          padding: 'var(--space-6)',
-          border: '1px solid #E2E8F0',
-          boxShadow: '0 20px 50px -10px rgba(15, 23, 42, 0.08)',
-          display: 'grid',
-          gridTemplateColumns: '260px minmax(0, 1fr) 280px',
-          gap: 'var(--space-6)',
-          alignItems: 'center',
-        }}
-      >
-        {/* Left: 3D Governance Mascot Shield with Motion */}
-        <div style={{ textAlign: 'center' }}>
-          <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '8px' }}>
-            Intelligence Oracle
-          </span>
-          <div
-            className="ui-integrated-graphic motion-mascot"
-            style={{
-              width: '120px',
-              height: '120px',
-              margin: '0 auto',
-            }}
-          >
-            <img
-              src={ASSET_IMAGES.governanceShield}
-              alt="Governance Mascot 3D"
-              className="ui-seamless-image"
-              style={{ width: '100%', height: '100%' }}
-            />
-          </div>
-          <div style={{ marginTop: '8px', display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', color: '#10B981', fontWeight: 600, background: '#ECFDF5', padding: '3px 10px', borderRadius: '999px' }}>
-            <span className="motion-pulse-check" style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#10B981', display: 'inline-block' }} />
-            Predictive Analytics Live
-          </div>
-        </div>
-
-        {/* Center: Insights Overview & Highlights */}
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-            <span className="badge" style={{ background: '#EFF6FF', color: '#2563EB', border: '1px solid #BFDBFE' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
+      {/* Modern Page Header */}
+      <div className="page-header-clean">
+        <div className="page-header-info">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+            <span className="badge badge-primary">
+              <TrendingUp size={12} style={{ display: 'inline', marginRight: '4px' }} />
               Governance Intelligence
             </span>
-            <span style={{ fontSize: '0.8125rem', color: '#64748B' }}>
+            <span style={{ fontSize: '0.8125rem', color: 'var(--text-tertiary)' }}>
               Real-time Drift Detection
             </span>
           </div>
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0F172A', letterSpacing: '-0.02em', marginBottom: '6px' }}>
-            Brand Governance Insights & Analytics
+          <h1 className="page-header-title text-gradient-primary">
+            Governance Insights & Analytics
           </h1>
-          <p style={{ fontSize: '0.875rem', color: '#475569', lineHeight: 1.5, marginBottom: 'var(--space-4)' }}>
+          <p className="page-header-subtitle">
             Data-driven intelligence to identify recurring team mistakes, refine ambiguous brand rules, and monitor enterprise compliance velocity.
           </p>
-
-          {/* Quick Metrics Bar */}
-          <div style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
-            <div style={{ background: '#F8FAFC', padding: '8px 14px', borderRadius: 'var(--radius-lg)', border: '1px solid #E2E8F0' }}>
-              <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block' }}>Compliance Index</span>
-              <span style={{ fontSize: '1.125rem', fontWeight: 800, color: '#10B981' }}>92.4%</span>
-            </div>
-            <div style={{ background: '#F8FAFC', padding: '8px 14px', borderRadius: 'var(--radius-lg)', border: '1px solid #E2E8F0' }}>
-              <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block' }}>Critical Unresolved</span>
-              <span style={{ fontSize: '1.125rem', fontWeight: 800, color: unresolvedHighRisk.length > 0 ? '#EF4444' : '#10B981' }}>
-                {unresolvedHighRisk.length}
-              </span>
-            </div>
-            <div style={{ background: '#F8FAFC', padding: '8px 14px', borderRadius: 'var(--radius-lg)', border: '1px solid #E2E8F0' }}>
-              <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block' }}>Turnaround SLA</span>
-              <span style={{ fontSize: '1.125rem', fontWeight: 800, color: '#2563EB' }}>
-                {formatTurnaround(avgTurnaroundSeconds)}
-              </span>
-            </div>
-          </div>
         </div>
 
-        {/* Right: Extracted Guidelines & Compliance Badges */}
-        <div style={{ background: '#F8FAFC', padding: 'var(--space-4)', borderRadius: 'var(--radius-xl)', border: '1px solid #E2E8F0' }}>
-          <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', marginBottom: '8px' }}>
-            Extracted Guidelines
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#FFFFFF', padding: '6px 10px', borderRadius: 'var(--radius-md)', marginBottom: '8px', border: '1px solid #E2E8F0' }}>
-            <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#0F172A' }}>Logo Usage</span>
-            <span style={{ fontSize: '0.75rem', color: '#2563EB', fontWeight: 700 }}>Dolorow</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#FFFFFF', padding: '6px 10px', borderRadius: 'var(--radius-md)', marginBottom: '8px', border: '1px solid #E2E8F0' }}>
-            <span style={{ fontSize: '0.8125rem', color: '#475569' }}>Messaging Tone</span>
-            <span style={{ fontSize: '0.6875rem', background: '#EFF6FF', color: '#2563EB', padding: '2px 8px', borderRadius: '999px', fontWeight: 600 }}>Setew</span>
-          </div>
-
-          <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', margin: '10px 0 6px 0' }}>
-            Typography Checker
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#FFFFFF', padding: '6px 10px', borderRadius: 'var(--radius-md)', border: '1px solid #E2E8F0' }}>
-            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#0F172A' }}>Lato Bold</span>
-            <div className="motion-pulse-check" style={{ width: '18px', height: '18px', borderRadius: '50%', background: '#10B981', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Check size={11} strokeWidth={3} />
-            </div>
+        <div style={{ display: 'flex', gap: 'var(--space-3)', alignItems: 'center', flexWrap: 'wrap' }}>
+          <div className="segmented-control">
+            <span className="segmented-btn active">
+              Last 30 Days
+            </span>
+            <span className="segmented-btn">
+              Quarter to Date
+            </span>
+            <span className="segmented-btn">
+              All Time
+            </span>
           </div>
         </div>
       </div>

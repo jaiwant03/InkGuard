@@ -101,12 +101,15 @@ router.get('/', async (req, res, next) => {
       totalFindings: r.findingsSummary?.total || 0,
     }));
 
+    const categoryBreakdown = categoryAgg.map((c) => ({ category: c._id, count: c.total, total: c.total, _id: c._id, dismissed: c.dismissed }));
+
     return res.status(200).json({
       success: true,
       data: {
-        categoryBreakdown: categoryAgg.map((c) => ({ category: c._id, count: c.total, dismissed: c.dismissed })),
+        categoryBreakdown,
+        categoryDistribution: categoryBreakdown,
         topRules: rulesWithDetails,
-        repeatedMistakes: repeatedMistakes.map((m) => ({ phrase: m._id, count: m.count, suggestion: m.sampleSuggestion })),
+        repeatedMistakes: repeatedMistakes.map((m) => ({ _id: m._id, phrase: m._id, count: m.count, suggestion: m.sampleSuggestion, sampleSuggestion: m.sampleSuggestion })),
         unresolvedHighRisk,
         avgTurnaroundSeconds,
         frequentlyDismissedRules,

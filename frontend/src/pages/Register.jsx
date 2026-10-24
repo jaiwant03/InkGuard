@@ -132,10 +132,10 @@ export default function Register() {
           </div>
 
           <h1
+            className="text-gradient-primary"
             style={{
               fontSize: '1.625rem',
               fontWeight: 850,
-              color: '#0F172A',
               letterSpacing: '-0.025em',
               marginBottom: '4px',
             }}

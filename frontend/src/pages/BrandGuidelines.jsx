@@ -650,40 +650,53 @@ export default function BrandGuidelines() {
       {/* Add / Edit Rule Modal */}
       {showRuleModal && (
         <div className="modal-overlay" onClick={() => setShowRuleModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-content" style={{ maxWidth: '740px' }} onClick={(e) => e.stopPropagation()}>
             {/* Modal Header */}
             <div className="modal-header">
-              <div className="modal-header-content">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
-                  <span
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '5px',
-                      padding: '2px 8px',
-                      borderRadius: '999px',
-                      background: '#EFF6FF',
-                      color: '#2563EB',
-                      fontSize: '0.6875rem',
-                      fontWeight: 700,
-                      border: '1px solid #DBEAFE',
-                    }}
-                  >
-                    <BookOpen size={11} color="#2563EB" />
-                    Governance Policy
-                  </span>
-                  <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>•</span>
-                  <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
-                    Deterministic Engine
-                  </span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                <div
+                  style={{
+                    width: '42px',
+                    height: '42px',
+                    borderRadius: '12px',
+                    background: 'linear-gradient(135deg, #EFF6FF 0%, #EDE9FE 100%)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    border: '1px solid #DBEAFE',
+                    color: '#2563EB',
+                    flexShrink: 0,
+                  }}
+                >
+                  <BookOpen size={20} />
                 </div>
-
-                <h3 className="modal-title text-gradient-primary">
-                  {editingRule ? 'Edit Brand Rule' : 'Create New Brand Rule'}
-                </h3>
-                <p className="modal-subtitle">
-                  Configure deterministic compliance checks for terminology, tone, and legal disclaimers.
-                </p>
+                <div className="modal-header-content">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
+                    <span
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        padding: '1px 8px',
+                        borderRadius: '999px',
+                        background: '#EFF6FF',
+                        color: '#2563EB',
+                        fontSize: '0.6875rem',
+                        fontWeight: 700,
+                        border: '1px solid #DBEAFE',
+                      }}
+                    >
+                      Governance Policy
+                    </span>
+                    <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>•</span>
+                    <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
+                      Deterministic Engine
+                    </span>
+                  </div>
+                  <h3 className="modal-title text-gradient-primary">
+                    {editingRule ? 'Edit Brand Rule' : 'Create New Brand Rule'}
+                  </h3>
+                </div>
               </div>
 
               <button
@@ -699,8 +712,12 @@ export default function BrandGuidelines() {
             {/* Modal Form */}
             <form onSubmit={handleSaveRule} style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
               <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {/* Rule Title */}
                 <div className="form-group" style={{ margin: 0 }}>
-                  <label className="form-label">Rule Title *</label>
+                  <label className="form-label" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span>Rule Title <span style={{ color: '#EF4444' }}>*</span></span>
+                    <span style={{ fontSize: '0.75rem', color: '#94A3B8', fontWeight: 400 }}>Clear standard name</span>
+                  </label>
                   <input
                     type="text"
                     required
@@ -711,9 +728,12 @@ export default function BrandGuidelines() {
                   />
                 </div>
 
+                {/* Category & Severity in 2 columns */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                   <div className="form-group" style={{ margin: 0 }}>
-                    <label className="form-label">Category *</label>
+                    <label className="form-label">
+                      Category <span style={{ color: '#EF4444' }}>*</span>
+                    </label>
                     <select
                       className="form-select"
                       value={ruleFormData.category}
@@ -726,21 +746,27 @@ export default function BrandGuidelines() {
                   </div>
 
                   <div className="form-group" style={{ margin: 0 }}>
-                    <label className="form-label">Severity Level *</label>
+                    <label className="form-label">
+                      Severity Level <span style={{ color: '#EF4444' }}>*</span>
+                    </label>
                     <select
                       className="form-select"
                       value={ruleFormData.severity}
                       onChange={(e) => setRuleFormData({ ...ruleFormData, severity: e.target.value })}
                     >
-                      <option value="High">High (Legal/Brand Risk)</option>
-                      <option value="Medium">Medium (Terminology/Tone)</option>
-                      <option value="Low">Low (Accessibility/Style)</option>
+                      <option value="High">🔴 High (Legal/Brand Risk)</option>
+                      <option value="Medium">🟡 Medium (Terminology/Tone)</option>
+                      <option value="Low">🔵 Low (Accessibility/Style)</option>
                     </select>
                   </div>
                 </div>
 
+                {/* Rule Explanation */}
                 <div className="form-group" style={{ margin: 0 }}>
-                  <label className="form-label">Rule Explanation / Instruction *</label>
+                  <label className="form-label" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span>Rule Explanation / Instruction <span style={{ color: '#EF4444' }}>*</span></span>
+                    <span style={{ fontSize: '0.75rem', color: '#94A3B8', fontWeight: 400 }}>Instruction creators must follow</span>
+                  </label>
                   <textarea
                     className="form-textarea"
                     rows={2}
@@ -751,54 +777,98 @@ export default function BrandGuidelines() {
                   />
                 </div>
 
-                <div className="form-group" style={{ margin: 0 }}>
-                  <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <CheckCircle2 size={13} color="#059669" />
-                    <span>Preferred Wording / Suggested Replacement</span>
-                  </label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    placeholder="e.g. Apex Cloud Enterprise"
-                    value={ruleFormData.preferredWording}
-                    onChange={(e) => setRuleFormData({ ...ruleFormData, preferredWording: e.target.value })}
-                  />
+                {/* Visual Distinction: Preferred vs Prohibited Side by Side */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                  <div
+                    style={{
+                      background: '#F0FDF4',
+                      border: '1px solid #BBF7D0',
+                      borderRadius: '12px',
+                      padding: '12px 14px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '6px',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.8125rem', fontWeight: 700, color: '#166534' }}>
+                        <CheckCircle2 size={14} color="#16A34A" />
+                        Preferred Wording
+                      </span>
+                      <span style={{ fontSize: '0.6875rem', fontWeight: 700, background: '#DCFCE7', color: '#15803D', padding: '1px 7px', borderRadius: '5px' }}>
+                        Recommended
+                      </span>
+                    </div>
+                    <input
+                      type="text"
+                      className="form-input"
+                      style={{ background: '#FFFFFF', borderColor: '#86EFAC', fontSize: '0.8125rem', padding: '0.55rem 0.8rem' }}
+                      placeholder="e.g. Apex Cloud Enterprise"
+                      value={ruleFormData.preferredWording}
+                      onChange={(e) => setRuleFormData({ ...ruleFormData, preferredWording: e.target.value })}
+                    />
+                  </div>
+
+                  <div
+                    style={{
+                      background: '#FEF2F2',
+                      border: '1px solid #FECACA',
+                      borderRadius: '12px',
+                      padding: '12px 14px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '6px',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.8125rem', fontWeight: 700, color: '#991B1B' }}>
+                        <XCircle size={14} color="#DC2626" />
+                        Prohibited Phrases
+                      </span>
+                      <span style={{ fontSize: '0.6875rem', fontWeight: 700, background: '#FEE2E2', color: '#B91C1C', padding: '1px 7px', borderRadius: '5px' }}>
+                        Blocked
+                      </span>
+                    </div>
+                    <input
+                      type="text"
+                      className="form-input"
+                      style={{ background: '#FFFFFF', borderColor: '#FCA5A5', fontSize: '0.8125rem', padding: '0.55rem 0.8rem' }}
+                      placeholder="e.g. ACE platform, 100% hack-proof"
+                      value={ruleFormData.prohibitedPhrases}
+                      onChange={(e) => setRuleFormData({ ...ruleFormData, prohibitedPhrases: e.target.value })}
+                    />
+                  </div>
                 </div>
 
-                <div className="form-group" style={{ margin: 0 }}>
-                  <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <XCircle size={13} color="#DC2626" />
-                    <span>Prohibited Phrases (Comma-separated)</span>
-                  </label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    placeholder="e.g. ACE platform, Apex Ent, 100% hack-proof"
-                    value={ruleFormData.prohibitedPhrases}
-                    onChange={(e) => setRuleFormData({ ...ruleFormData, prohibitedPhrases: e.target.value })}
-                  />
-                </div>
+                {/* Required Phrases & Source Reference (2 columns) */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                  <div className="form-group" style={{ margin: 0 }}>
+                    <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <FileCheck size={14} color="#2563EB" />
+                      <span>Required Phrases (Comma-separated)</span>
+                    </label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="e.g. registered trademark, SLA terms"
+                      value={ruleFormData.requiredPhrases}
+                      onChange={(e) => setRuleFormData({ ...ruleFormData, requiredPhrases: e.target.value })}
+                    />
+                  </div>
 
-                <div className="form-group" style={{ margin: 0 }}>
-                  <label className="form-label">Required Phrases (Comma-separated)</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    placeholder="e.g. registered trademark, SLA terms"
-                    value={ruleFormData.requiredPhrases}
-                    onChange={(e) => setRuleFormData({ ...ruleFormData, requiredPhrases: e.target.value })}
-                  />
-                </div>
-
-                <div className="form-group" style={{ margin: 0 }}>
-                  <label className="form-label">Source Reference / Policy Code</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    placeholder="e.g. Legal Compliance Manual §4.2"
-                    value={ruleFormData.sourceReference}
-                    onChange={(e) => setRuleFormData({ ...ruleFormData, sourceReference: e.target.value })}
-                  />
+                  <div className="form-group" style={{ margin: 0 }}>
+                    <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <Shield size={14} color="#6366F1" />
+                      <span>Source Reference / Policy Code</span>
+                    </label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="e.g. Legal Compliance Manual §4.2"
+                      value={ruleFormData.sourceReference}
+                      onChange={(e) => setRuleFormData({ ...ruleFormData, sourceReference: e.target.value })}
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -808,7 +878,7 @@ export default function BrandGuidelines() {
                   type="button"
                   className="btn btn-secondary btn-sm"
                   onClick={() => setShowRuleModal(false)}
-                  style={{ borderRadius: '10px', padding: '8px 18px' }}
+                  style={{ borderRadius: '10px', padding: '8px 20px', fontWeight: 600 }}
                 >
                   Cancel
                 </button>
@@ -816,7 +886,7 @@ export default function BrandGuidelines() {
                   type="submit"
                   className="btn btn-gradient-primary btn-sm"
                   disabled={savingRule}
-                  style={{ borderRadius: '10px', padding: '8px 20px' }}
+                  style={{ borderRadius: '10px', padding: '8px 24px', fontWeight: 700, boxShadow: '0 4px 14px rgba(79, 70, 229, 0.3)' }}
                 >
                   {savingRule ? 'Saving Rule...' : editingRule ? 'Update Rule' : 'Create Rule'}
                 </button>

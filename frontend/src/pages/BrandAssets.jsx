@@ -135,64 +135,85 @@ export default function BrandAssets() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
-      {/* Header Banner */}
+      {/* Modern Page Header Banner */}
       <div className="page-header-clean">
-        <div className="page-header-info">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-            <span
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '3px 10px',
-                borderRadius: '999px',
-                background: '#F5F3FF',
-                color: '#7C3AED',
-                fontSize: '0.75rem',
-                fontWeight: 700,
-                border: '1px solid #DDD6FE',
-              }}
-            >
-              <Palette size={12} />
-              Brand Assets Repository
-            </span>
-            <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>•</span>
-            <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
-              Visual Identity Compliance
-            </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
+          <div
+            className="ui-integrated-graphic motion-mascot"
+            style={{ width: '56px', height: '56px', flexShrink: 0 }}
+          >
+            <img
+              src={ASSET_IMAGES.brandDocPreview}
+              alt="Brand Assets Repository"
+              className="ui-seamless-image"
+              style={{ width: '100%', height: '100%' }}
+            />
           </div>
-          <h1 className="page-header-title">Approved Brand Assets</h1>
-          <p className="page-header-desc">
-            Maintain high-resolution vector logos, approved banners, and marketing photography with strict clearance guidelines and usage restrictions.
-          </p>
+
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '3px 10px',
+                  borderRadius: '999px',
+                  background: '#F5F3FF',
+                  color: '#7C3AED',
+                  fontSize: '0.6875rem',
+                  fontWeight: 700,
+                  border: '1px solid #DDD6FE',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                }}
+              >
+                <Palette size={12} color="#7C3AED" />
+                Brand Assets Repository
+              </span>
+              <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>•</span>
+              <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
+                {assets.length} Visual Assets Enforced
+              </span>
+            </div>
+
+            <h1 className="text-gradient-primary" style={{ fontSize: '1.75rem', fontWeight: 850, margin: 0 }}>
+              Approved Brand Assets
+            </h1>
+            <p style={{ fontSize: '0.875rem', color: '#64748B', marginTop: '4px', margin: '4px 0 0 0' }}>
+              Maintain high-resolution vector logos, approved banners, and marketing photography with strict clearance guidelines and usage restrictions.
+            </p>
+          </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        {/* Action Controls & Top Right Upload Button */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
           <button
             type="button"
-            className="btn-outline"
+            className="btn-reload-action"
             onClick={loadAssets}
             disabled={loading}
-            title="Reload assets"
+            title="Reload brand assets"
           >
-            <RefreshCw size={15} className={loading ? 'spin-icon' : ''} />
+            <RefreshCw size={16} className={loading ? 'spin-icon' : ''} />
           </button>
 
           {isReviewer && (
             <button
               type="button"
-              className="btn-primary"
+              className="btn-upload-brand-asset"
               onClick={() => setShowUploadModal(true)}
-              style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
             >
-              <Plus size={16} />
+              <span className="upload-icon-badge">
+                <Plus size={14} strokeWidth={2.8} />
+              </span>
               <span>Upload Brand Asset</span>
             </button>
           )}
         </div>
       </div>
 
-      {/* Filter and Search Bar */}
+      {/* Modern Filter and Search Bar */}
       <div
         style={{
           background: '#FFFFFF',
@@ -204,44 +225,78 @@ export default function BrandAssets() {
           justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: '12px',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.02)',
         }}
       >
         {/* Category Pills */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', overflowX: 'auto', flex: 1 }}>
-          {ASSET_CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              type="button"
-              onClick={() => setSelectedCategory(cat)}
-              style={{
-                padding: '6px 14px',
-                borderRadius: '999px',
-                fontSize: '0.8125rem',
-                fontWeight: 600,
-                cursor: 'pointer',
-                border: selectedCategory === cat ? '1px solid #2563EB' : '1px solid #E2E8F0',
-                background: selectedCategory === cat ? '#EFF6FF' : '#FFFFFF',
-                color: selectedCategory === cat ? '#2563EB' : '#64748B',
-                whiteSpace: 'nowrap',
-                transition: 'all 0.15s ease',
-              }}
-            >
-              {cat}
-            </button>
-          ))}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflowX: 'auto', flex: 1, paddingBottom: '2px' }}>
+          {ASSET_CATEGORIES.map((cat) => {
+            const isActive = selectedCategory === cat;
+            return (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setSelectedCategory(cat)}
+                style={{
+                  padding: '7px 16px',
+                  borderRadius: '999px',
+                  fontSize: '0.8125rem',
+                  fontWeight: isActive ? 700 : 550,
+                  cursor: 'pointer',
+                  border: isActive ? '1px solid rgba(124, 58, 237, 0.4)' : '1px solid #E2E8F0',
+                  background: isActive ? 'linear-gradient(135deg, #7C3AED 0%, #2563EB 100%)' : '#FFFFFF',
+                  color: isActive ? '#FFFFFF' : '#64748B',
+                  whiteSpace: 'nowrap',
+                  boxShadow: isActive ? '0 4px 12px rgba(124, 58, 237, 0.25)' : 'none',
+                  transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)',
+                }}
+              >
+                {cat}
+              </button>
+            );
+          })}
         </div>
 
         {/* Search Input */}
-        <div style={{ position: 'relative', width: '240px' }}>
-          <Search size={15} color="#64748B" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+        <div style={{ position: 'relative', width: '260px' }}>
+          <Search size={15} color="#94A3B8" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
           <input
             type="text"
             className="form-input"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search assets..."
-            style={{ paddingLeft: '32px', height: '36px', fontSize: '0.8125rem' }}
+            style={{
+              paddingLeft: '36px',
+              paddingRight: search ? '32px' : '12px',
+              height: '38px',
+              fontSize: '0.8125rem',
+              borderRadius: '12px',
+            }}
           />
+          {search && (
+            <button
+              type="button"
+              onClick={() => setSearch('')}
+              style={{
+                position: 'absolute',
+                right: '10px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                color: '#94A3B8',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '2px',
+              }}
+              title="Clear search"
+            >
+              <X size={14} />
+            </button>
+          )}
         </div>
       </div>
 
@@ -534,7 +589,7 @@ export default function BrandAssets() {
                 <button type="button" className="btn-outline" onClick={() => setShowUploadModal(false)}>
                   Cancel
                 </button>
-                <button type="submit" className="btn-primary" disabled={uploading}>
+                <button type="submit" className="btn btn-gradient-primary" disabled={uploading}>
                   {uploading ? 'Uploading...' : 'Save to Asset Library'}
                 </button>
               </div>

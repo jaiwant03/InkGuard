@@ -47,51 +47,77 @@ ${JSON.stringify(activeRuleTitles.slice(0, 15), null, 2)}
     let providerName = '';
 
     if (config.geminiApiKey) {
-      providerName = 'Google Gemini';
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 12000); // 12s timeout
+      const geminiModels = ['gemini-3.5-flash-lite', 'gemini-flash-latest', 'gemini-3.8-flash'];
+      for (const model of geminiModels) {
+        try {
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 12000);
 
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${config.geminiApiKey}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { responseMimeType: 'application/json' },
-        }),
-        signal: controller.signal,
-      });
-      clearTimeout(timeout);
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${config.geminiApiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: prompt }] }],
+              generationConfig: { responseMimeType: 'application/json' },
+            }),
+            signal: controller.signal,
+          });
+          clearTimeout(timeout);
 
-      if (!res.ok) {
-        throw new Error(`Gemini API error: ${res.statusText}`);
+          if (res.ok) {
+            const data = await res.json();
+            rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+            if (rawText) {
+              providerName = `Google Gemini (${model})`;
+              break;
+            }
+          } else {
+            const errData = await res.json().catch(() => null);
+            console.warn(`[AI Engine] Gemini (${model}) HTTP ${res.status}: ${errData?.error?.message || res.statusText}`);
+          }
+        } catch (mErr) {
+          console.warn(`[AI Engine] Gemini (${model}) attempt failed: ${mErr.message}`);
+        }
       }
-      const data = await res.json();
-      rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
-    } else if (config.openaiApiKey) {
-      providerName = 'OpenAI';
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 12000);
+    }
 
-      const res = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${config.openaiApiKey}`,
-        },
-        body: JSON.stringify({
-          model: 'gpt-4o-mini',
-          response_format: { type: 'json_object' },
-          messages: [{ role: 'user', content: prompt }],
-        }),
-        signal: controller.signal,
-      });
-      clearTimeout(timeout);
+    if (!rawText && config.openaiApiKey) {
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 12000);
 
-      if (!res.ok) {
-        throw new Error(`OpenAI API error: ${res.statusText}`);
+        const res = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${config.openaiApiKey}`,
+          },
+          body: JSON.stringify({
+            model: 'gpt-4o-mini',
+            response_format: { type: 'json_object' },
+            messages: [{ role: 'user', content: prompt }],
+          }),
+          signal: controller.signal,
+        });
+        clearTimeout(timeout);
+
+        if (res.ok) {
+          const data = await res.json();
+          rawText = data?.choices?.[0]?.message?.content || '';
+          if (rawText) {
+            providerName = 'OpenAI (gpt-4o-mini)';
+          }
+        } else {
+          const errData = await res.json().catch(() => null);
+          console.warn(`[AI Engine] OpenAI HTTP ${res.status}: ${errData?.error?.message || res.statusText}`);
+        }
+      } catch (oErr) {
+        console.warn(`[AI Engine] OpenAI call failed: ${oErr.message}`);
       }
-      const data = await res.json();
-      rawText = data?.choices?.[0]?.message?.content || '{}';
+    }
+
+    if (!rawText) {
+      throw new Error('Configured AI provider was temporarily unavailable. Deterministic rule engine active.');
     }
 
     const parsed = JSON.parse(rawText);

@@ -22,6 +22,7 @@ import {
   FileCheck,
   Check,
   Sparkles,
+  RotateCcw,
 } from 'lucide-react';
 import { SeverityBadge } from '../components/Badges';
 import { api } from '../services/api';
@@ -49,8 +50,8 @@ const STANDARD_RULES_TEMPLATE = [
     description: 'Avoid definitive absolute guarantees that cannot be legally or technically defended.',
     preferredWording: 'Engineered for high availability, enterprise-grade resilience, and defense-in-depth protection.',
     prohibitedPhrases: ['100% hack-proof', 'zero-risk', 'foolproof', 'guaranteed ROI', '100% secure', 'unhackable'],
-    correctExamples: 'Our platform delivers 99.99% high availability and multi-region failover protection.',
-    incorrectExamples: 'Our cloud platform is 100% hack-proof and completely zero-risk.',
+    correctExamples: ['Our platform delivers 99.99% high availability and multi-region failover protection.'],
+    incorrectExamples: ['Our cloud platform is 100% hack-proof and completely zero-risk.'],
     sourceReference: 'Corporate Legal & Marketing Governance Policy §4.2',
     isActive: true,
   },
@@ -61,8 +62,8 @@ const STANDARD_RULES_TEMPLATE = [
     description: 'Maintain an expert yet approachable tone. Guide users with clarity without condescension.',
     preferredWording: 'Our dedicated Client Success Team is available to assist you.',
     prohibitedPhrases: ['obviously', 'simply contact', 'as any beginner knows', 'just click'],
-    correctExamples: 'Follow our step-by-step setup guide or reach out to client support.',
-    incorrectExamples: 'Obviously, anyone can simply configure the cluster.',
+    correctExamples: ['Follow our step-by-step setup guide or reach out to client support.'],
+    incorrectExamples: ['Obviously, anyone can simply configure the cluster.'],
     sourceReference: 'Brand Voice & Tone Guide 2026',
     isActive: true,
   },
@@ -73,8 +74,8 @@ const STANDARD_RULES_TEMPLATE = [
     description: 'Ensure official brand and product names are spelled and capitalized accurately.',
     preferredWording: 'INKGUARD Brand Governance Platform',
     prohibitedPhrases: ['Inkguard', 'ink guard', 'Ink Guard platform', 'ink-guard app'],
-    correctExamples: 'INKGUARD provides explainable brand compliance checks.',
-    incorrectExamples: 'Use ink guard to verify your documents.',
+    correctExamples: ['INKGUARD provides explainable brand compliance checks.'],
+    incorrectExamples: ['Use ink guard to verify your documents.'],
     sourceReference: 'Trademark Usage Guidelines §2',
     isActive: true,
   },
@@ -85,8 +86,8 @@ const STANDARD_RULES_TEMPLATE = [
     description: 'All visual graphics and banners must include meaningful descriptive alt text for screen readers.',
     preferredWording: 'Detailed diagram illustrating multi-region failover architecture.',
     prohibitedPhrases: ['image', 'photo', 'graphic', 'banner', 'click here for image'],
-    correctExamples: 'Architectural diagram showing primary and secondary data failover routes.',
-    incorrectExamples: 'image of cloud',
+    correctExamples: ['Architectural diagram showing primary and secondary data failover routes.'],
+    incorrectExamples: ['image of cloud'],
     sourceReference: 'Web Content Accessibility Guidelines (WCAG 2.1 AA)',
     isActive: true,
   },
@@ -97,8 +98,8 @@ const STANDARD_RULES_TEMPLATE = [
     description: 'Eliminate clichéd buzzwords and replace them with precise enterprise terminology.',
     preferredWording: 'Next-generation distributed architecture',
     prohibitedPhrases: ['synergy', 'game-changing paradigm', 'disruptive secret sauce', 'growth hack'],
-    correctExamples: 'Accelerate digital transformation with automated brand auditing.',
-    incorrectExamples: 'Our disruptive secret sauce delivers unmatched corporate synergy.',
+    correctExamples: ['Accelerate digital transformation with automated brand auditing.'],
+    incorrectExamples: ['Our disruptive secret sauce delivers unmatched corporate synergy.'],
     sourceReference: 'Editorial Standards Manual §6',
     isActive: true,
   },
@@ -109,8 +110,8 @@ const STANDARD_RULES_TEMPLATE = [
     description: 'Statistical performance or adoption metrics must cite officially approved benchmarks.',
     preferredWording: 'Over 1,200 enterprise organizations rely on our governance platform.',
     prohibitedPhrases: ['millions of users', 'every company uses us', 'number one in the world without proof'],
-    correctExamples: 'Verified benchmark data shows a 45% reduction in compliance review cycles.',
-    incorrectExamples: 'We are overwhelmingly the number one platform in the universe.',
+    correctExamples: ['Verified benchmark data shows a 45% reduction in compliance review cycles.'],
+    incorrectExamples: ['We are overwhelmingly the number one platform in the universe.'],
     sourceReference: 'Product Benchmark Report Q4 2025',
     isActive: true,
   },
@@ -147,9 +148,32 @@ export default function BrandGuidelines() {
   // Profile Form state
   const [profileForm, setProfileForm] = useState(null);
   const [savingProfile, setSavingProfile] = useState(false);
+  const [loadingTemplate, setLoadingTemplate] = useState(false);
 
   const { workspace, isAdmin, isReviewer } = useAuth();
   const toast = useToast();
+
+  const handleLoadStarterTemplate = async () => {
+    try {
+      setLoadingTemplate(true);
+      toast.info('Seeding standard corporate brand governance rules...');
+      let added = 0;
+      for (const rule of STANDARD_RULES_TEMPLATE) {
+        try {
+          await api.brandRules.create(rule);
+          added++;
+        } catch (e) {
+          // If conflict warning or existing, keep going
+        }
+      }
+      toast.success(`Loaded ${added} standard corporate brand rules!`);
+      await loadData();
+    } catch (err) {
+      toast.error('Could not load template rules: ' + (err.message || 'Request failed'));
+    } finally {
+      setLoadingTemplate(false);
+    }
+  };
 
   const loadData = async () => {
     try {
@@ -398,6 +422,27 @@ export default function BrandGuidelines() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
+              {search && (
+                <button
+                  type="button"
+                  onClick={() => setSearch('')}
+                  style={{
+                    position: 'absolute',
+                    right: '12px',
+                    background: 'transparent',
+                    border: 'none',
+                    cursor: 'pointer',
+                    color: '#94A3B8',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '2px',
+                  }}
+                  title="Clear search"
+                >
+                  <X size={14} />
+                </button>
+              )}
             </div>
 
             <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
@@ -424,31 +469,188 @@ export default function BrandGuidelines() {
                 <option value="Medium">Medium</option>
                 <option value="Low">Low</option>
               </select>
+
+              {(search || selectedCategory || selectedSeverity) && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearch('');
+                    setSelectedCategory('');
+                    setSelectedSeverity('');
+                  }}
+                  className="btn btn-ghost btn-sm"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    color: '#64748B',
+                    padding: '6px 12px',
+                    borderRadius: '10px',
+                    border: '1px solid #E2E8F0',
+                    background: '#F8FAFC',
+                    fontSize: '0.8125rem',
+                    fontWeight: 600,
+                  }}
+                  title="Reset all filters"
+                >
+                  <RotateCcw size={13} />
+                  <span>Reset Filters</span>
+                </button>
+              )}
             </div>
           </div>
 
-          {/* Rules Grid / List */}
-          {rules.length === 0 ? (
-            <div className="card" style={{ textAlign: 'center', padding: 'var(--space-12)' }}>
-              <BookOpen size={44} color="var(--text-tertiary)" style={{ margin: '0 auto var(--space-3) auto' }} />
-              <h3 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: 'var(--space-1)' }}>No Brand Rules Found</h3>
-              <p style={{ color: 'var(--text-secondary)', marginBottom: 'var(--space-4)' }}>
-                {search || selectedCategory || selectedSeverity
-                  ? 'No rules match your active search filters. Try clearing criteria.'
-                  : 'Start by creating your first corporate brand guideline rule.'}
+          {/* Rules Grid or Spacious Empty Canvas */}
+          {loading ? (
+            <div className="brand-empty-canvas" style={{ padding: '64px 24px' }}>
+              <div className="brand-empty-canvas-emblem">
+                <Sparkles size={34} color="#4F46E5" className="motion-spin-slow" />
+              </div>
+              <h4 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0F172A', marginBottom: '6px' }}>
+                Loading Governance Policies...
+              </h4>
+              <p style={{ fontSize: '0.875rem', color: '#64748B', maxWidth: '420px', margin: '0 auto' }}>
+                Synchronizing workspace guidelines and active compliance rules.
               </p>
-              {isReviewer && (
-                <button onClick={handleOpenAddRule} className="btn btn-primary">
-                  <Plus size={16} /> Create Brand Rule
-                </button>
+            </div>
+          ) : rules.length === 0 ? (
+            <div className="brand-empty-canvas">
+              <div className="brand-empty-canvas-emblem">
+                <BookOpen size={34} color="#4F46E5" strokeWidth={2.3} />
+              </div>
+
+              <h3 className="brand-empty-title">
+                {search || selectedCategory || selectedSeverity
+                  ? 'No Matching Brand Rules Found'
+                  : 'Your Brand Rules Library is Empty'}
+              </h3>
+
+              <p className="brand-empty-subtitle">
+                {search || selectedCategory || selectedSeverity
+                  ? 'No guidelines match your active search filters. Try clearing criteria to view all corporate policies.'
+                  : 'Establish automated governance guardrails for your brand. Rules power InkGuard’s AI engine to catch unapproved claims, tone deviations, and accessibility gaps before publishing.'}
+              </p>
+
+              <div className="brand-empty-actions">
+                {search || selectedCategory || selectedSeverity ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSearch('');
+                      setSelectedCategory('');
+                      setSelectedSeverity('');
+                    }}
+                    className="btn btn-primary"
+                    style={{ padding: '12px 24px', borderRadius: '14px', fontWeight: 700 }}
+                  >
+                    <RotateCcw size={16} />
+                    <span>Clear Search & Filters</span>
+                  </button>
+                ) : (
+                  <>
+                    {isReviewer && (
+                      <button
+                        type="button"
+                        onClick={handleLoadStarterTemplate}
+                        disabled={loadingTemplate}
+                        className="btn btn-gradient-primary"
+                        style={{
+                          padding: '12px 24px',
+                          borderRadius: '14px',
+                          fontWeight: 700,
+                          fontSize: '0.9375rem',
+                          boxShadow: '0 8px 24px -4px rgba(79, 70, 229, 0.38)',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                        }}
+                      >
+                        <Sparkles size={16} />
+                        <span>
+                          {loadingTemplate ? 'Loading Recommended Rules...' : 'Load Recommended Rules (1-Click)'}
+                        </span>
+                      </button>
+                    )}
+
+                    {isReviewer && (
+                      <button
+                        type="button"
+                        onClick={handleOpenAddRule}
+                        className="btn"
+                        style={{
+                          padding: '12px 22px',
+                          borderRadius: '14px',
+                          fontWeight: 600,
+                          fontSize: '0.9375rem',
+                          background: '#FFFFFF',
+                          border: '1.5px solid #CBD5E1',
+                          color: '#0F172A',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                        }}
+                      >
+                        <Plus size={16} />
+                        <span>Create Custom Rule</span>
+                      </button>
+                    )}
+                  </>
+                )}
+              </div>
+
+              {/* 3 Core Pillars Feature Highlights */}
+              {!search && !selectedCategory && !selectedSeverity && (
+                <div className="brand-empty-features-grid">
+                  <div className="brand-empty-feature-card">
+                    <div className="brand-empty-feature-icon" style={{ background: '#EFF6FF', color: '#2563EB' }}>
+                      <ShieldCheck size={18} strokeWidth={2.4} />
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: '0.875rem', color: '#0F172A' }}>
+                        Tone & Voice Standards
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '2px', lineHeight: 1.45 }}>
+                        Maintain authoritative, empathetic communication and eliminate corporate clichés.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="brand-empty-feature-card">
+                    <div className="brand-empty-feature-icon" style={{ background: '#FEF2F2', color: '#EF4444' }}>
+                      <XCircle size={18} strokeWidth={2.4} />
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: '0.875rem', color: '#0F172A' }}>
+                        Prohibited Phrases
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '2px', lineHeight: 1.45 }}>
+                        Block unverified guarantees, absolute security assertions, and liability traps.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="brand-empty-feature-card">
+                    <div className="brand-empty-feature-icon" style={{ background: '#F5F3FF', color: '#7C3AED' }}>
+                      <CheckCircle2 size={18} strokeWidth={2.4} />
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 700, fontSize: '0.875rem', color: '#0F172A' }}>
+                        Product Nomenclature
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '2px', lineHeight: 1.45 }}>
+                        Enforce official trademarks, capitalization, and preferred corporate terminology.
+                      </div>
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
           ) : (
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(480px, 1fr))',
-                gap: '22px',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 420px), 1fr))',
+                gap: '24px',
               }}
             >
               {rules.map((rule) => {

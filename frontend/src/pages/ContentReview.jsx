@@ -765,80 +765,141 @@ export default function ContentReview() {
         </div>
 
         {/* Right Sidebar: Active Policy Preview */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {/* Policy Card */}
-          <div className="card" style={{ padding: '20px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
-              <Shield size={18} color="#2563EB" />
-              <h3 style={{ fontSize: '0.9375rem', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
-                Active Governance Rules
-              </h3>
-            </div>
-            <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', marginBottom: '14px', lineHeight: 1.4 }}>
-              Content is checked against {activeRules.length} active rules tailored for <strong>{workspace?.name}</strong>.
-            </p>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '380px', overflowY: 'auto' }}>
-              {activeRules.map((rule) => (
+          <div className="card" style={{ padding: '24px', borderRadius: '20px', border: '1px solid #E2E8F0', background: '#FFFFFF' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <div
-                  key={rule._id}
                   style={{
-                    padding: '10px 12px',
-                    borderRadius: '10px',
-                    background: '#F8FAFC',
-                    border: '1px solid #E2E8F0',
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '9px',
+                    background: '#EFF6FF',
+                    color: '#2563EB',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                   }}
                 >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                    <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#0F172A' }}>
-                      {rule.title}
-                    </span>
-                    <span
-                      style={{
-                        fontSize: '0.6875rem',
-                        fontWeight: 700,
-                        padding: '1px 6px',
-                        borderRadius: '4px',
-                        background:
-                          rule.severity === 'High' ? '#FEE2E2' : rule.severity === 'Medium' ? '#FEF3C7' : '#EFF6FF',
-                        color:
-                          rule.severity === 'High' ? '#DC2626' : rule.severity === 'Medium' ? '#D97706' : '#2563EB',
-                      }}
-                    >
-                      {rule.severity}
-                    </span>
-                  </div>
-                  <div style={{ fontSize: '0.75rem', color: '#64748B', lineHeight: 1.3 }}>
-                    {rule.description}
-                  </div>
+                  <Shield size={16} strokeWidth={2.4} />
                 </div>
-              ))}
+                <h3 style={{ fontSize: '0.9375rem', fontWeight: 800, margin: 0, color: '#0F172A' }}>
+                  Active Governance Rules
+                </h3>
+              </div>
+              <span
+                style={{
+                  fontSize: '0.6875rem',
+                  fontWeight: 700,
+                  padding: '2px 8px',
+                  borderRadius: '999px',
+                  background: '#ECFDF5',
+                  color: '#059669',
+                  border: '1px solid #A7F3D0',
+                }}
+              >
+                {activeRules.length} Active
+              </span>
+            </div>
+
+            <p style={{ fontSize: '0.8125rem', color: '#64748B', marginBottom: '16px', lineHeight: 1.45 }}>
+              Content is deterministically audited against active rules tailored for <strong>{workspace?.name}</strong>.
+            </p>
+
+            <div
+              className="custom-scrollbar"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px',
+                maxHeight: '380px',
+                overflowY: 'auto',
+                paddingRight: '4px',
+              }}
+            >
+              {activeRules.map((rule) => {
+                const sev = (rule.severity || 'Medium').toLowerCase();
+                const sevColor = sev === 'high' ? '#DC2626' : sev === 'medium' ? '#D97706' : '#2563EB';
+                const sevBg = sev === 'high' ? '#FEF2F2' : sev === 'medium' ? '#FFFBEB' : '#EFF6FF';
+                const sevBorder = sev === 'high' ? '#FECDD3' : sev === 'medium' ? '#FDE68A' : '#BFDBFE';
+
+                return (
+                  <div
+                    key={rule._id}
+                    style={{
+                      padding: '12px 14px',
+                      borderRadius: '12px',
+                      background: '#F8FAFC',
+                      border: '1px solid #E2E8F0',
+                      transition: 'border-color 0.15s ease',
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '4px' }}>
+                      <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#0F172A', lineHeight: 1.3 }}>
+                        {rule.title}
+                      </span>
+                      <span
+                        style={{
+                          fontSize: '0.625rem',
+                          fontWeight: 750,
+                          padding: '1px 6px',
+                          borderRadius: '6px',
+                          background: sevBg,
+                          color: sevColor,
+                          border: `1px solid ${sevBorder}`,
+                          textTransform: 'uppercase',
+                          flexShrink: 0,
+                        }}
+                      >
+                        {rule.severity}
+                      </span>
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: '#64748B', lineHeight: 1.4 }}>
+                      {rule.description}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
           {/* Supported Formats Card */}
-          <div className="card" style={{ padding: '20px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-              <FileCode size={18} color="#7C3AED" />
-              <h3 style={{ fontSize: '0.9375rem', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
+          <div className="card" style={{ padding: '22px', borderRadius: '20px', border: '1px solid #E2E8F0', background: '#FFFFFF' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
+              <div
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '9px',
+                  background: '#F5F3FF',
+                  color: '#7C3AED',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <FileCode size={16} strokeWidth={2.4} />
+              </div>
+              <h3 style={{ fontSize: '0.9375rem', fontWeight: 800, margin: 0, color: '#0F172A' }}>
                 Supported Document Formats
               </h3>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.8125rem', color: '#475569' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.8125rem', color: '#475569' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Check size={14} color="#10B981" />
+                <Check size={14} color="#10B981" strokeWidth={2.5} />
                 <span><strong>PDF Documents:</strong> Server-side text extraction</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Check size={14} color="#10B981" />
+                <Check size={14} color="#10B981" strokeWidth={2.5} />
                 <span><strong>Word (.docx):</strong> Structured XML text extraction</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Check size={14} color="#10B981" />
+                <Check size={14} color="#10B981" strokeWidth={2.5} />
                 <span><strong>Markdown & Plain Text:</strong> UTF-8 parsing</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Check size={14} color="#10B981" />
+                <Check size={14} color="#10B981" strokeWidth={2.5} />
                 <span><strong>Visual Assets (PNG/JPG/SVG):</strong> Visual brand check</span>
               </div>
             </div>

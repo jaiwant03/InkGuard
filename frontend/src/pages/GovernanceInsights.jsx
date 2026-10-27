@@ -51,48 +51,90 @@ export default function GovernanceInsights() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
-      {/* Header Banner */}
+      {/* Modern Page Header Banner */}
       <div className="page-header-clean">
-        <div className="page-header-info">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-            <span
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '3px 10px',
-                borderRadius: '999px',
-                background: '#EFF6FF',
-                color: '#2563EB',
-                fontSize: '0.75rem',
-                fontWeight: 700,
-                border: '1px solid #BFDBFE',
-              }}
-            >
-              <TrendingUp size={12} />
-              Continuous Governance Intelligence
-            </span>
-            <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>•</span>
-            <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
-              MongoDB Aggregation
-            </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
+          <div
+            className="ui-integrated-graphic motion-mascot"
+            style={{ width: '56px', height: '56px', flexShrink: 0 }}
+          >
+            <img
+              src={ASSET_IMAGES.governanceShield}
+              alt="Governance Intelligence"
+              className="ui-seamless-image"
+              style={{ width: '100%', height: '100%' }}
+            />
           </div>
-          <h1 className="page-header-title">Governance Insights & Analytics</h1>
-          <p className="page-header-desc">
-            Monitor real-world policy enforcement, uncover repeated terminology pitfalls, and optimize ambiguous brand guidelines with aggregated data.
-          </p>
+
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '3px 10px',
+                  borderRadius: '999px',
+                  background: '#EFF6FF',
+                  color: '#2563EB',
+                  fontSize: '0.6875rem',
+                  fontWeight: 700,
+                  border: '1px solid #BFDBFE',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                }}
+              >
+                <TrendingUp size={12} color="#2563EB" />
+                Continuous Governance Intelligence
+              </span>
+              <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>•</span>
+              <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
+                MongoDB Aggregation Pipeline
+              </span>
+            </div>
+
+            <h1 className="text-gradient-primary" style={{ fontSize: '1.75rem', fontWeight: 850, margin: 0 }}>
+              Governance Insights & Analytics
+            </h1>
+            <p style={{ fontSize: '0.875rem', color: '#64748B', marginTop: '4px', margin: '4px 0 0 0' }}>
+              Monitor real-world policy enforcement, uncover repeated terminology pitfalls, and optimize ambiguous brand guidelines with aggregated data.
+            </p>
+          </div>
         </div>
 
-        <button
-          type="button"
-          className="btn-outline"
-          onClick={loadInsights}
-          disabled={loading}
-          style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
-        >
-          <RefreshCw size={15} className={loading ? 'spin-icon' : ''} />
-          <span>Refresh Analytics</span>
-        </button>
+        {/* Action Controls & Top Right Refresh Button */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+          <div className="segmented-control">
+            <span
+              className="segmented-option active"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', cursor: 'default' }}
+            >
+              <span
+                style={{
+                  width: '7px',
+                  height: '7px',
+                  borderRadius: '50%',
+                  background: '#10B981',
+                  boxShadow: '0 0 8px #10B981',
+                }}
+              />
+              <span>Live Aggregation</span>
+            </span>
+          </div>
+
+          <button
+            type="button"
+            className="btn-refresh-analytics"
+            onClick={loadInsights}
+            disabled={loading}
+            title="Refresh workspace intelligence"
+          >
+            <span className="refresh-icon-badge">
+              <RefreshCw size={13} strokeWidth={2.6} className={loading ? 'spin-icon' : ''} />
+            </span>
+            <span>{loading ? 'Refreshing Intelligence...' : 'Refresh Analytics'}</span>
+          </button>
+        </div>
       </div>
 
       {loading ? (

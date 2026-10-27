@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   FileCheck2,
@@ -17,19 +17,70 @@ import {
   X,
   FileQuestion,
   RefreshCw,
+  Globe,
+  Share2,
+  Megaphone,
+  Mail,
+  Package,
+  ChevronDown,
 } from 'lucide-react';
 import { api, getAssetUrl } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { ASSET_IMAGES } from '../assets/images';
 
-const CONTENT_TYPES = [
-  'General marketing text',
-  'Social media post',
-  'Advertisement',
-  'Website copy',
-  'Email campaign',
-  'Product description',
-];
+const CONTENT_TYPE_CONFIG = {
+  'Website copy': {
+    label: 'Website copy',
+    icon: Globe,
+    desc: 'Landing pages, hero banners, and web product copy',
+    badge: 'Digital',
+    color: '#2563EB',
+    bg: '#EFF6FF',
+  },
+  'Social media post': {
+    label: 'Social media post',
+    icon: Share2,
+    desc: 'LinkedIn, Twitter/X updates, and public threads',
+    badge: 'Social',
+    color: '#7C3AED',
+    bg: '#F5F3FF',
+  },
+  'Advertisement': {
+    label: 'Advertisement',
+    icon: Megaphone,
+    desc: 'Paid display banners, search ads, and slogans',
+    badge: 'Paid Ads',
+    color: '#EA580C',
+    bg: '#FFF7ED',
+  },
+  'Email campaign': {
+    label: 'Email campaign',
+    icon: Mail,
+    desc: 'Product newsletters and direct customer emails',
+    badge: 'Outbound',
+    color: '#0D9488',
+    bg: '#F0FDFA',
+  },
+  'Product description': {
+    label: 'Product description',
+    icon: Package,
+    desc: 'Feature specifications, store blurbs, and docs',
+    badge: 'Catalog',
+    color: '#4F46E5',
+    bg: '#EEF2FF',
+  },
+  'General marketing text': {
+    label: 'General marketing text',
+    icon: FileText,
+    desc: 'Press announcements, blog posts, and articles',
+    badge: 'Editorial',
+    color: '#64748B',
+    bg: '#F8FAFC',
+  },
+};
+
+const CONTENT_TYPES = Object.keys(CONTENT_TYPE_CONFIG);
 
 const VIOLATION_SAMPLE = `Introducing the new ACE platform for high-scale enterprise workloads!
 
@@ -46,8 +97,22 @@ Explore our architectural whitepaper and benchmark studies. Apex Cloud is a regi
 export default function ContentReview() {
   const [title, setTitle] = useState('');
   const [contentType, setContentType] = useState('Website copy');
+  const [contentTypeOpen, setContentTypeOpen] = useState(false);
+  const contentTypeRef = useRef(null);
   const [content, setContent] = useState('');
   const [savingDraft, setSavingDraft] = useState(false);
+  const [auditing, setAuditing] = useState(false);
+  const [activeRules, setActiveRules] = useState([]);
+
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (contentTypeRef.current && !contentTypeRef.current.contains(e.target)) {
+        setContentTypeOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, []);
   const [auditing, setAuditing] = useState(false);
   const [activeRules, setActiveRules] = useState([]);
 

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
+import SplashScreen from './components/SplashScreen';
 
 // Layout & Pages
 import AppLayout from './layouts/AppLayout';
@@ -62,6 +63,11 @@ function ProtectedRoute({ children }) {
 
 // Main App Router Flow
 function AppRouter() {
+  const [showSplash, setShowSplash] = useState(true);
+
+  if (showSplash) {
+    return <SplashScreen onComplete={() => setShowSplash(false)} />;
+  }
   return (
     <Routes>
       {/* Public Auth Routes */}

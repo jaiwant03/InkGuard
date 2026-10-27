@@ -220,43 +220,73 @@ export default function ApprovedFacts() {
   const expiredCount = facts.filter(f => f.status === 'expired' || f.isAutoExpired).length;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
-      {/* Modern Page Header */}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '28px', maxWidth: '100%' }}>
+      {/* Modern Page Header Banner */}
       <div className="page-header-clean">
-        <div className="page-header-info">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <span className="badge badge-success">
-              <CheckCircle2 size={12} style={{ display: 'inline', marginRight: '4px' }} />
-              Truth Repository
-            </span>
-            <span style={{ fontSize: '0.8125rem', color: 'var(--text-tertiary)' }}>
-              Deterministic Fact Verification
-            </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
+          <div
+            className="ui-integrated-graphic motion-mascot"
+            style={{ width: '56px', height: '56px', flexShrink: 0 }}
+          >
+            <img
+              src={ASSET_IMAGES.brandDocPreview}
+              alt="Truth Repository"
+              className="ui-seamless-image"
+              style={{ width: '100%', height: '100%' }}
+            />
           </div>
 
-          <h1 className="page-header-title text-gradient-primary">
-            Approved Facts & Evidence Repository
-          </h1>
-          <p className="page-header-subtitle">
-            Authoritative corporate claims, benchmarks, and legal verification sources preventing promotional drift.
-          </p>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '3px 10px',
+                  borderRadius: '999px',
+                  background: '#ECFDF5',
+                  color: '#059669',
+                  fontSize: '0.6875rem',
+                  fontWeight: 700,
+                  border: '1px solid #A7F3D0',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                }}
+              >
+                <CheckCircle2 size={12} color="#059669" />
+                Truth Repository
+              </span>
+              <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>•</span>
+              <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
+                {activeCount} Verified Claims Enforced
+              </span>
+            </div>
+
+            <h1 className="text-gradient-primary" style={{ fontSize: '1.75rem', fontWeight: 850, margin: 0 }}>
+              Approved Facts & Evidence Repository
+            </h1>
+            <p style={{ fontSize: '0.875rem', color: '#64748B', marginTop: '4px', margin: '4px 0 0 0' }}>
+              Authoritative corporate claims, benchmarks, and legal verification sources preventing promotional drift.
+            </p>
+          </div>
         </div>
 
         {/* Action Button & Quick Metrics */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
           <div className="segmented-control">
-            <span className="segmented-btn active">
-              {activeCount} Active
+            <span className="segmented-option active">
+              {activeCount} Active Verified
             </span>
             {expiredCount > 0 && (
-              <span className="segmented-btn" style={{ color: '#D97706' }}>
+              <span className="segmented-option" style={{ color: '#D97706' }}>
                 {expiredCount} Refresh Needed
               </span>
             )}
           </div>
 
           {isReviewer && (
-            <button onClick={handleOpenAdd} className="btn btn-primary btn-sm btn-pill">
+            <button onClick={handleOpenAdd} className="btn btn-gradient-primary btn-sm">
               <Plus size={16} strokeWidth={2.5} />
               <span>Add Approved Fact</span>
             </button>
@@ -274,9 +304,30 @@ export default function ApprovedFacts() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
+          {search && (
+            <button
+              type="button"
+              onClick={() => setSearch('')}
+              style={{
+                position: 'absolute',
+                right: '12px',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                color: '#94A3B8',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '2px',
+              }}
+              title="Clear search"
+            >
+              <X size={14} />
+            </button>
+          )}
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
           <select
             className="form-select"
             value={selectedStatus}
@@ -288,25 +339,197 @@ export default function ApprovedFacts() {
             <option value="expired">Expired / Needs Refresh</option>
             <option value="archived">Archived</option>
           </select>
-        </div>
-      </div>
 
-      {/* Facts Grid */}
-      {facts.length === 0 ? (
-        <div className="card" style={{ textAlign: 'center', padding: 'var(--space-12)' }}>
-          <CheckCircle2 size={44} color="var(--text-tertiary)" style={{ margin: '0 auto var(--space-3) auto' }} />
-          <h3 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: 'var(--space-1)' }}>No Approved Facts Found</h3>
-          <p style={{ color: 'var(--text-secondary)', marginBottom: 'var(--space-4)' }}>
-            {search || selectedStatus ? 'No facts match your search filters.' : 'Add verified data points and performance metrics.'}
-          </p>
-          {isReviewer && (
-            <button onClick={handleOpenAdd} className="btn btn-primary btn-pill">
-              <Plus size={16} /> Add Approved Fact
+          {(search || selectedStatus) && (
+            <button
+              type="button"
+              onClick={() => {
+                setSearch('');
+                setSelectedStatus('');
+              }}
+              className="btn btn-ghost btn-sm"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                color: '#64748B',
+                padding: '6px 12px',
+                borderRadius: '10px',
+                border: '1px solid #E2E8F0',
+                background: '#F8FAFC',
+                fontSize: '0.8125rem',
+                fontWeight: 600,
+              }}
+              title="Reset all filters"
+            >
+              <RotateCcw size={13} />
+              <span>Reset Filters</span>
             </button>
           )}
         </div>
+      </div>
+
+      {/* Facts Grid or Spacious Empty Canvas */}
+      {loading ? (
+        <div className="brand-empty-canvas" style={{ padding: '64px 24px' }}>
+          <div className="brand-empty-canvas-emblem" style={{ background: '#ECFDF5', borderColor: '#A7F3D0' }}>
+            <Sparkles size={34} color="#059669" className="motion-spin-slow" />
+          </div>
+          <h4 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0F172A', marginBottom: '6px' }}>
+            Loading Approved Facts...
+          </h4>
+          <p style={{ fontSize: '0.875rem', color: '#64748B', maxWidth: '420px', margin: '0 auto' }}>
+            Synchronizing verified corporate benchmarks and evidentiary sources.
+          </p>
+        </div>
+      ) : facts.length === 0 ? (
+        <div className="brand-empty-canvas">
+          <div
+            className="brand-empty-canvas-emblem"
+            style={{
+              background: 'linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 100%)',
+              borderColor: '#A7F3D0',
+              boxShadow: '0 12px 28px -6px rgba(16, 185, 129, 0.22)',
+            }}
+          >
+            <CheckCircle2 size={34} color="#059669" strokeWidth={2.3} />
+          </div>
+
+          <h3 className="brand-empty-title">
+            {search || selectedStatus
+              ? 'No Matching Approved Facts Found'
+              : 'Your Verified Facts Repository is Empty'}
+          </h3>
+
+          <p className="brand-empty-subtitle">
+            {search || selectedStatus
+              ? 'No corporate claims match your active search filters. Try clearing criteria to view all verified data points.'
+              : 'Approved facts provide deterministic truth anchors for your brand. InkGuard cross-references every marketing claim and statistic against these verified sources to eliminate factual drift.'}
+          </p>
+
+          <div className="brand-empty-actions">
+            {search || selectedStatus ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearch('');
+                  setSelectedStatus('');
+                }}
+                className="btn btn-primary"
+                style={{ padding: '12px 24px', borderRadius: '14px', fontWeight: 700 }}
+              >
+                <RotateCcw size={16} />
+                <span>Clear Search & Filters</span>
+              </button>
+            ) : (
+              <>
+                {isReviewer && (
+                  <button
+                    type="button"
+                    onClick={handleLoadStarterTemplate}
+                    disabled={loadingTemplate}
+                    className="btn btn-gradient-primary"
+                    style={{
+                      padding: '12px 24px',
+                      borderRadius: '14px',
+                      fontWeight: 700,
+                      fontSize: '0.9375rem',
+                      background: 'linear-gradient(135deg, #059669 0%, #2563EB 100%)',
+                      boxShadow: '0 8px 24px -4px rgba(5, 150, 105, 0.38)',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                    }}
+                  >
+                    <Sparkles size={16} />
+                    <span>
+                      {loadingTemplate ? 'Loading Verified Facts...' : 'Load Recommended Facts (1-Click)'}
+                    </span>
+                  </button>
+                )}
+
+                {isReviewer && (
+                  <button
+                    type="button"
+                    onClick={handleOpenAdd}
+                    className="btn"
+                    style={{
+                      padding: '12px 22px',
+                      borderRadius: '14px',
+                      fontWeight: 600,
+                      fontSize: '0.9375rem',
+                      background: '#FFFFFF',
+                      border: '1.5px solid #CBD5E1',
+                      color: '#0F172A',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                    }}
+                  >
+                    <Plus size={16} />
+                    <span>Add Custom Fact</span>
+                  </button>
+                )}
+              </>
+            )}
+          </div>
+
+          {/* 3 Value Pillar Highlights */}
+          {!search && !selectedStatus && (
+            <div className="brand-empty-features-grid">
+              <div className="brand-empty-feature-card">
+                <div className="brand-empty-feature-icon" style={{ background: '#ECFDF5', color: '#059669' }}>
+                  <ShieldCheck size={18} strokeWidth={2.4} />
+                </div>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: '0.875rem', color: '#0F172A' }}>
+                    SLA & Performance
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '2px', lineHeight: 1.45 }}>
+                    Lock in legally defensible uptime, latency, and cloud infrastructure figures.
+                  </div>
+                </div>
+              </div>
+
+              <div className="brand-empty-feature-card">
+                <div className="brand-empty-feature-icon" style={{ background: '#EFF6FF', color: '#2563EB' }}>
+                  <CheckCircle2 size={18} strokeWidth={2.4} />
+                </div>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: '0.875rem', color: '#0F172A' }}>
+                    Enterprise Adoption
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '2px', lineHeight: 1.45 }}>
+                    Maintain audited user counts, client milestones, and market growth statistics.
+                  </div>
+                </div>
+              </div>
+
+              <div className="brand-empty-feature-card">
+                <div className="brand-empty-feature-icon" style={{ background: '#F5F3FF', color: '#7C3AED' }}>
+                  <Clock size={18} strokeWidth={2.4} />
+                </div>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: '0.875rem', color: '#0F172A' }}>
+                    Automated Expiry Safeguards
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '2px', lineHeight: 1.45 }}>
+                    Facts automatically flag for recertification when empirical validity dates lapse.
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       ) : (
-        <div className="facts-grid">
+        <div
+          className="facts-grid"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 380px), 1fr))',
+            gap: '24px',
+          }}
+        >
           {facts.map((fact) => {
             const isExpired = fact.status === 'expired' || fact.isAutoExpired;
 

@@ -3039,3 +3039,45 @@ input[type="radio"]:focus-visible {
   flex-shrink: 0;
 }
 
+/* Custom Sleek Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Preset Action Pill Buttons */
+.preset-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.preset-pill-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px -2px rgba(15, 23, 42, 0.12);
+}
+
+.preset-pill-btn:active {
+  transform: translateY(0);
+}
+

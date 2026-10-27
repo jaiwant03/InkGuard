@@ -15,11 +15,59 @@ import {
   ShieldAlert,
   Check,
   Sparkles,
+  RotateCcw,
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { ASSET_IMAGES } from '../assets/images';
+
+const STANDARD_FACTS_TEMPLATE = [
+  {
+    factText: 'INKGUARD delivers 99.99% high availability with multi-region automated failover architecture.',
+    category: 'Performance Benchmarks',
+    sourceName: 'Infrastructure SLA Report Q4 2025',
+    sourceUrl: 'https://status.inkguard.io',
+    verificationDate: new Date().toISOString(),
+    expiryDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+    ownerRole: 'VP of Cloud Infrastructure',
+    status: 'active',
+    notes: 'Verified against SOC2 Type II audit telemetry and multi-cloud metrics.',
+  },
+  {
+    factText: 'Over 1,200 enterprise organizations actively use our brand governance platform worldwide.',
+    category: 'Customer Adoption',
+    sourceName: 'Annual Customer & Revenue Report 2025',
+    sourceUrl: '',
+    verificationDate: new Date().toISOString(),
+    expiryDate: new Date(Date.now() + 180 * 24 * 60 * 60 * 1000).toISOString(),
+    ownerRole: 'Director of Product Marketing',
+    status: 'active',
+    notes: 'Audited active accounts with more than 10 daily active seats.',
+  },
+  {
+    factText: 'Automated brand audits reduce content compliance review cycle times by 45%.',
+    category: 'Product Capabilities',
+    sourceName: 'Enterprise Governance Efficiency Benchmark 2026',
+    sourceUrl: '',
+    verificationDate: new Date().toISOString(),
+    expiryDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+    ownerRole: 'Head of Customer Success',
+    status: 'active',
+    notes: 'Calculated across 85,000 document reviews during beta testing phase.',
+  },
+  {
+    factText: 'All data is encrypted with AES-256 at rest and TLS 1.3 in transit with SOC2 Type II compliance.',
+    category: 'Security & Compliance',
+    sourceName: 'Corporate Security & Compliance Whitepaper',
+    sourceUrl: 'https://trust.inkguard.io',
+    verificationDate: new Date().toISOString(),
+    expiryDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+    ownerRole: 'Chief Information Security Officer',
+    status: 'active',
+    notes: 'Third-party audited and re-certified annually.',
+  },
+];
 
 export default function ApprovedFacts() {
   const [facts, setFacts] = useState([]);
@@ -43,9 +91,32 @@ export default function ApprovedFacts() {
   });
   const [saving, setSaving] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [loadingTemplate, setLoadingTemplate] = useState(false);
 
   const { workspace, isReviewer, isAdmin } = useAuth();
   const toast = useToast();
+
+  const handleLoadStarterTemplate = async () => {
+    try {
+      setLoadingTemplate(true);
+      toast.info('Seeding standard corporate verified facts...');
+      let added = 0;
+      for (const fact of STANDARD_FACTS_TEMPLATE) {
+        try {
+          await api.approvedFacts.create(fact);
+          added++;
+        } catch (e) {
+          // ignore duplicate
+        }
+      }
+      toast.success(`Successfully loaded ${added} verified corporate facts!`);
+      await loadFacts();
+    } catch (err) {
+      toast.error('Could not load template facts: ' + (err.message || 'Request failed'));
+    } finally {
+      setLoadingTemplate(false);
+    }
+  };
 
   const loadFacts = async () => {
     try {

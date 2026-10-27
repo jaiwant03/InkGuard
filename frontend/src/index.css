@@ -3081,3 +3081,75 @@ input[type="radio"]:focus-visible {
   transform: translateY(0);
 }
 
+/* Modern Brand Asset Header Actions */
+.btn-upload-brand-asset {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 42px;
+  padding: 0 20px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #7C3AED 0%, #6366F1 50%, #2563EB 100%);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  box-shadow: 0 8px 20px -4px rgba(124, 58, 237, 0.42), 0 2px 6px -1px rgba(99, 102, 241, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.32);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+}
+
+.btn-upload-brand-asset:hover:not(:disabled) {
+  background: linear-gradient(135deg, #6D28D9 0%, #4F46E5 50%, #1D4ED8 100%);
+  transform: translateY(-1.5px);
+  box-shadow: 0 12px 28px -4px rgba(124, 58, 237, 0.55), 0 4px 10px -1px rgba(99, 102, 241, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.btn-upload-brand-asset:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 4px 14px -2px rgba(124, 58, 237, 0.4);
+}
+
+.btn-upload-brand-asset .upload-icon-badge {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.btn-upload-brand-asset:hover:not(:disabled) .upload-icon-badge {
+  transform: scale(1.08) rotate(90deg);
+}
+
+.btn-reload-action {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  border: 1px solid #E2E8F0;
+  background: #FFFFFF;
+  color: #64748B;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: all 0.18s ease;
+}
+
+.btn-reload-action:hover:not(:disabled) {
+  background: #F8FAFC;
+  border-color: #CBD5E1;
+  color: #7C3AED;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.12);
+}
+
+

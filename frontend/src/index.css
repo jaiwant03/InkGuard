@@ -141,6 +141,16 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 /* ==========================================================================
@@ -1554,14 +1564,20 @@ input[type="radio"]:focus-visible {
 .top-nav-tier-secondary-inner {
   max-width: 1560px;
   margin: 0 auto;
-  padding: 0 28px;
+  padding: 0 24px;
   height: 52px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 12px;
+  justify-content: flex-start;
+  gap: 10px;
   overflow-x: auto;
   scrollbar-width: none;
+}
+
+@media (min-width: 1280px) {
+  .top-nav-tier-secondary-inner {
+    justify-content: center;
+  }
 }
 
 .top-nav-tier-secondary-inner::-webkit-scrollbar {

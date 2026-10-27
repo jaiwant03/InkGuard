@@ -113,8 +113,6 @@ export default function ContentReview() {
     document.addEventListener('mousedown', handleOutsideClick);
     return () => document.removeEventListener('mousedown', handleOutsideClick);
   }, []);
-  const [auditing, setAuditing] = useState(false);
-  const [activeRules, setActiveRules] = useState([]);
 
   // Multi-format upload & visual metadata states
   const [extracting, setExtracting] = useState(false);

@@ -42,15 +42,10 @@ This guide walks you through deploying **INKGUARD** with the backend API hosted 
 5. **Get Connection String**:
    - Go to **Database** > **Clusters** > Click **Connect**.
    - Select **Drivers** (Node.js).
-   - Copy the connection string, which looks like:
-     ```
-     mongodb+srv://inkguard_admin:<db_password>@cluster0.abcde.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-     ```
-   - Replace `<db_password>` with your actual database user password.
-   - Append `/inkguard` before the `?` query parameter:
-     ```
-     mongodb+srv://inkguard_admin:YOUR_PASSWORD@cluster0.abcde.mongodb.net/inkguard?retryWrites=true&w=majority
-     ```
+   - Copy the connection URI provided by Atlas (it starts with `mongodb+srv://`).
+   - Replace the `<db_password>` placeholder with your actual database user password.
+   - Insert `/inkguard` right before the `?` query parameters so it connects to the `inkguard` database.
+
 
 ---
 

@@ -385,17 +385,66 @@ export default function BrandAssets() {
           ))}
         </div>
       ) : (
-        <div style={{ padding: '60px', textAlign: 'center', background: '#FFFFFF', borderRadius: '16px', border: '1px solid #E2E8F0' }}>
-          <Palette size={44} color="#94A3B8" style={{ margin: '0 auto 12px auto' }} />
-          <h3 style={{ fontSize: '1.125rem', fontWeight: 700, color: '#0F172A' }}>No brand assets found</h3>
-          <p style={{ color: '#64748B', fontSize: '0.875rem', maxWidth: '420px', margin: '6px auto 16px auto' }}>
-            Upload approved vector logos, banners, or imagery to ensure content creators use authentic brand assets.
+        <div className="brand-empty-canvas">
+          <div
+            className="brand-empty-canvas-emblem"
+            style={{
+              background: 'linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%)',
+              borderColor: '#DDD6FE',
+              boxShadow: '0 12px 28px -6px rgba(124, 58, 237, 0.22)',
+            }}
+          >
+            <Palette size={34} color="#7C3AED" strokeWidth={2.3} />
+          </div>
+
+          <h3 className="brand-empty-title">
+            {search || selectedCategory !== 'All'
+              ? 'No Brand Assets Match Your Filter'
+              : 'Your Brand Asset Library is Empty'}
+          </h3>
+
+          <p className="brand-empty-subtitle">
+            {search || selectedCategory !== 'All'
+              ? 'No brand media found under the active filter. Try resetting search criteria or selecting "All".'
+              : 'Store and govern official brand logos, typography sheets, UI banners, and certified vector illustrations. Content reviewers verify that published designs strictly use these authentic assets.'}
           </p>
-          {isReviewer && (
-            <button type="button" className="btn-primary" onClick={() => setShowUploadModal(true)}>
-              Upload First Asset
-            </button>
-          )}
+
+          <div className="brand-empty-actions">
+            {search || selectedCategory !== 'All' ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearch('');
+                  setSelectedCategory('All');
+                }}
+                className="btn btn-primary"
+                style={{ padding: '12px 24px', borderRadius: '14px', fontWeight: 700 }}
+              >
+                <span>Reset Asset Filters</span>
+              </button>
+            ) : (
+              isReviewer && (
+                <button
+                  type="button"
+                  className="btn btn-gradient-primary"
+                  onClick={() => setShowUploadModal(true)}
+                  style={{
+                    padding: '12px 26px',
+                    borderRadius: '14px',
+                    fontWeight: 700,
+                    fontSize: '0.9375rem',
+                    boxShadow: '0 8px 24px -4px rgba(124, 58, 237, 0.38)',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                  }}
+                >
+                  <Plus size={16} />
+                  <span>Upload First Brand Asset</span>
+                </button>
+              )
+            )}
+          </div>
         </div>
       )}
 

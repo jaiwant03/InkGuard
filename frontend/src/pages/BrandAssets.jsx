@@ -17,7 +17,7 @@ import {
   AlertTriangle,
   Info,
 } from 'lucide-react';
-import { api } from '../services/api';
+import { api, getAssetUrl } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 
@@ -279,7 +279,7 @@ export default function BrandAssets() {
                 }}
               >
                 <img
-                  src={asset.fileUrl}
+                  src={getAssetUrl(asset.fileUrl)}
                   alt={asset.name}
                   style={{
                     maxWidth: '100%',
@@ -360,7 +360,7 @@ export default function BrandAssets() {
                 <div style={{ marginTop: 'auto', paddingTop: '10px', borderTop: '1px solid #F1F5F9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <button
                     type="button"
-                    onClick={() => handleCopyUrl(asset.fileUrl, asset._id)}
+                    onClick={() => handleCopyUrl(getAssetUrl(asset.fileUrl), asset._id)}
                     className="top-nav-btn"
                     style={{ fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '6px', color: '#2563EB', padding: '4px 8px' }}
                   >

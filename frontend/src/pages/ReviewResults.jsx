@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 import ComplianceScoreRing from '../components/ComplianceScoreRing';
 import { SeverityBadge, ClaimStatusBadge, WorkflowStatusBadge } from '../components/Badges';
-import { api } from '../services/api';
+import { api, getAssetUrl } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 
@@ -547,7 +547,7 @@ export default function ReviewResults() {
                 </div>
                 <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
                   <img
-                    src={draft.imageUrl}
+                    src={getAssetUrl(draft.imageUrl)}
                     alt={draft.imageAltText || 'Attached brand asset'}
                     style={{ maxHeight: '120px', maxWidth: '200px', objectFit: 'contain', borderRadius: '8px', border: '1px solid #CBD5E1', background: '#FFFFFF' }}
                   />

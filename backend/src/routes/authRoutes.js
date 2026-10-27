@@ -109,6 +109,7 @@ router.post('/register', authLimiter, async (req, res, next) => {
       success: true,
       message: 'Account created successfully.',
       data: {
+        token,
         user,
         workspace,
         role: membership.role,

@@ -18,7 +18,7 @@ import {
   FileQuestion,
   RefreshCw,
 } from 'lucide-react';
-import { api } from '../services/api';
+import { api, getAssetUrl } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 
@@ -366,7 +366,7 @@ export default function ContentReview() {
                     overflow: 'hidden',
                   }}
                 >
-                  <img src={imageUrl} alt="Thumbnail preview" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                  <img src={getAssetUrl(imageUrl)} alt="Thumbnail preview" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
                 </div>
 
                 <div className="form-group" style={{ margin: 0 }}>

@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { config } from './config/env.js';
 import { errorHandler } from './middleware/errorHandler.js';
@@ -26,6 +27,9 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
+// Trust reverse proxy (essential for Render / Cloudflare to correctly pass client IP and HTTPS headers)
+app.set('trust proxy', 1);
+
 // Security headers
 app.use(
   helmet({
@@ -33,22 +37,47 @@ app.use(
   })
 );
 
-// CORS configuration for secure HTTP-only cookies
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      // Allow localhost and frontendUrl
-      if (!origin || origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1') || origin === config.frontendUrl) {
-        callback(null, true);
-      } else {
-        callback(new Error('CORS request blocked from origin: ' + origin));
-      }
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Workspace-Id'],
-  })
-);
+// Dynamic origin matching supporting local development, configured FRONTEND_URL, and Vercel deployments
+const configuredOrigins = (config.frontendUrl || '')
+  .split(',')
+  .map((url) => url.trim().replace(/\/+$/, ''))
+  .filter(Boolean);
+
+const isOriginAllowed = (origin) => {
+  if (!origin) return true; // Allow mobile apps, curl, server-to-server, and health checks
+  const cleanOrigin = origin.replace(/\/+$/, '');
+
+  // Local development on any port
+  if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(cleanOrigin)) {
+    return true;
+  }
+  // Configured frontend URLs
+  if (configuredOrigins.includes(cleanOrigin)) {
+    return true;
+  }
+  // Any Vercel deployment (production, preview branches, PR previews)
+  if (/^https:\/\/[a-zA-Z0-9_\-.]+\.vercel\.app$/.test(cleanOrigin)) {
+    return true;
+  }
+  return false;
+};
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (isOriginAllowed(origin)) {
+      callback(null, true);
+    } else {
+      callback(null, false);
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Workspace-Id'],
+  exposedHeaders: ['Set-Cookie'],
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 // Logging
 if (config.nodeEnv !== 'test') {
@@ -60,9 +89,24 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser(config.cookieSecret));
 
-// Static uploads serving
+// Static uploads serving (ensure directory exists)
 const uploadsDir = path.resolve('uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
 app.use('/uploads', express.static(uploadsDir));
+
+// Root welcome / status endpoint
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    service: 'INKGUARD Brand Governance Platform API',
+    status: 'operational',
+    version: '1.0.0',
+    health: '/api/health',
+    tagline: 'Create with confidence. Publish with consistency.',
+  });
+});
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

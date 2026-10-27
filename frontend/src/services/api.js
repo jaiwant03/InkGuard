@@ -1,4 +1,7 @@
-const API_BASE = '/api';
+// Resolve API Base and Origin dynamically from environment or default to local proxy
+const envApiUrl = import.meta.env.VITE_API_URL || '';
+export const API_ORIGIN = envApiUrl.replace(/\/api\/?$/, '').replace(/\/+$/, '');
+const API_BASE = API_ORIGIN ? `${API_ORIGIN}/api` : '/api';
 
 export class ApiError extends Error {
   constructor(message, status = 500, errors = null) {
@@ -6,6 +9,40 @@ export class ApiError extends Error {
     this.status = status;
     this.errors = errors;
   }
+}
+
+// Persistent Auth Token (dual support for cross-domain Vercel <-> Render cookies & bearer tokens)
+let authToken = localStorage.getItem('inkguard_auth_token') || '';
+
+export function setAuthToken(token) {
+  authToken = token || '';
+  if (token) {
+    localStorage.setItem('inkguard_auth_token', token);
+  } else {
+    localStorage.removeItem('inkguard_auth_token');
+  }
+}
+
+export function getAuthToken() {
+  return authToken;
+}
+
+export function clearAuthToken() {
+  authToken = '';
+  localStorage.removeItem('inkguard_auth_token');
+}
+
+// Convert relative upload URLs (/uploads/...) to absolute backend URLs in production
+export function getAssetUrl(path) {
+  if (!path) return '';
+  if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:')) {
+    return path;
+  }
+  const clean = path.startsWith('/') ? path : `/${path}`;
+  if (API_ORIGIN) {
+    return `${API_ORIGIN}${clean}`;
+  }
+  return clean;
 }
 
 let activeWorkspaceId = localStorage.getItem('inkguard_active_workspace_id') || '';
@@ -28,6 +65,11 @@ async function request(endpoint, options = {}) {
     ...options.headers,
   };
 
+  // Attach Bearer token if present (ensures seamless auth when cross-site cookies are blocked)
+  if (authToken && !headers['Authorization']) {
+    headers['Authorization'] = `Bearer ${authToken}`;
+  }
+
   // Add workspace ID header if set
   if (activeWorkspaceId && !headers['X-Workspace-Id']) {
     headers['X-Workspace-Id'] = activeWorkspaceId;
@@ -41,7 +83,7 @@ async function request(endpoint, options = {}) {
   const response = await fetch(`${API_BASE}${endpoint}`, {
     ...options,
     headers,
-    credentials: 'include', // Ensures HTTP-only cookies are passed
+    credentials: 'include', // Ensures HTTP-only cookies are passed when supported
   });
 
   const contentType = response.headers.get('content-type');
@@ -54,6 +96,10 @@ async function request(endpoint, options = {}) {
   }
 
   if (!response.ok) {
+    // If unauthorized, clear stale token
+    if (response.status === 401) {
+      clearAuthToken();
+    }
     throw new ApiError(data.message || `Request failed with status ${response.status}`, response.status, data.errors);
   }
 
@@ -75,9 +121,27 @@ export const api = {
   // Auth
   auth: {
     me: () => request('/auth/me'),
-    login: (credentials) => request('/auth/login', { method: 'POST', body: JSON.stringify(credentials) }),
-    register: (userData) => request('/auth/register', { method: 'POST', body: JSON.stringify(userData) }),
-    logout: () => request('/auth/logout', { method: 'POST' }),
+    login: async (credentials) => {
+      const res = await request('/auth/login', { method: 'POST', body: JSON.stringify(credentials) });
+      if (res?.data?.token) {
+        setAuthToken(res.data.token);
+      }
+      return res;
+    },
+    register: async (userData) => {
+      const res = await request('/auth/register', { method: 'POST', body: JSON.stringify(userData) });
+      if (res?.data?.token) {
+        setAuthToken(res.data.token);
+      }
+      return res;
+    },
+    logout: async () => {
+      try {
+        await request('/auth/logout', { method: 'POST' });
+      } finally {
+        clearAuthToken();
+      }
+    },
     updateProfile: (profile) => request('/auth/profile', { method: 'PUT', body: JSON.stringify(profile) }),
   },
 

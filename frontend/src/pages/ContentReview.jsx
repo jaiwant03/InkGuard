@@ -249,42 +249,64 @@ export default function ContentReview() {
   const wordCount = content.trim() ? content.trim().split(/\s+/).filter(Boolean).length : 0;
   const charCount = content.length;
 
+  const activeConfig = CONTENT_TYPE_CONFIG[contentType] || CONTENT_TYPE_CONFIG['Website copy'];
+  const ActiveIcon = activeConfig.icon;
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '28px', maxWidth: '100%' }}>
       {/* Modern Page Header Banner */}
       <div className="page-header-clean">
-        <div className="page-header-info">
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-            <span
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '3px 10px',
-                borderRadius: '999px',
-                background: '#FFF1F2',
-                color: '#E11D48',
-                fontSize: '0.75rem',
-                fontWeight: 700,
-                border: '1px solid #FFE4E6',
-              }}
-            >
-              <FileCheck2 size={12} />
-              Pre-Publication Gatekeeper
-            </span>
-            <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>•</span>
-            <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
-              Explainable Review Studio
-            </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
+          <div
+            className="ui-integrated-graphic motion-mascot"
+            style={{ width: '56px', height: '56px', flexShrink: 0 }}
+          >
+            <img
+              src={ASSET_IMAGES.brandDocPreview}
+              alt="Content Review Studio"
+              className="ui-seamless-image"
+              style={{ width: '100%', height: '100%' }}
+            />
           </div>
-          <h1 className="page-header-title">Submit Content for Review</h1>
-          <p className="page-header-desc">
-            Submit marketing copy, social posts, PDFs, or DOCX documents to audit tone, terminology, claims, and accessibility before public distribution.
-          </p>
+
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '3px 10px',
+                  borderRadius: '999px',
+                  background: '#FFF1F2',
+                  color: '#E11D48',
+                  fontSize: '0.6875rem',
+                  fontWeight: 700,
+                  border: '1px solid #FFE4E6',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                }}
+              >
+                <FileCheck2 size={12} color="#E11D48" />
+                Pre-Publication Gatekeeper
+              </span>
+              <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>•</span>
+              <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
+                Explainable Review Studio
+              </span>
+            </div>
+
+            <h1 className="text-gradient-primary" style={{ fontSize: '1.75rem', fontWeight: 850, margin: 0 }}>
+              Submit Content for Review
+            </h1>
+            <p style={{ fontSize: '0.875rem', color: '#64748B', marginTop: '4px', margin: '4px 0 0 0' }}>
+              Submit marketing copy, social posts, PDFs, or DOCX documents to audit tone, terminology, claims, and accessibility before public distribution.
+            </p>
+          </div>
         </div>
 
-        {/* Quick-Fill Sample Buttons */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+        {/* Modern Quick-Fill Preset Buttons */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
           <button
             type="button"
             onClick={() => {
@@ -294,13 +316,43 @@ export default function ContentReview() {
               setImageUrl('');
               setUploadedFileInfo(null);
             }}
-            className="btn btn-secondary btn-sm"
-            style={{ fontSize: '0.8125rem', padding: '8px 16px', borderRadius: '12px' }}
+            className="preset-pill-btn"
+            style={{
+              background: 'linear-gradient(135deg, #FFF1F2 0%, #FFFBEB 100%)',
+              border: '1px solid #FECDD3',
+              color: '#9F1239',
+              boxShadow: '0 2px 8px rgba(244, 63, 94, 0.08)',
+            }}
             title="Loads unvetted copy with prohibited claims and terms"
           >
-            <AlertTriangle size={14} color="#EF4444" />
+            <span
+              style={{
+                width: '20px',
+                height: '20px',
+                borderRadius: '50%',
+                background: '#FFE4E6',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <AlertTriangle size={12} color="#E11D48" />
+            </span>
             <span>Load Sample with Violations</span>
+            <span
+              style={{
+                fontSize: '0.6875rem',
+                background: '#FDA4AF',
+                color: '#881337',
+                padding: '1px 6px',
+                borderRadius: '999px',
+                fontWeight: 700,
+              }}
+            >
+              Test AI
+            </span>
           </button>
+
           <button
             type="button"
             onClick={() => {
@@ -310,40 +362,208 @@ export default function ContentReview() {
               setImageUrl('');
               setUploadedFileInfo(null);
             }}
-            className="btn btn-secondary btn-sm"
-            style={{ fontSize: '0.8125rem', padding: '8px 16px', borderRadius: '12px' }}
+            className="preset-pill-btn"
+            style={{
+              background: 'linear-gradient(135deg, #ECFDF5 0%, #EFF6FF 100%)',
+              border: '1px solid #A7F3D0',
+              color: '#065F46',
+              boxShadow: '0 2px 8px rgba(16, 185, 129, 0.08)',
+            }}
             title="Loads compliant enterprise copy"
           >
-            <CheckCircle2 size={14} color="#10B981" />
-            <span>Compliant Sample</span>
+            <span
+              style={{
+                width: '20px',
+                height: '20px',
+                borderRadius: '50%',
+                background: '#D1FAE5',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <CheckCircle2 size={12} color="#059669" />
+            </span>
+            <span>Compliant Enterprise Sample</span>
+            <span
+              style={{
+                fontSize: '0.6875rem',
+                background: '#6EE7B7',
+                color: '#064E3B',
+                padding: '1px 6px',
+                borderRadius: '999px',
+                fontWeight: 700,
+              }}
+            >
+              Pass
+            </span>
           </button>
         </div>
       </div>
 
       {/* Main Split-Pane Workspace */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 360px', gap: 'var(--space-6)', alignItems: 'start' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 360px', gap: '24px', alignItems: 'start' }}>
         {/* Left Main Pane: Editor */}
-        <div className="card" style={{ padding: '28px' }}>
+        <div className="card" style={{ padding: '28px', borderRadius: '20px', border: '1px solid #E2E8F0' }}>
           {/* Form Inputs */}
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 'var(--space-4)', marginBottom: 'var(--space-4)' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.8fr) minmax(260px, 1.2fr)', gap: '20px', marginBottom: '22px' }}>
             <div className="form-group" style={{ marginBottom: 0 }}>
-              <label className="form-label">Content Title *</label>
+              <label className="form-label" style={{ fontWeight: 700, fontSize: '0.8125rem', color: '#0F172A', marginBottom: '6px' }}>
+                Content Title *
+              </label>
               <input
                 type="text"
                 className="form-input"
                 placeholder="e.g. Q4 Cloud Product Launch Announcement"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                style={{
+                  height: '46px',
+                  borderRadius: '12px',
+                  fontSize: '0.875rem',
+                  padding: '0 16px',
+                  border: '1.5px solid #CBD5E1',
+                  background: '#FFFFFF',
+                  color: '#0F172A',
+                }}
               />
             </div>
 
-            <div className="form-group" style={{ marginBottom: 0 }}>
-              <label className="form-label">Content Type *</label>
-              <select className="form-select" value={contentType} onChange={(e) => setContentType(e.target.value)}>
-                {CONTENT_TYPES.map((t) => (
-                  <option key={t} value={t}>{t}</option>
-                ))}
-              </select>
+            {/* Custom Modern Content Type Option Dropdown */}
+            <div className="form-group" style={{ marginBottom: 0, position: 'relative' }} ref={contentTypeRef}>
+              <label className="form-label" style={{ fontWeight: 700, fontSize: '0.8125rem', color: '#0F172A', marginBottom: '6px' }}>
+                Content Type *
+              </label>
+              <button
+                type="button"
+                onClick={() => setContentTypeOpen(!contentTypeOpen)}
+                style={{
+                  width: '100%',
+                  height: '46px',
+                  padding: '8px 14px',
+                  borderRadius: '12px',
+                  border: contentTypeOpen ? '1.5px solid #2563EB' : '1.5px solid #CBD5E1',
+                  background: '#FFFFFF',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  cursor: 'pointer',
+                  boxShadow: contentTypeOpen ? '0 0 0 3px rgba(37, 99, 235, 0.12)' : '0 1px 2px rgba(0,0,0,0.03)',
+                  transition: 'all 0.18s ease',
+                }}
+                aria-haspopup="listbox"
+                aria-expanded={contentTypeOpen}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', overflow: 'hidden' }}>
+                  <div
+                    style={{
+                      width: '28px',
+                      height: '28px',
+                      borderRadius: '8px',
+                      background: activeConfig.bg,
+                      color: activeConfig.color,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <ActiveIcon size={16} strokeWidth={2.4} />
+                  </div>
+                  <span style={{ fontSize: '0.875rem', fontWeight: 650, color: '#0F172A', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {contentType}
+                  </span>
+                </div>
+                <ChevronDown
+                  size={16}
+                  color="#64748B"
+                  style={{
+                    transform: contentTypeOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                    transition: 'transform 0.2s ease',
+                    flexShrink: 0,
+                  }}
+                />
+              </button>
+
+              {/* Floating Custom Dropdown List */}
+              {contentTypeOpen && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 'calc(100% + 6px)',
+                    left: 0,
+                    right: 0,
+                    background: '#FFFFFF',
+                    borderRadius: '16px',
+                    border: '1px solid #E2E8F0',
+                    boxShadow: '0 20px 40px -6px rgba(15, 23, 42, 0.16), 0 0 0 1px rgba(0,0,0,0.02)',
+                    padding: '6px',
+                    zIndex: 120,
+                    maxHeight: '360px',
+                    overflowY: 'auto',
+                  }}
+                  role="listbox"
+                >
+                  {Object.entries(CONTENT_TYPE_CONFIG).map(([key, config]) => {
+                    const isSelected = contentType === key;
+                    const ItemIcon = config.icon;
+                    return (
+                      <div
+                        key={key}
+                        onClick={() => {
+                          setContentType(key);
+                          setContentTypeOpen(false);
+                        }}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          padding: '10px 12px',
+                          borderRadius: '10px',
+                          background: isSelected ? '#EFF6FF' : 'transparent',
+                          cursor: 'pointer',
+                          transition: 'background 0.15s ease',
+                          marginBottom: '2px',
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!isSelected) e.currentTarget.style.background = '#F8FAFC';
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isSelected) e.currentTarget.style.background = 'transparent';
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
+                          <div
+                            style={{
+                              width: '32px',
+                              height: '32px',
+                              borderRadius: '8px',
+                              background: config.bg,
+                              color: config.color,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              flexShrink: 0,
+                            }}
+                          >
+                            <ItemIcon size={16} strokeWidth={2.3} />
+                          </div>
+                          <div style={{ minWidth: 0 }}>
+                            <div style={{ fontSize: '0.875rem', fontWeight: isSelected ? 750 : 600, color: isSelected ? '#2563EB' : '#0F172A', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                              {config.label}
+                            </div>
+                            <div style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '1px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                              {config.desc}
+                            </div>
+                          </div>
+                        </div>
+
+                        {isSelected && <Check size={16} color="#2563EB" strokeWidth={2.5} style={{ flexShrink: 0, marginLeft: '8px' }} />}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
 

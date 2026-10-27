@@ -413,3 +413,14 @@ In production, serve the static `frontend/dist` directory using Express or an Ng
   - Browser extension (Chrome/Edge) to audit content directly inside Google Docs and CMS editors.
   - Granular Figma plugin integration to inspect typography and color tokens directly against Figma design systems.
   - Multi-language terminology dictionaries for global brand localization.
+
+---
+
+## 17. Production Deployment (Vercel + Render)
+
+The project includes ready-to-deploy configurations for:
+- **Frontend on Vercel**: Configured with Vite, SPA client-side route rewrites (`vercel.json`), persistent Bearer auth, and dynamic API URL resolution via `VITE_API_URL`.
+- **Backend on Render**: Configured with reverse-proxy trust (`app.set('trust proxy', 1)`), flexible multi-origin CORS with Vercel preview support, Render Blueprint (`render.yaml`), and health check endpoint `/api/health`.
+
+For full step-by-step instructions, see [DEPLOYMENT.md](file:///d:/Dev/Projects/InkGuard-AI%20Powered%20Brand%20Governance%20Platform/DEPLOYMENT.md).
+

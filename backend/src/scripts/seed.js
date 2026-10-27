@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import path from 'path';
+import fs from 'fs';
 import { connectDB } from '../config/db.js';
 import { User } from '../models/User.js';
 import { Workspace } from '../models/Workspace.js';
@@ -265,6 +267,21 @@ async function seed() {
   ]);
 
   console.log('[Seed] Seeding Brand Assets...');
+  const uploadsDir = path.resolve('uploads');
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+  const rootUploads = path.resolve('..', 'uploads');
+  if (fs.existsSync(rootUploads)) {
+    ['sample_logo.svg', 'sample_banner.svg'].forEach((file) => {
+      const src = path.join(rootUploads, file);
+      const dest = path.join(uploadsDir, file);
+      if (fs.existsSync(src) && !fs.existsSync(dest)) {
+        try { fs.copyFileSync(src, dest); } catch (_) {}
+      }
+    });
+  }
+
   await BrandAsset.insertMany([
     {
       workspace: workspace._id,

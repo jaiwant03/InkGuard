@@ -32,6 +32,11 @@ yarn-error.log*
 *.sw?
 
 # Uploads
-uploads/
+uploads/*
+!uploads/.gitkeep
+!uploads/sample_logo.svg
+!uploads/sample_banner.svg
 backend/uploads/*
 !backend/uploads/.gitkeep
+!backend/uploads/sample_logo.svg
+!backend/uploads/sample_banner.svg

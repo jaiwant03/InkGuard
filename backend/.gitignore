@@ -2,4 +2,7 @@ node_modules/
 .env
 uploads/*
 !uploads/.gitkeep
+!uploads/sample_logo.svg
+!uploads/sample_banner.svg
 *.log
+

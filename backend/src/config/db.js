@@ -29,10 +29,6 @@ export async function connectDB() {
     return conn.connection;
   } catch (error) {
     console.error(`[Database] Error connecting to MongoDB: ${error.message}`);
-    // In dev or test, do not exit process immediately so health check can report status
-    if (config.isProduction) {
-      process.exit(1);
-    }
     throw error;
   }
 }

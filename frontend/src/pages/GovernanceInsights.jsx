@@ -17,6 +17,7 @@ import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { SeverityBadge } from '../components/Badges';
+import { ASSET_IMAGES } from '../assets/images';
 
 export default function GovernanceInsights() {
   const [data, setData] = useState(null);

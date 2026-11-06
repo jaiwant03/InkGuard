@@ -1,0 +1,23 @@
+{
+  "name": "inkguard-platform",
+  "version": "1.0.0",
+  "description": "INKGUARD — AI-Assisted Brand Governance Platform",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install --prefix backend && npm install --prefix frontend",
+    "seed": "npm run seed --prefix backend",
+    "test": "npm test --prefix backend",
+    "dev:backend": "npm run dev --prefix backend",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "build:frontend": "npm run build --prefix frontend",
+    "start": "node backend/src/server.js"
+  },
+  "keywords": [
+    "brand-governance",
+    "compliance",
+    "brand-management",
+    "content-audit"
+  ],
+  "author": "",
+  "license": "ISC"
+}

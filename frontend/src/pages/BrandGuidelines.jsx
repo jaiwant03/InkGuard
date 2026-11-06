@@ -23,6 +23,8 @@ import {
   Check,
   Sparkles,
   RotateCcw,
+  Download,
+  Upload,
 } from 'lucide-react';
 import { SeverityBadge } from '../components/Badges';
 import { api } from '../services/api';
@@ -326,6 +328,50 @@ export default function BrandGuidelines() {
   const copyToClipboard = (text, label) => {
     navigator.clipboard.writeText(text);
     toast.success(`Copied ${label}: ${text}`);
+  };
+
+  const handleExportRules = () => {
+    if (rules.length === 0) {
+      toast.info('No rules to export.');
+      return;
+    }
+    const exportData = rules.map(({ title, description, category, severity, preferredWording, prohibitedPhrases, requiredPhrases, correctExamples, incorrectExamples, sourceReference }) => ({
+      title, description, category, severity, preferredWording, prohibitedPhrases, requiredPhrases, correctExamples, incorrectExamples, sourceReference
+    }));
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `brand-guidelines-rules.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success(`Exported ${rules.length} brand rules as JSON.`);
+  };
+
+  const handleImportRules = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      try {
+        const parsed = JSON.parse(event.target.result);
+        if (!Array.isArray(parsed)) throw new Error('File must contain a JSON array of rules.');
+        let importedCount = 0;
+        for (const rule of parsed) {
+          if (rule.title && rule.category) {
+            await api.brandRules.create(rule);
+            importedCount++;
+          }
+        }
+        toast.success(`Successfully imported ${importedCount} brand rules!`);
+        loadData();
+      } catch (err) {
+        toast.error('Import failed: ' + (err.message || 'Invalid format'));
+      } finally {
+        e.target.value = '';
+      }
+    };
+    reader.readAsText(file);
   };
 
   return (

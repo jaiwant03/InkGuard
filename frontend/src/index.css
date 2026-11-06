@@ -2912,6 +2912,48 @@ input[type="radio"]:focus-visible {
   background: #94A3B8;
 }
 
+/* Clear & Spacious Review Studio Split Workspace */
+.review-results-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(360px, 440px);
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 1120px) {
+  .review-results-workspace {
+    grid-template-columns: 1fr;
+  }
+}
+
+.findings-scroll-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+  padding-right: 6px;
+  padding-bottom: 24px;
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E1 transparent;
+}
+
+.findings-scroll-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.findings-scroll-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.findings-scroll-list::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 999px;
+}
+
+.findings-scroll-list::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
 /* Responsive Media Queries */
 @media (max-width: 1320px) {
   .dashboard-kpi-grid-5 {

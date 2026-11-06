@@ -591,12 +591,12 @@ export default function ReviewResults() {
             top: '80px',
             display: 'flex',
             flexDirection: 'column',
-            gap: '14px',
+            gap: '16px',
             maxHeight: 'calc(100vh - 100px)',
           }}
         >
           {/* Findings Filter Bar */}
-          <div className="card" style={{ padding: '16px 18px' }}>
+          <div className="card" style={{ padding: '16px 20px', flexShrink: 0, borderRadius: '16px' }}>
             <div
               style={{
                 display: 'flex',
@@ -605,13 +605,13 @@ export default function ReviewResults() {
                 marginBottom: '12px',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ fontSize: '0.9375rem', fontWeight: 800, color: '#0F172A' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0F172A' }}>
                   Audit Findings
                 </span>
                 <span
                   style={{
-                    padding: '1px 8px',
+                    padding: '2px 8px',
                     borderRadius: '999px',
                     background: '#F1F5F9',
                     color: '#475569',
@@ -627,17 +627,20 @@ export default function ReviewResults() {
                 style={{
                   fontSize: '0.75rem',
                   fontWeight: 700,
-                  color: activeFindings.length > 0 ? '#D97706' : '#059669',
+                  padding: '2px 8px',
+                  borderRadius: '6px',
+                  background: activeFindings.length > 0 ? '#FEF3C7' : '#ECFDF5',
+                  color: activeFindings.length > 0 ? '#B45309' : '#059669',
                 }}
               >
                 {activeFindings.length} unresolved
               </span>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
               <select
                 className="form-select"
-                style={{ fontSize: '0.75rem', padding: '6px 10px', height: '36px' }}
+                style={{ fontSize: '0.8125rem', padding: '6px 12px', height: '38px', borderRadius: '10px' }}
                 value={severityFilter}
                 onChange={(e) => setSeverityFilter(e.target.value)}
               >
@@ -649,7 +652,7 @@ export default function ReviewResults() {
 
               <select
                 className="form-select"
-                style={{ fontSize: '0.75rem', padding: '6px 10px', height: '36px' }}
+                style={{ fontSize: '0.8125rem', padding: '6px 12px', height: '38px', borderRadius: '10px' }}
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
               >
@@ -666,24 +669,22 @@ export default function ReviewResults() {
 
           {/* Scrollable Finding Cards List */}
           {filteredFindings.length === 0 ? (
-            <div className="card" style={{ textAlign: 'center', padding: '36px 20px' }}>
-              <CheckCircle2 size={36} color="#059669" style={{ margin: '0 auto 8px auto' }} />
-              <h4 style={{ fontSize: '0.9375rem', fontWeight: 750, color: '#0F172A', marginBottom: '2px' }}>
+            <div className="card" style={{ textAlign: 'center', padding: '40px 24px', borderRadius: '16px' }}>
+              <CheckCircle2 size={40} color="#059669" style={{ margin: '0 auto 10px auto' }} />
+              <h4 style={{ fontSize: '1rem', fontWeight: 750, color: '#0F172A', marginBottom: '4px' }}>
                 Zero Active Issues in Filter
               </h4>
-              <p style={{ fontSize: '0.8125rem', color: '#64748B', margin: 0 }}>
+              <p style={{ fontSize: '0.8125rem', color: '#64748B', margin: 0, lineHeight: 1.5 }}>
                 All evaluated rules in this selection pass established governance standards.
               </p>
             </div>
           ) : (
             <div
+              className="findings-scroll-list"
               style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '12px',
-                overflowY: 'auto',
-                maxHeight: 'calc(100vh - 220px)',
-                paddingRight: '4px',
+                flex: 1,
+                minHeight: 0,
+                maxHeight: 'calc(100vh - 230px)',
               }}
             >
               {filteredFindings.map((finding) => {
@@ -704,6 +705,10 @@ export default function ReviewResults() {
                     id={`finding-${finding._id}`}
                     className={`finding-card ${isActive ? 'active' : ''}`}
                     onClick={() => setActiveFindingId(finding._id)}
+                    style={{
+                      flexShrink: 0,
+                      minHeight: 'fit-content',
+                    }}
                   >
                     {/* Flush Left Colored Accent Stripe */}
                     <div className={`finding-accent-stripe ${getFindingStripe()}`} />
@@ -714,14 +719,14 @@ export default function ReviewResults() {
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center',
-                        marginBottom: '8px',
+                        marginBottom: '10px',
                       }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <SeverityBadge severity={finding.severity} />
                         <span
                           style={{
-                            padding: '2px 8px',
+                            padding: '3px 8px',
                             borderRadius: '6px',
                             background: '#F1F5F9',
                             color: '#475569',
@@ -739,24 +744,24 @@ export default function ReviewResults() {
                     </div>
 
                     {/* Flagged Snippet & Correction Badges */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '8px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '10px' }}>
                       {finding.textSpan && (
-                        <div className="mistake-prohibited">
-                          <XCircle size={12} />
+                        <div className="mistake-prohibited" style={{ width: '100%', wordBreak: 'break-word', whiteSpace: 'normal', boxSizing: 'border-box' }}>
+                          <XCircle size={13} style={{ flexShrink: 0 }} />
                           <span>"{finding.textSpan}"</span>
                         </div>
                       )}
 
                       {finding.suggestedCorrection && (
-                        <div className="mistake-replacement">
-                          <CheckCircle2 size={12} />
+                        <div className="mistake-replacement" style={{ width: '100%', wordBreak: 'break-word', whiteSpace: 'normal', boxSizing: 'border-box' }}>
+                          <CheckCircle2 size={13} style={{ flexShrink: 0 }} />
                           <span>Replace with: "{finding.suggestedCorrection}"</span>
                         </div>
                       )}
                     </div>
 
                     {/* Explanation */}
-                    <p style={{ fontSize: '0.8125rem', color: '#475569', margin: '0 0 8px 0', lineHeight: 1.45 }}>
+                    <p style={{ fontSize: '0.8125rem', color: '#475569', margin: '0 0 10px 0', lineHeight: 1.5 }}>
                       {finding.explanation}
                     </p>
 
@@ -766,13 +771,13 @@ export default function ReviewResults() {
                         style={{
                           fontSize: '0.75rem',
                           color: '#64748B',
-                          marginBottom: '10px',
+                          marginBottom: '12px',
                           display: 'flex',
                           alignItems: 'center',
-                          gap: '5px',
+                          gap: '6px',
                         }}
                       >
-                        <ShieldCheck size={13} color="#2563EB" />
+                        <ShieldCheck size={14} color="#2563EB" style={{ flexShrink: 0 }} />
                         <span>Rule: <strong style={{ color: '#0F172A' }}>{finding.ruleTitle}</strong></span>
                       </div>
                     )}
@@ -789,14 +794,14 @@ export default function ReviewResults() {
                           marginTop: '6px',
                         }}
                       >
-                        <div style={{ display: 'flex', gap: '6px' }}>
+                        <div style={{ display: 'flex', gap: '8px' }}>
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
                               setDismissModalFinding(finding);
                             }}
                             className="btn btn-secondary btn-sm"
-                            style={{ fontSize: '0.75rem', padding: '3px 8px', borderRadius: '6px' }}
+                            style={{ fontSize: '0.75rem', padding: '5px 10px', borderRadius: '8px' }}
                           >
                             Dismiss
                           </button>
@@ -807,7 +812,7 @@ export default function ReviewResults() {
                               handleResolveFinding(finding._id);
                             }}
                             className="btn btn-secondary btn-sm"
-                            style={{ fontSize: '0.75rem', padding: '3px 8px', borderRadius: '6px' }}
+                            style={{ fontSize: '0.75rem', padding: '5px 10px', borderRadius: '8px' }}
                           >
                             Resolve
                           </button>
@@ -823,12 +828,15 @@ export default function ReviewResults() {
                             className="btn btn-sm"
                             style={{
                               fontSize: '0.75rem',
-                              padding: '4px 12px',
+                              padding: '5px 14px',
                               borderRadius: '8px',
                               background: '#2563EB',
                               color: '#FFFFFF',
                               fontWeight: 600,
                               boxShadow: '0 2px 6px rgba(37, 99, 235, 0.25)',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '5px',
                             }}
                           >
                             <Check size={13} />
@@ -878,6 +886,8 @@ export default function ReviewResults() {
                 );
               })}
             </div>
+          )}
+        </div>
           )}
         </div>
       </div>

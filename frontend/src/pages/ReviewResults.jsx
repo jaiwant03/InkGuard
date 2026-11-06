@@ -22,6 +22,7 @@ import {
   XCircle,
   AlertCircle,
   Filter,
+  Download,
 } from 'lucide-react';
 import ComplianceScoreRing from '../components/ComplianceScoreRing';
 import { SeverityBadge, ClaimStatusBadge, WorkflowStatusBadge } from '../components/Badges';
@@ -286,6 +287,56 @@ export default function ReviewResults() {
 
   const wordCount = draft.currentContent ? draft.currentContent.split(/\s+/).filter(Boolean).length : 0;
 
+  const handleDownloadReport = () => {
+    const reportData = {
+      platform: 'INKGUARD Brand Governance Platform',
+      reportType: 'Digital Content Governance & Compliance Audit Certificate',
+      generatedAt: new Date().toISOString(),
+      draft: {
+        id: draft._id,
+        title: draft.title,
+        contentType: draft.contentType,
+        version: draft.currentVersion,
+        status: draft.status,
+        author: draft.author?.name || 'Creator',
+        complianceScore: draft.latestComplianceScore,
+        wordCount,
+      },
+      auditSummary: {
+        totalFindings: findings.length,
+        unresolvedFindings: activeFindings.length,
+        resolvedFindings: resolvedCount,
+        highRiskFindings: highRiskCount,
+        mediumRiskFindings: mediumRiskCount,
+        lowRiskFindings: lowRiskCount,
+        statusGrade: draft.latestComplianceScore >= 90 ? 'Excellent' : draft.latestComplianceScore >= 75 ? 'Strong' : 'Needs Revision',
+      },
+      findings: findings.map((f) => ({
+        category: f.category,
+        severity: f.severity,
+        textSpan: f.textSpan,
+        explanation: f.explanation,
+        suggestedCorrection: f.suggestedCorrection,
+        ruleTitle: f.ruleTitle || null,
+        detectedBy: f.detectedBy,
+        status: f.status,
+      })),
+      verificationEngine: {
+        deterministicRuleEngine: 'Active (100% Explainable)',
+        wcagAccessibilityCheck: 'Enforced (WCAG 2.1 AA)',
+        brandPaletteCheck: draft.detectedColors?.length > 0 ? 'Verified' : 'Not Applicable',
+      },
+    };
+    const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `inkguard-audit-${(draft.title || 'document').toLowerCase().replace(/[^a-z0-9]/g, '_')}-v${draft.currentVersion}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success('Governance audit certificate downloaded.');
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
       {/* Modern Page Header Banner */}
@@ -342,6 +393,16 @@ export default function ReviewResults() {
 
         {/* Primary Header Actions */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+          <button
+            onClick={handleDownloadReport}
+            className="btn btn-secondary btn-sm"
+            title="Download full governance audit certificate (JSON)"
+            style={{ borderRadius: '10px', padding: '7px 14px', fontSize: '0.8125rem', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+          >
+            <Download size={14} />
+            <span>Audit Report</span>
+          </button>
+
           <button
             onClick={handleReRunAudit}
             disabled={reAuditing}

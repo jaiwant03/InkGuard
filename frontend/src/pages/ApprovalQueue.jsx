@@ -39,7 +39,7 @@ export default function ApprovalQueue() {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
 
-  const { workspace, isReviewer } = useAuth();
+  const { workspace, isReviewer, isAdmin, isCreatorOnly, role } = useAuth();
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -62,6 +62,7 @@ export default function ApprovalQueue() {
   }, [workspace]);
 
   const handleOpenDecision = async (draft, decision) => {
+    if (!isReviewer) return;
     setSelectedDraft(draft);
     setDecisionModal(decision);
     setCommentText('');
@@ -80,6 +81,10 @@ export default function ApprovalQueue() {
 
   const handleConfirmDecision = async (e) => {
     e.preventDefault();
+    if (!isReviewer) {
+      toast.error('Only compliance reviewers and workspace admins can authorize approval decisions.');
+      return;
+    }
     if (!selectedDraft || !decisionModal) return;
 
     if (decisionModal === 'request_changes' && !commentText.trim()) {
@@ -145,29 +150,31 @@ export default function ApprovalQueue() {
                 gap: '6px',
                 padding: '3px 10px',
                 borderRadius: '999px',
-                background: '#FEF3C7',
-                color: '#B45309',
+                background: isCreatorOnly ? '#EFF6FF' : '#FEF3C7',
+                color: isCreatorOnly ? '#2563EB' : '#B45309',
                 fontSize: '0.6875rem',
                 fontWeight: 700,
-                border: '1px solid #FDE68A',
+                border: isCreatorOnly ? '1px solid #BFDBFE' : '1px solid #FDE68A',
                 textTransform: 'uppercase',
                 letterSpacing: '0.04em',
               }}
             >
-              <ClipboardList size={12} color="#B45309" />
-              Sign-Off Gatekeeper
+              <ClipboardList size={12} color={isCreatorOnly ? '#2563EB' : '#B45309'} />
+              {isCreatorOnly ? 'Submissions Tracker' : 'Sign-Off Gatekeeper'}
             </span>
             <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>•</span>
             <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>
-              {inReviewCount} Awaiting Review
+              {inReviewCount} {isCreatorOnly ? 'Submissions in Review' : 'Awaiting Review'}
             </span>
           </div>
 
           <h1 className="page-header-title text-gradient-amber">
-            Approval Queue & Sign-Offs
+            {isCreatorOnly ? 'Content Submissions & Approval Tracker' : 'Approval Queue & Sign-Offs'}
           </h1>
           <p className="page-header-subtitle">
-            Multi-stakeholder sign-off workflow ensuring content meets brand tone, legal policies, and approved claims.
+            {isCreatorOnly
+              ? 'Track review status, compliance scores, reviewer comments, and sign-offs for your submitted content.'
+              : 'Multi-stakeholder sign-off workflow ensuring content meets brand tone, legal policies, and approved claims.'}
           </p>
         </div>
 
@@ -433,9 +440,28 @@ export default function ApprovalQueue() {
                         borderRadius: '10px',
                       }}
                     >
-                      <span>Inspect Audit</span>
+                      <span>{isCreatorOnly ? 'Open in Studio' : 'Inspect Audit'}</span>
                       <ArrowRight size={13} />
                     </button>
+
+                    {isCreatorOnly && draft.status === 'Changes Requested' && (
+                      <button
+                        onClick={() => navigate(`/review/${draft._id}`)}
+                        className="btn btn-sm"
+                        style={{
+                          padding: '6px 14px',
+                          fontSize: '0.8125rem',
+                          borderRadius: '10px',
+                          background: '#FFFBEB',
+                          color: '#B45309',
+                          border: '1px solid #FDE68A',
+                          fontWeight: 600,
+                        }}
+                      >
+                        <AlertTriangle size={14} />
+                        <span>Address Feedback</span>
+                      </button>
+                    )}
 
                     {isReviewer && draft.status === 'In Review' && (
                       <>

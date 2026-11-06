@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Settings,
   Users,
@@ -35,8 +36,9 @@ export default function WorkspaceSettings() {
   const [newMemberRole, setNewMemberRole] = useState('creator');
   const [inviting, setInviting] = useState(false);
 
-  const { workspace, isAdmin, isReviewer, user, refreshUser } = useAuth();
+  const { workspace, isAdmin, isReviewer, user, role, refreshUser } = useAuth();
   const toast = useToast();
+  const navigate = useNavigate();
 
   const loadData = async () => {
     try {
@@ -142,6 +144,56 @@ export default function WorkspaceSettings() {
       toast.error('Failed to remove member: ' + err.message);
     }
   };
+
+  if (!isAdmin) {
+    return (
+      <div className="card" style={{ maxWidth: '640px', margin: '40px auto', padding: '40px 32px', textAlign: 'center' }}>
+        <div
+          style={{
+            width: '64px',
+            height: '64px',
+            borderRadius: '16px',
+            background: '#FEF2F2',
+            color: '#DC2626',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            margin: '0 auto 20px auto',
+            border: '1px solid #FEE2E2',
+          }}
+        >
+          <Lock size={32} />
+        </div>
+        <span
+          style={{
+            fontSize: '0.6875rem',
+            fontWeight: 700,
+            padding: '3px 10px',
+            borderRadius: '999px',
+            background: '#F1F5F9',
+            color: '#475569',
+            textTransform: 'uppercase',
+            letterSpacing: '0.04em',
+          }}
+        >
+          Access Restricted • Role: {role || 'User'}
+        </span>
+        <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0F172A', marginTop: '12px', marginBottom: '8px' }}>
+          Administrator Privileges Required
+        </h2>
+        <p style={{ fontSize: '0.875rem', color: '#64748B', lineHeight: 1.6, maxWidth: '480px', margin: '0 auto 24px auto' }}>
+          Organization configuration, security policies, and team membership roles are managed exclusively by Workspace Administrators. You are currently authenticated with the <strong>{role || 'creator'}</strong> role.
+        </p>
+        <button
+          onClick={() => navigate('/')}
+          className="btn btn-gradient-primary"
+          style={{ borderRadius: '12px', padding: '10px 24px', fontSize: '0.875rem', fontWeight: 600 }}
+        >
+          Return to Dashboard
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>

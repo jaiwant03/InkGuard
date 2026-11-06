@@ -29,7 +29,7 @@ import { useToast } from '../context/ToastContext';
 import { api } from '../services/api';
 
 export default function TopNavigation({ onOpenSearch }) {
-  const { user, workspace, role, logout, refreshUser, switchWorkspace } = useAuth();
+  const { user, workspace, role, isAdmin, isReviewer, isCreatorOnly, logout, refreshUser, switchWorkspace } = useAuth();
   const [profileOpen, setProfileOpen] = useState(false);
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
@@ -193,13 +193,19 @@ export default function TopNavigation({ onOpenSearch }) {
     return name.slice(0, 2).toUpperCase();
   };
 
-  // Core Brand Governance Pillars
+  // Core Brand Governance Pillars (Tailored by Role)
   const navTabs = [
     { label: 'Dashboard', path: '/', icon: LayoutDashboard, color: '#2563EB', lightBg: '#EFF6FF', end: true },
     { label: 'Brand Guidelines', path: '/guidelines', icon: BookOpen, color: '#7C3AED', lightBg: '#F5F3FF' },
     { label: 'Approved Facts', path: '/facts', icon: CheckCircle2, color: '#10B981', lightBg: '#ECFDF5' },
     { label: 'Content Review', path: '/review', icon: FileText, color: '#F43F5E', lightBg: '#FFF1F2' },
-    { label: 'Approval Queue', path: '/approvals', icon: ClipboardList, color: '#F59E0B', lightBg: '#FFFBEB' },
+    {
+      label: isCreatorOnly ? 'My Submissions' : 'Approval Queue',
+      path: '/approvals',
+      icon: ClipboardList,
+      color: '#F59E0B',
+      lightBg: '#FFFBEB',
+    },
     { label: 'Brand Assets', path: '/assets', icon: Palette, color: '#8B5CF6', lightBg: '#F5F3FF' },
     { label: 'Governance Insights', path: '/insights', icon: TrendingUp, color: '#06B6D4', lightBg: '#ECFEFF' },
     { label: 'Review History', path: '/history', icon: History, color: '#3B82F6', lightBg: '#EFF6FF' },
@@ -402,51 +408,53 @@ export default function TopNavigation({ onOpenSearch }) {
                       )}
                     </div>
 
-                    <div style={{ borderTop: '1px solid #F1F5F9', marginTop: '6px', paddingTop: '6px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setWorkspaceOpen(false);
-                          setShowCreateWsModal(true);
-                        }}
-                        style={{
-                          width: '100%',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '8px',
-                          padding: '8px 10px',
-                          borderRadius: '10px',
-                          fontSize: '0.8125rem',
-                          fontWeight: 600,
-                          color: '#2563EB',
-                          background: '#EFF6FF',
-                          border: 'none',
-                          cursor: 'pointer',
-                          textAlign: 'left',
-                        }}
-                      >
-                        <Plus size={14} />
-                        <span>Create New Workspace</span>
-                      </button>
+                    {isAdmin && (
+                      <div style={{ borderTop: '1px solid #F1F5F9', marginTop: '6px', paddingTop: '6px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setWorkspaceOpen(false);
+                            setShowCreateWsModal(true);
+                          }}
+                          style={{
+                            width: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            padding: '8px 10px',
+                            borderRadius: '10px',
+                            fontSize: '0.8125rem',
+                            fontWeight: 600,
+                            color: '#2563EB',
+                            background: '#EFF6FF',
+                            border: 'none',
+                            cursor: 'pointer',
+                            textAlign: 'left',
+                          }}
+                        >
+                          <Plus size={14} />
+                          <span>Create New Workspace</span>
+                        </button>
 
-                      <Link
-                        to="/settings"
-                        onClick={() => setWorkspaceOpen(false)}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '8px',
-                          padding: '8px 10px',
-                          borderRadius: '10px',
-                          fontSize: '0.8125rem',
-                          color: '#475569',
-                          textDecoration: 'none',
-                        }}
-                      >
-                        <Settings size={14} />
-                        <span>Workspace Settings</span>
-                      </Link>
-                    </div>
+                        <Link
+                          to="/settings"
+                          onClick={() => setWorkspaceOpen(false)}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            padding: '8px 10px',
+                            borderRadius: '10px',
+                            fontSize: '0.8125rem',
+                            color: '#475569',
+                            textDecoration: 'none',
+                          }}
+                        >
+                          <Settings size={14} />
+                          <span>Workspace Settings</span>
+                        </Link>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -764,22 +772,24 @@ export default function TopNavigation({ onOpenSearch }) {
                         <User size={15} color="#64748B" /> Edit Profile
                       </button>
 
-                      <Link
-                        to="/settings"
-                        onClick={() => setProfileOpen(false)}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '8px',
-                          padding: '8px 10px',
-                          borderRadius: '8px',
-                          fontSize: '0.8125rem',
-                          color: '#0F172A',
-                          textDecoration: 'none',
-                        }}
-                      >
-                        <Settings size={15} color="#64748B" /> Workspace Settings
-                      </Link>
+                      {isAdmin && (
+                        <Link
+                          to="/settings"
+                          onClick={() => setProfileOpen(false)}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            padding: '8px 10px',
+                            borderRadius: '8px',
+                            fontSize: '0.8125rem',
+                            color: '#0F172A',
+                            textDecoration: 'none',
+                          }}
+                        >
+                          <Settings size={15} color="#64748B" /> Workspace Settings
+                        </Link>
+                      )}
 
                       <Link
                         to="/history"
@@ -893,18 +903,22 @@ export default function TopNavigation({ onOpenSearch }) {
                   </NavLink>
                 );
               })}
-              <div style={{ height: '1px', background: '#E2E8F0', margin: '6px 0' }} />
-              <NavLink
-                to="/settings"
-                className={({ isActive }) => `top-nav-tab ${isActive ? 'active' : ''}`}
-                style={{ width: '100%', justifyContent: 'flex-start', padding: '10px 14px' }}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <span className="top-nav-tab-icon">
-                  <Settings size={16} strokeWidth={2.2} />
-                </span>
-                <span>Workspace Settings</span>
-              </NavLink>
+              {isAdmin && (
+                <>
+                  <div style={{ height: '1px', background: '#E2E8F0', margin: '6px 0' }} />
+                  <NavLink
+                    to="/settings"
+                    className={({ isActive }) => `top-nav-tab ${isActive ? 'active' : ''}`}
+                    style={{ width: '100%', justifyContent: 'flex-start', padding: '10px 14px' }}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <span className="top-nav-tab-icon">
+                      <Settings size={16} strokeWidth={2.2} />
+                    </span>
+                    <span>Workspace Settings</span>
+                  </NavLink>
+                </>
+              )}
             </div>
           </div>
         )}

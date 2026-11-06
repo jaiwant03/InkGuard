@@ -16,6 +16,7 @@ import {
   Check,
   Sparkles,
   RotateCcw,
+  Copy,
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -92,9 +93,17 @@ export default function ApprovedFacts() {
   const [saving, setSaving] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [loadingTemplate, setLoadingTemplate] = useState(false);
+  const [copiedFactText, setCopiedFactText] = useState(null);
 
   const { workspace, isReviewer, isAdmin } = useAuth();
   const toast = useToast();
+
+  const handleCopyFact = (text) => {
+    navigator.clipboard.writeText(text);
+    setCopiedFactText(text);
+    toast.info('Copied verified claim to clipboard.');
+    setTimeout(() => setCopiedFactText(null), 2000);
+  };
 
   const handleLoadStarterTemplate = async () => {
     try {
@@ -293,6 +302,33 @@ export default function ApprovedFacts() {
           )}
         </div>
       </div>
+
+      {/* Creator Reference Mode Callout */}
+      {!isReviewer && (
+        <div
+          style={{
+            padding: '12px 18px',
+            borderRadius: '12px',
+            background: '#F8FAFC',
+            border: '1px solid #E2E8F0',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+          }}
+        >
+          <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: '#ECFDF5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <CheckCircle2 size={15} color="#059669" />
+          </div>
+          <div>
+            <div style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#0F172A' }}>
+              Approved Facts & Evidence Reference Mode
+            </div>
+            <div style={{ fontSize: '0.75rem', color: '#64748B' }}>
+              These certified claims and metrics are officially approved for external content. Click "Copy Claim" on any fact to quote it directly in your drafts.
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Unified Search & Status Filter Toolbar */}
       <div className="facts-toolbar">
@@ -598,7 +634,7 @@ export default function ApprovedFacts() {
                   </div>
                 </div>
 
-                {isReviewer && (
+                {isReviewer ? (
                   <div className="fact-footer">
                     <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>
                       ID: {fact._id.slice(-6).toUpperCase()}
@@ -619,6 +655,21 @@ export default function ApprovedFacts() {
                         </button>
                       )}
                     </div>
+                  </div>
+                ) : (
+                  <div className="fact-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>
+                      Verified Claim
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => handleCopyFact(fact.factText)}
+                      className="btn btn-secondary btn-xs"
+                      style={{ borderRadius: '8px', padding: '5px 12px', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '5px' }}
+                    >
+                      <Copy size={12} />
+                      <span>{copiedFactText === fact.factText ? 'Copied!' : 'Copy Claim'}</span>
+                    </button>
                   </div>
                 )}
               </div>

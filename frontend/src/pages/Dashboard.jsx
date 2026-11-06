@@ -25,6 +25,8 @@ import {
   CheckSquare,
   Zap,
   Sparkle,
+  Settings,
+  ClipboardList,
 } from 'lucide-react';
 import ComplianceScoreRing from '../components/ComplianceScoreRing';
 import { SeverityBadge, WorkflowStatusBadge } from '../components/Badges';

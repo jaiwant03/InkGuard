@@ -486,6 +486,46 @@ export default function BrandGuidelines() {
       {/* TAB 1: BRAND RULES LIBRARY */}
       {activeTab === 'rules' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
+          {/* Creator Reference Mode Callout */}
+          {!isReviewer && (
+            <div
+              style={{
+                padding: '12px 18px',
+                borderRadius: '12px',
+                background: '#F8FAFC',
+                border: '1px solid #E2E8F0',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '12px',
+                flexWrap: 'wrap',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <BookOpen size={15} color="#2563EB" />
+                </div>
+                <div>
+                  <div style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#0F172A' }}>
+                    Brand Guidelines Reference Mode
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: '#64748B' }}>
+                    These guidelines and prohibited terms are automatically audited when you test copy in Content Review. Rule editing is managed by compliance reviewers.
+                  </div>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={handleExportRules}
+                className="btn btn-secondary btn-sm"
+                style={{ borderRadius: '8px', padding: '6px 12px', fontSize: '0.75rem' }}
+              >
+                <Download size={13} />
+                <span>Download Guidelines (JSON)</span>
+              </button>
+            </div>
+          )}
+
           {/* Unified Search & Filters Toolbar */}
           <div className="facts-toolbar">
             <div className="facts-toolbar-search">

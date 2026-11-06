@@ -91,6 +91,11 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const isAdmin = role === 'admin' || user?.systemRole === 'superadmin';
+  const isReviewer = role === 'reviewer' || role === 'admin' || user?.systemRole === 'superadmin';
+  const isReviewerOnly = role === 'reviewer' && user?.systemRole !== 'superadmin';
+  const isCreatorOnly = role === 'creator' && user?.systemRole !== 'superadmin';
+
   const value = {
     user,
     workspace,
@@ -98,9 +103,16 @@ export function AuthProvider({ children }) {
     loading,
     error,
     isAuthenticated: Boolean(user),
-    isAdmin: role === 'admin' || user?.systemRole === 'superadmin',
-    isReviewer: role === 'reviewer' || role === 'admin' || user?.systemRole === 'superadmin',
+    isAdmin,
+    isReviewer,
+    isReviewerOnly,
+    isCreatorOnly,
     isCreator: Boolean(user),
+    canManageRules: isReviewer,
+    canManageFacts: isReviewer,
+    canManageAssets: isReviewer,
+    canApproveDrafts: isReviewer,
+    canManageWorkspace: isAdmin,
     login,
     register,
     logout,

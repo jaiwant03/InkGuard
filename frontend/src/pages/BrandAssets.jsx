@@ -213,6 +213,33 @@ export default function BrandAssets() {
         </div>
       </div>
 
+      {/* Creator Reference Mode Callout */}
+      {!isReviewer && (
+        <div
+          style={{
+            padding: '12px 18px',
+            borderRadius: '12px',
+            background: '#F8FAFC',
+            border: '1px solid #E2E8F0',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+          }}
+        >
+          <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: '#F5F3FF', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <Palette size={15} color="#7C3AED" />
+          </div>
+          <div>
+            <div style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#0F172A' }}>
+              Brand Asset Library (Creator Mode)
+            </div>
+            <div style={{ fontSize: '0.75rem', color: '#64748B' }}>
+              Browse approved corporate logos, banners, and marketing assets. Copy URLs directly for use in verified digital and print campaigns.
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Modern Filter and Search Bar */}
       <div
         style={{

@@ -888,8 +888,6 @@ export default function ReviewResults() {
             </div>
           )}
         </div>
-          )}
-        </div>
       </div>
 
       {/* Dismiss Finding Modal */}

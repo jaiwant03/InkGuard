@@ -447,10 +447,38 @@ export default function BrandGuidelines() {
           </div>
 
           {activeTab === 'rules' && isReviewer && (
-            <button onClick={handleOpenAddRule} className="btn btn-gradient-primary btn-sm">
-              <Plus size={16} strokeWidth={2.5} />
-              <span>Add Brand Rule</span>
-            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+              <button
+                type="button"
+                onClick={handleExportRules}
+                className="btn btn-secondary btn-sm"
+                title="Export all brand rules to JSON"
+                style={{ borderRadius: '10px', padding: '7px 12px', fontSize: '0.8125rem' }}
+              >
+                <Download size={14} />
+                <span>Export JSON</span>
+              </button>
+
+              <label
+                className="btn btn-secondary btn-sm"
+                title="Import brand rules from JSON file"
+                style={{ borderRadius: '10px', padding: '7px 12px', fontSize: '0.8125rem', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px', margin: 0 }}
+              >
+                <Upload size={14} />
+                <span>Import JSON</span>
+                <input
+                  type="file"
+                  accept=".json,application/json"
+                  style={{ display: 'none' }}
+                  onChange={handleImportRules}
+                />
+              </label>
+
+              <button onClick={handleOpenAddRule} className="btn btn-gradient-primary btn-sm" style={{ borderRadius: '10px', padding: '7px 14px' }}>
+                <Plus size={16} strokeWidth={2.5} />
+                <span>Add Brand Rule</span>
+              </button>
+            </div>
           )}
         </div>
       </div>

@@ -2803,25 +2803,32 @@ input[type="radio"]:focus-visible {
 }
 
 .document-paper {
-  background: #F8FAFC;
+  background: #FFFFFF;
   border: 1px solid #E2E8F0;
   border-radius: 14px;
-  padding: 24px 26px;
-  min-height: 440px;
+  padding: 28px 32px;
+  min-height: 480px;
   font-size: 0.95rem;
-  line-height: 1.8;
+  line-height: 1.85;
   color: #1E293B;
   white-space: pre-wrap;
   font-family: var(--font-sans);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.02);
 }
 
 .document-highlight-span {
   padding: 2px 6px;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   font-weight: 600;
-  display: inline-block;
+  display: inline;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.document-highlight-span:hover {
+  filter: brightness(0.95);
 }
 
 .document-highlight-span.high {
@@ -2843,8 +2850,9 @@ input[type="radio"]:focus-visible {
 }
 
 .document-highlight-span.active {
-  box-shadow: 0 0 0 2px #2563EB;
-  background: #DBEAFE;
+  box-shadow: 0 0 0 2px #2563EB, 0 2px 8px rgba(37, 99, 235, 0.2);
+  background: #DBEAFE !important;
+  color: #1E40AF !important;
 }
 
 .finding-card {
@@ -2855,8 +2863,10 @@ input[type="radio"]:focus-visible {
   box-shadow: 0 1px 4px rgba(15, 23, 42, 0.03);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
-  padding: 18px 20px 18px 22px;
+  padding: 16px 18px 16px 20px;
   cursor: pointer;
+  flex-shrink: 0;
+  min-height: fit-content;
 }
 
 .finding-card:hover {
@@ -2866,8 +2876,9 @@ input[type="radio"]:focus-visible {
 }
 
 .finding-card.active {
-  border-color: #3B82F6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25), 0 8px 24px rgba(37, 99, 235, 0.1);
+  border-color: #2563EB;
+  background: #FAFCFF;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2), 0 8px 24px rgba(37, 99, 235, 0.08);
 }
 
 .finding-accent-stripe {
@@ -2875,7 +2886,9 @@ input[type="radio"]:focus-visible {
   top: 0;
   bottom: 0;
   left: 0;
-  width: 4px;
+  width: 5px;
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
 }
 
 .finding-accent-stripe.high {

@@ -36,7 +36,7 @@ import { useToast } from '../context/ToastContext';
 import { ASSET_IMAGES } from '../assets/images';
 
 export default function Dashboard() {
-  const { user, workspace } = useAuth();
+  const { user, workspace, role, isAdmin, isReviewer, isCreatorOnly } = useAuth();
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -328,61 +328,162 @@ export default function Dashboard() {
               </span>
             </div>
 
-            <h1
-              className="text-gradient-primary"
-              style={{
-                fontSize: '1.85rem',
-                fontWeight: 850,
-                letterSpacing: '-0.03em',
-                lineHeight: 1.2,
-                margin: 0,
-              }}
-            >
-              {getGreeting()}
-            </h1>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+              <h1
+                className="text-gradient-primary"
+                style={{
+                  fontSize: '1.85rem',
+                  fontWeight: 850,
+                  letterSpacing: '-0.03em',
+                  lineHeight: 1.2,
+                  margin: 0,
+                }}
+              >
+                {getGreeting()}
+              </h1>
+              <span
+                style={{
+                  fontSize: '0.6875rem',
+                  fontWeight: 700,
+                  padding: '2px 8px',
+                  borderRadius: '999px',
+                  background: role === 'admin' ? '#EFF6FF' : role === 'reviewer' ? '#FEF3C7' : '#F0FDF4',
+                  color: role === 'admin' ? '#2563EB' : role === 'reviewer' ? '#B45309' : '#166534',
+                  border: `1px solid ${role === 'admin' ? '#BFDBFE' : role === 'reviewer' ? '#FDE68A' : '#BBF7D0'}`,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                }}
+              >
+                Role: {role || 'Creator'}
+              </span>
+            </div>
             <p style={{ fontSize: '0.875rem', color: '#64748B', marginTop: '4px', margin: '4px 0 0 0' }}>
-              Protect brand equity across all channels with real-time deterministic audits.
+              {isCreatorOnly
+                ? 'Draft, audit, and submit compliant brand content with real-time deterministic checks.'
+                : isAdmin
+                ? 'Full governance administration, team access control, and compliance oversight.'
+                : 'Enforce brand standards, review pending draft submissions, and issue verified sign-offs.'}
             </p>
           </div>
         </div>
 
-        {/* Modern Action Buttons */}
+        {/* Modern Action Buttons Tailored by Role */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-          <Link
-            to="/guidelines"
-            className="btn btn-secondary"
-            style={{
-              padding: '10px 20px',
-              fontSize: '0.875rem',
-              fontWeight: 650,
-              borderRadius: '12px',
-              border: '1px solid #E2E8F0',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-            }}
-          >
-            <BookOpen size={16} color="#7C3AED" />
-            <span>Explore Guidelines</span>
-          </Link>
+          {role === 'reviewer' ? (
+            <>
+              <Link
+                to="/guidelines"
+                className="btn btn-secondary"
+                style={{
+                  padding: '10px 18px',
+                  fontSize: '0.875rem',
+                  fontWeight: 650,
+                  borderRadius: '12px',
+                  border: '1px solid #E2E8F0',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                }}
+              >
+                <BookOpen size={16} color="#7C3AED" />
+                <span>Explore Guidelines</span>
+              </Link>
 
-          <button
-            onClick={() => navigate('/review')}
-            className="btn btn-gradient-primary"
-            style={{
-              padding: '10px 24px',
-              fontSize: '0.875rem',
-              fontWeight: 700,
-              borderRadius: '12px',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-            }}
-            title="Run instant brand compliance audit on new content"
-          >
-            <Plus size={16} strokeWidth={2.5} />
-            <span>Start New Review</span>
-          </button>
+              <button
+                onClick={() => navigate('/approvals')}
+                className="btn btn-gradient-primary"
+                style={{
+                  padding: '10px 22px',
+                  fontSize: '0.875rem',
+                  fontWeight: 700,
+                  borderRadius: '12px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                }}
+                title="Open Review Approval Queue"
+              >
+                <ClipboardList size={16} strokeWidth={2.5} />
+                <span>Review Pending Queue ({pendingApprovalsCount})</span>
+              </button>
+            </>
+          ) : isAdmin ? (
+            <>
+              <Link
+                to="/settings"
+                className="btn btn-secondary"
+                style={{
+                  padding: '10px 18px',
+                  fontSize: '0.875rem',
+                  fontWeight: 650,
+                  borderRadius: '12px',
+                  border: '1px solid #E2E8F0',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                }}
+              >
+                <Settings size={16} color="#475569" />
+                <span>Workspace Settings</span>
+              </Link>
+
+              <button
+                onClick={() => navigate('/review')}
+                className="btn btn-gradient-primary"
+                style={{
+                  padding: '10px 24px',
+                  fontSize: '0.875rem',
+                  fontWeight: 700,
+                  borderRadius: '12px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                }}
+                title="Run instant brand compliance audit on new content"
+              >
+                <Plus size={16} strokeWidth={2.5} />
+                <span>Start New Review</span>
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/guidelines"
+                className="btn btn-secondary"
+                style={{
+                  padding: '10px 20px',
+                  fontSize: '0.875rem',
+                  fontWeight: 650,
+                  borderRadius: '12px',
+                  border: '1px solid #E2E8F0',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                }}
+              >
+                <BookOpen size={16} color="#7C3AED" />
+                <span>Explore Guidelines</span>
+              </Link>
+
+              <button
+                onClick={() => navigate('/review')}
+                className="btn btn-gradient-primary"
+                style={{
+                  padding: '10px 24px',
+                  fontSize: '0.875rem',
+                  fontWeight: 700,
+                  borderRadius: '12px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                }}
+                title="Run instant brand compliance audit on new content"
+              >
+                <Plus size={16} strokeWidth={2.5} />
+                <span>Start New Review</span>
+              </button>
+            </>
+          )}
         </div>
       </section>
 
@@ -475,11 +576,11 @@ export default function Dashboard() {
         <div
           className="kpi-card-vibrant kpi-card-amber"
           onClick={() => navigate('/approvals')}
-          title="Click to open Approval Queue"
+          title={isCreatorOnly ? 'Click to view My Submissions' : 'Click to open Approval Queue'}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-              Pending Queue
+              {isCreatorOnly ? 'My Submissions' : 'Pending Queue'}
             </span>
             <div className="icon-tile icon-tile-amber" style={{ width: '40px', height: '40px' }}>
               <Clock size={20} strokeWidth={2.4} />
@@ -500,9 +601,11 @@ export default function Dashboard() {
                   color: '#D97706',
                 }}
               >
-                Awaiting Sign-off
+                {isCreatorOnly ? 'In Review' : 'Awaiting Sign-off'}
               </span>
-              <span style={{ fontSize: '0.78rem', color: '#64748B' }}>by reviewer</span>
+              <span style={{ fontSize: '0.78rem', color: '#64748B' }}>
+                {isCreatorOnly ? 'awaiting reviewer' : 'by reviewer'}
+              </span>
             </div>
           </div>
         </div>
@@ -511,11 +614,11 @@ export default function Dashboard() {
         <div
           className="kpi-card-vibrant kpi-card-violet"
           onClick={() => navigate('/guidelines')}
-          title="Click to manage Brand Rules"
+          title="Click to explore Brand Guidelines"
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-              Enforced Rules
+              {isReviewer ? 'Enforced Rules' : 'Brand Guardrails'}
             </span>
             <div className="icon-tile icon-tile-violet" style={{ width: '40px', height: '40px' }}>
               <BookOpen size={20} strokeWidth={2.4} />
@@ -536,7 +639,7 @@ export default function Dashboard() {
                   color: '#7C3AED',
                 }}
               >
-                Brand Guardrails
+                {isReviewer ? 'Brand Guardrails' : 'Active Rules'}
               </span>
               <span style={{ fontSize: '0.78rem', color: '#64748B' }}>across 6 pillars</span>
             </div>
@@ -808,10 +911,12 @@ export default function Dashboard() {
                 </div>
                 <div>
                   <h2 className="text-gradient-emerald" style={{ fontSize: '1.2rem', fontWeight: 800, lineHeight: 1.2, margin: 0 }}>
-                    Review Queue
+                    {isCreatorOnly ? 'My Submissions' : 'Review Queue'}
                   </h2>
                   <p style={{ fontSize: '0.75rem', color: '#64748B', marginTop: '3px', margin: '3px 0 0 0' }}>
-                    Recent content submitted for brand verification and sign-off.
+                    {isCreatorOnly
+                      ? 'Recent content submitted for brand verification and sign-off.'
+                      : 'Recent content submitted for brand verification and sign-off.'}
                   </p>
                 </div>
               </div>
@@ -828,7 +933,7 @@ export default function Dashboard() {
                   gap: '4px',
                 }}
               >
-                View Queue <ChevronRight size={14} />
+                {isCreatorOnly ? 'Track Status' : 'View Queue'} <ChevronRight size={14} />
               </Link>
             </div>
 

@@ -367,25 +367,19 @@ export default function ReviewResults() {
       </div>
 
       {/* Main Split-Pane Workspace */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'minmax(0, 1.2fr) minmax(380px, 460px)',
-          gap: '24px',
-          alignItems: 'start',
-        }}
-      >
+      <div className="review-results-workspace">
         {/* Left Column: Compliance Score Ribbon + Document Canvas */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {/* Streamlined Compliance Score Ribbon */}
           <div
             className="card"
             style={{
-              padding: '18px 22px',
+              padding: '20px 24px',
               display: 'flex',
               alignItems: 'center',
-              gap: '20px',
+              gap: '22px',
               flexWrap: 'wrap',
+              borderRadius: '16px',
             }}
           >
             <div style={{ flexShrink: 0 }}>

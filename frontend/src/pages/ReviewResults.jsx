@@ -50,7 +50,7 @@ export default function ReviewResults() {
   const [dismissModalFinding, setDismissModalFinding] = useState(null);
   const [dismissReason, setDismissReason] = useState('');
 
-  const { workspace } = useAuth();
+  const { workspace, isReviewer, isAdmin, isCreatorOnly, role } = useAuth();
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -134,6 +134,10 @@ export default function ReviewResults() {
   // Handle dismissing a finding with reason
   const handleDismissFinding = async (e) => {
     e.preventDefault();
+    if (!isReviewer) {
+      toast.error('Only compliance reviewers and workspace admins can dismiss findings.');
+      return;
+    }
     if (!dismissModalFinding) return;
     try {
       const res = await api.drafts.updateFindingStatus(draftId, dismissModalFinding._id, {
@@ -413,15 +417,59 @@ export default function ReviewResults() {
             <span>{reAuditing ? 'Auditing...' : 'Re-run Brand Audit'}</span>
           </button>
 
-          {draft.status !== 'Approved' && (
+          {isReviewer && draft.status === 'In Review' ? (
+            <button
+              onClick={() => navigate('/approvals')}
+              className="btn btn-sm"
+              style={{
+                borderRadius: '10px',
+                padding: '7px 16px',
+                fontSize: '0.8125rem',
+                background: '#FEF3C7',
+                color: '#B45309',
+                border: '1px solid #FDE68A',
+                fontWeight: 700,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+              }}
+            >
+              <span>Authorize Sign-Off in Queue →</span>
+            </button>
+          ) : draft.status === 'Approved' ? (
+            <span
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '6px 14px',
+                borderRadius: '10px',
+                background: '#ECFDF5',
+                color: '#059669',
+                fontSize: '0.8125rem',
+                fontWeight: 700,
+                border: '1px solid #A7F3D0',
+              }}
+            >
+              <CheckCircle2 size={14} /> Approved for Publishing
+            </span>
+          ) : (
             <button
               onClick={handleSubmitForApproval}
-              disabled={submittingApproval}
+              disabled={submittingApproval || draft.status === 'In Review'}
               className="btn btn-gradient-primary btn-sm"
               style={{ borderRadius: '10px', padding: '7px 16px', fontSize: '0.8125rem' }}
             >
               <Send size={14} />
-              <span>Submit for Sign-Off</span>
+              <span>
+                {submittingApproval
+                  ? 'Submitting...'
+                  : draft.status === 'In Review'
+                  ? 'Awaiting Reviewer Sign-Off'
+                  : draft.status === 'Changes Requested'
+                  ? 'Re-Submit for Sign-Off'
+                  : 'Submit for Sign-Off'}
+              </span>
             </button>
           )}
         </div>
@@ -856,16 +904,19 @@ export default function ReviewResults() {
                         }}
                       >
                         <div style={{ display: 'flex', gap: '8px' }}>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setDismissModalFinding(finding);
-                            }}
-                            className="btn btn-secondary btn-sm"
-                            style={{ fontSize: '0.75rem', padding: '5px 10px', borderRadius: '8px' }}
-                          >
-                            Dismiss
-                          </button>
+                          {isReviewer && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setDismissModalFinding(finding);
+                              }}
+                              className="btn btn-secondary btn-sm"
+                              style={{ fontSize: '0.75rem', padding: '5px 10px', borderRadius: '8px' }}
+                              title="Dismiss finding with compliance override note"
+                            >
+                              Dismiss (Override)
+                            </button>
+                          )}
 
                           <button
                             onClick={(e) => {
